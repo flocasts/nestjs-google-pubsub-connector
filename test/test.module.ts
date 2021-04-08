@@ -2,7 +2,7 @@ import { Module } from "@nestjs/common";
 import { TestController } from "./test.controller";
 
 /**
- * The main application module. Import all submodules here.
+ * The Test Module
  */
 @Module({
     controllers: [TestController],

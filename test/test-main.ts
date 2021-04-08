@@ -4,7 +4,7 @@ import { GooglePubSubTransport } from '../lib/server';
 import { TestModule } from './test.module';
 
 /**
- * Configure and run the HTTP nest application.
+ * Configure and run the test application.
  */
 async function bootstrap() {
     const app = await NestFactory.createMicroservice(TestModule, {

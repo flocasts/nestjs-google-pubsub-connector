@@ -20,6 +20,11 @@
   "devDependencies": {
     "@types/jest": "^26.0.22",
     "@types/uuid": "^8.3.0",
+    "@typescript-eslint/eslint-plugin": "^4.21.0",
+    "@typescript-eslint/parser": "^4.21.0",
+    "commitizen": "^4.2.3",
+    "cz-conventional-changelog": "^3.3.0",
+    "eslint": "^7.23.0",
     "husky": "^6.0.0",
     "jest": "^26.6.3",
     "lint-staged": "^10.5.4",
@@ -31,13 +36,22 @@
     "@nestjs/common": "^7.6.15",
     "@nestjs/core": "^7.6.15",
     "@nestjs/microservices": "^7.6.15",
-    "i": "^0.3.6",
-    "npm": "^7.8.0",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^6.6.7",
-    "uuid": "^8.3.2"
+    "rxjs": "^6.6.7"
   },
   "lint-staged": {
-    "*.{js,css,md}": "prettier --write"
+    "{lib,test}/**/*.ts": "prettier --write",
+    "{lib,apps,libs,test}/**/*.ts": "eslint --fix"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "husky": {
+    "hooks": {
+      "prepare-commit-msg": "exec < /dev/tty && git cz --hook",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
   }
 }

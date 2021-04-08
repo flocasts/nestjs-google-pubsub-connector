@@ -3,9 +3,19 @@ import {
     PubSub as GooglePubSub,
     Subscription as GooglePubSubSubscription,
 } from '@google-cloud/pubsub';
-import { CustomTransportStrategy, MessageHandler, Server, WritePacket } from '@nestjs/microservices';
-import { GOOGLE_PUBSUB_SUBSCRIPTION_MESSAGE_EVENT } from '../constants';
+import { Logger } from '@nestjs/common';
+import {
+    CustomTransportStrategy,
+    MessageHandler,
+    Server,
+    WritePacket,
+} from '@nestjs/microservices';
+import {
+    GOOGLE_PUBSUB_SUBSCRIPTION_ERROR_EVENT,
+    GOOGLE_PUBSUB_SUBSCRIPTION_MESSAGE_EVENT,
+} from '../constants';
 import { GooglePubSubContext as GooglePubSubContext } from '../ctx-host/google-pubsub.context';
+import { GooglePubSubMessageDeserializer } from '../deserializers';
 import { GooglePubSubPatternHandler } from '../enums';
 
 export type SubscriptionNamingStrategy = (subscriptionName: string) => string;
@@ -25,12 +35,21 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
      */
     private readonly googlePubSubClient: GooglePubSub;
 
-    private readonly subscriptionNamingStrategy: SubscriptionNamingStrategy;
+    /**
+     * Logger
+     */
+    protected readonly logger = new Logger('GooglePubSubTransport');
+
+    private readonly subscriptions: Map<string, GooglePubSubSubscription> = new Map();
+
+    // private readonly subscriptionNamingStrategy: SubscriptionNamingStrategy;
 
     constructor(options?: GooglePubSubTransportOptions) {
         super();
         this.googlePubSubClient = options?.client || new GooglePubSub();
-        this.subscriptionNamingStrategy = options?.subscriptionNamingStrategy || identitySubscriptionNamingStrategy;
+        // this.subscriptionNamingStrategy =
+        //     options?.subscriptionNamingStrategy || identitySubscriptionNamingStrategy;
+        this.deserializer = new GooglePubSubMessageDeserializer();
     }
 
     public listen(callback: () => void): void {
@@ -52,64 +71,45 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
                     this.logger.log(`Mapped {${pattern}, SUBSCRIPTION} route"`);
                     subscription = this.googlePubSubClient.subscription(pattern);
                     break;
-                // If we're dealing with an @Topic handler, pass the topic name though the
-                // naming strategy to get the subscriptions name
-                // case GooglePubSubPatternHandler.TOPIC:
-                //     this.logger.log(`Mapped {${pattern}, TOPIC} route"`)
-                //     const subscriptionName = this.subscriptionNamingStrategy(
-                //         pattern,
-                //     );
-                //     subscription = this.googlePubSubClient.subscription(
-                //         subscriptionName,
-                //     );
-                //     break;
             }
 
             if (subscription) {
+                if (!this.subscriptions.has(pattern)) this.subscriptions.set(pattern, subscription);
                 subscription.on(
                     GOOGLE_PUBSUB_SUBSCRIPTION_MESSAGE_EVENT,
-                    this.handleGooglePubSubMessageEvent(handler, pattern),
+                    this.handleMessage(pattern),
+                );
+                subscription.on(GOOGLE_PUBSUB_SUBSCRIPTION_ERROR_EVENT, (error) =>
+                    this.handleError(error),
                 );
             }
         });
     }
 
-    private handleGooglePubSubMessageEvent(handler: GooglePubSubMessageHandler, pattern: string) {
-        return (message: GooglePubSubMessage) => {
+    public handleMessage(pattern: string) {
+        return async (message: GooglePubSubMessage) => {
             // Create our context object
-            const ctx = new GooglePubSubContext([message, pattern, false]);
-            const data = JSON.parse(message.data.toString());
+            const ctx = new GooglePubSubContext([message, pattern, true]);
+            const packet = this.deserializer.deserialize(message, { pattern });
 
-            // Transform whatever we get back from the handler into an observable
-            // N.B. we do this because the NestJS internals plays better with observables
-            // than raw values
-            // @ts-ignore
-            const response$ = this.transformToObservable(handler(data, ctx));
-
-            // If a requester uses the @Ack param decorator we'll unset the auto ack value
-            // and assume that they'll ack themselves
             const shouldAck = (ctx: GooglePubSubContext) => ctx.getAutoAck();
-
-            // This will be called when the response$ observable completes
-            const respond = async (packet: WritePacket): Promise<void | Promise<void>> => {
-                if (packet.err) {
-                    this.handleError(packet.err);
-                }
+            try {
+                await this.handleEvent(pattern, packet, ctx);
+            } catch (error) {
+                this.handleError(error);
+            } finally {
                 if (shouldAck(ctx)) {
                     await message.ack();
                 }
-            };
-
-            // If our handler returned anything, pass it to `this.send` where `respond` will
-            // be called with the response$ observable completes
-            response$ && this.send(response$, respond);
+            }
         };
     }
 
     /**
      * This is called on transport close by the NestJS internals
      */
-    public close(): Promise<void> {
-        return this.googlePubSubClient.close();
+    public async close(): Promise<void> {
+        await Promise.all(Array.from(this.subscriptions.values(), (sub) => sub.close()));
+        await this.googlePubSubClient.close();
     }
 }

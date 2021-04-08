@@ -1,2 +1,3 @@
 export const GOOGLE_PUBSUB_HANDLER_TYPE: string = 'GOOGLE_PUBSUB_HANDLER_TYPE';
 export const GOOGLE_PUBSUB_SUBSCRIPTION_MESSAGE_EVENT: string = 'message';
+export const GOOGLE_PUBSUB_SUBSCRIPTION_ERROR_EVENT: string = 'error';
