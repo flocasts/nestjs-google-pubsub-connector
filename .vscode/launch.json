@@ -1,0 +1,30 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "pwa-node",
+            "request": "launch",
+            "name": "Launch Program",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "preLaunchTask": "npm: build",
+            "resolveSourceMapLocations": [
+                "${workspaceFolder}/**",
+                "!**/node_modules/**"
+            ],
+            "program": "${workspaceFolder}/test/test-main.ts",
+            "outFiles": [
+                "${workspaceFolder}/**/*.js"
+            ],
+            "outputCapture": "std",
+            "console": "internalConsole",
+            "env": {
+                "GOOGLE_APPLICATION_CREDENTIALS": "/Users/haroldwaters/google-keys/flosports-174016-be4fa81cdbee.json"
+            }
+        }
+    ]
+}
