@@ -2,14 +2,14 @@ import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { GooglePubSubContext } from '../ctx-host';
 
 /**
- * Retrieves the ack function from the received message
- * and disables auto ack.
+ * Retrieves the nack function from the received message
+ * and disables auto nack.
  */
-export const GooglePubSubMessageAck = createParamDecorator(
+export const GooglePubSubMessageNack = createParamDecorator(
     (data: unknown, ctx: ExecutionContext): (() => void) => {
         const pubSubCtx: GooglePubSubContext = ctx.switchToRpc().getContext();
         const message = pubSubCtx.getMessage();
-        pubSubCtx.setAutoAck(false);
-        return message.ack.bind(message);
+        pubSubCtx.setAutoNack(false);
+        return message.nack.bind(message);
     },
 );

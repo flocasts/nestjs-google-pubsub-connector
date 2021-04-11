@@ -1,5 +1,4 @@
 import { NestFactory } from '@nestjs/core';
-import { ClientGooglePubSub } from '../lib/client';
 import { GooglePubSubTransport } from '../lib/server';
 import { TestModule } from './test.module';
 
@@ -8,10 +7,12 @@ import { TestModule } from './test.module';
  */
 async function bootstrap() {
     const app = await NestFactory.createMicroservice(TestModule, {
-        strategy: new GooglePubSubTransport()
+        strategy: new GooglePubSubTransport({
+            createSubscriptions: true,
+        }),
     });
     return app.listen(() => {
-        console.log('app started!')
-    })
+        console.log('app started!');
+    });
 }
 bootstrap();

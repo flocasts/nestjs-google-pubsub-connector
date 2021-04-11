@@ -1,11 +1,14 @@
-import { Message } from '@google-cloud/pubsub';
-import { Deserializer, IncomingRequest } from '@nestjs/microservices';
+import { Message as GooglePubSubMessage } from '@google-cloud/pubsub';
+import { Deserializer, ReadPacket } from '@nestjs/microservices';
 
-export class GooglePubSubMessageDeserializer implements Deserializer<Message, IncomingRequest> {
-    deserialize(value: Message, options: { pattern: string }): IncomingRequest {
+export class GooglePubSubMessageDeserializer
+    implements Deserializer<GooglePubSubMessage, ReadPacket<GooglePubSubMessage>> {
+    deserialize(
+        value: GooglePubSubMessage,
+        options: { metadata: string },
+    ): ReadPacket<GooglePubSubMessage> {
         return {
-            id: value.id,
-            pattern: options.pattern,
+            pattern: options.metadata,
             data: value,
         };
     }

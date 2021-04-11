@@ -1,2 +1,2 @@
-export * from './topic-name.decorator';
-export * from './subscription-name.decorator';
+export * from './google-pubsub-message.decorator';
+export * from './google-pubsub-ack.decorator';

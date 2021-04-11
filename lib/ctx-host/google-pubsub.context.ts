@@ -1,8 +1,20 @@
 import { Message } from '@google-cloud/pubsub';
 import { BaseRpcContext } from '@nestjs/microservices/ctx-host/base-rpc.context';
 
-type PubSubContextArgs = [Message, string, boolean];
+type PubSubContextArgs = [
+    // The incoming message
+    Message,
+    // The raw handler metadata
+    string,
+    // Auto ack
+    boolean,
+    // Auto nack
+    boolean,
+];
 
+/**
+ * Context for an incoming Google PubSub message
+ */
 export class GooglePubSubContext extends BaseRpcContext<PubSubContextArgs> {
     constructor(args: PubSubContextArgs) {
         super(args);
@@ -16,9 +28,9 @@ export class GooglePubSubContext extends BaseRpcContext<PubSubContextArgs> {
     }
 
     /**
-     * Returns the name of the subscription
+     * Returns the raw metadata for the handler
      */
-    getPattern(): string {
+    getRawMetadata(): string {
         return this.args[1];
     }
 
@@ -34,5 +46,19 @@ export class GooglePubSubContext extends BaseRpcContext<PubSubContextArgs> {
      */
     setAutoAck(value: boolean): void {
         this.args[2] = value;
+    }
+
+    /**
+     * Whether the message attached to this context should be auto-nacked
+     */
+    getAutoNack(): boolean {
+        return this.args[3];
+    }
+
+    /**
+     * Whether the message attached to this context should be auto-nacked
+     */
+    setAutoNack(value: boolean): void {
+        this.args[3] = value;
     }
 }

@@ -1,76 +1,237 @@
-import { ClientConfig as GooglePubSubClientConfig, PubSub } from '@google-cloud/pubsub';
-import { DynamicModule, Injectable } from '@nestjs/common';
 import {
-    ClientProxy,
-    Deserializer,
-    ReadPacket,
-    Serializer,
-    WritePacket,
-} from '@nestjs/microservices';
-import { Observable } from 'rxjs';
-import { GooglePubSubMessageDeserializer } from '../deserializers/google-pubsub.deserializer';
-import { GooglePubSubMessageSerializer } from '../serializers/google-pubsub.serializer';
+    ClientConfig as GooglePubSubClientConfig,
+    CreateSubscriptionOptions,
+    ExistsResponse,
+    PubSub,
+    Subscription,
+    Topic,
+} from '@google-cloud/pubsub';
+import { Injectable } from '@nestjs/common';
+import { ClientProxy, ReadPacket, WritePacket } from '@nestjs/microservices';
+import { from, fromEvent, Observable, of, OperatorFunction } from 'rxjs';
+import { first, map } from 'rxjs/operators';
+import { GOOGLE_PUBSUB_SUBSCRIPTION_MESSAGE_EVENT } from '../constants';
+import {
+    ClientHealthInfo,
+    GooglePubSubMessage,
+    GooglePubSubSubscription,
+    GooglePubSubTopic,
+} from '../interfaces';
 
 export interface GooglePubSubOptions {
-    serializer?: Serializer;
-    deserializer?: Deserializer;
+    pubSubClient?: PubSub;
     pubSubClientConfig?: GooglePubSubClientConfig;
 }
 
+/**
+ * Proxy for the Google PubSub client
+ */
 @Injectable()
 export class ClientGooglePubSub extends ClientProxy {
     private googlePubSubClient: PubSub;
 
     constructor(options?: GooglePubSubOptions) {
         super();
-        this.initializeSerializer(options);
-        this.initializeDeserializer(options);
-        this.googlePubSubClient = new PubSub(options?.pubSubClientConfig);
+        this.googlePubSubClient = options?.pubSubClient ?? new PubSub(options?.pubSubClientConfig);
     }
 
-    public static register(): DynamicModule {
-        return {
-            module: ClientGooglePubSub,
-        };
+    /**
+     * Since the client on starts listening for messages when event subscribers are added, this
+     * method does nothing
+     * @returns
+     */
+    public connect(): Promise<void> {
+        return Promise.resolve();
     }
 
-    public async close(): Promise<void> {
-        await this.googlePubSubClient.close();
+    /**
+     * Terminates the underlying gRPC channel for the PubSub client
+     */
+    public close(): Observable<void> {
+        return from(this.googlePubSubClient.close());
     }
 
-    public publishToTopic(topic: string, data: Buffer): Observable<any> {
+    /**
+     * Publishes the buffer to the supplied Topic
+     * @param topic
+     * @param data
+     * @returns
+     */
+    public publishToTopic(topic: string, data: Buffer): Observable<string> {
         return this.emit(topic, data);
     }
 
-    protected dispatchEvent(packet: ReadPacket<any>): Promise<any> {
+    /**
+     * Get a Subscription instance from the PubSub client. If a Subscription instance is supplied
+     * then the returned Subscription will point to the same instance.
+     * @param _subscription
+     * @returns
+     */
+    public getSubscription(
+        _subscription: string | GooglePubSubSubscription,
+    ): GooglePubSubSubscription {
+        if (this.isSubscriptionInstance(_subscription)) {
+            return _subscription;
+        } else {
+            return this.googlePubSubClient.subscription(_subscription);
+        }
+    }
+
+    /**
+     * Returns a boolean indicating if the requested Subscription exists
+     * @param subscription
+     * @returns
+     */
+    public subscriptionExists(
+        subscription: string | GooglePubSubSubscription,
+    ): Observable<boolean> {
+        return from(this.getSubscription(subscription).exists()).pipe(this.parseExistsResponse);
+    }
+
+    /**
+     * Attempts to create a Subscription instance belonging to the provided Topic
+     * @param _subscription
+     * @param _topic
+     * @returns
+     */
+    public createSubscription(
+        _subscription: string | GooglePubSubSubscription,
+        _topic?: string | GooglePubSubTopic,
+        createSubscriptionOptions?: CreateSubscriptionOptions,
+    ): Observable<GooglePubSubSubscription | null> {
+        let subscription: GooglePubSubSubscription | string | null = null;
+        if (this.isString(_subscription)) {
+            subscription = this.getSubscription(_subscription);
+        } else if (this.isSubscriptionInstance(_subscription)) {
+            subscription = _subscription;
+        }
+
+        if (subscription) {
+            let topic: GooglePubSubTopic | string | null = subscription.topic ?? _topic ?? null;
+            if (this.isString(_topic)) {
+                topic = this.getTopic(_topic);
+            } else if (this.isTopicInstance(_topic)) {
+                topic = _topic;
+            }
+            if (topic) {
+                return from(
+                    this.getTopic(topic).createSubscription(
+                        subscription.name,
+                        createSubscriptionOptions,
+                    ),
+                ).pipe(map((subscriptionResponse) => subscriptionResponse[0]));
+            }
+        }
+        return of(null);
+    }
+
+    /**
+     * Register a listener for from `message` events on the PubSub client for the
+     * supplied subscription
+     * @param subscription
+     * @returns
+     */
+    public listenForMessages(
+        subscription: string | GooglePubSubSubscription,
+    ): Observable<GooglePubSubMessage> {
+        return fromEvent(
+            this.getSubscription(subscription),
+            GOOGLE_PUBSUB_SUBSCRIPTION_MESSAGE_EVENT,
+        );
+    }
+
+    /**
+     * Get a Topic instance from the PubSub client. If a Topic instance is supplied
+     * then the returned Topic will point to the same instance.
+     * @param _topic
+     * @returns
+     */
+    public getTopic(_topic: string | GooglePubSubTopic): GooglePubSubTopic {
+        if (this.isTopicInstance(_topic)) {
+            return _topic;
+        } else {
+            return this.googlePubSubClient.topic(_topic);
+        }
+    }
+
+    /**
+     * Returns a boolean indicating if the requested Topic exists
+     * @param subscription
+     * @returns
+     */
+    public topicExists(topic: string | GooglePubSubTopic): Observable<boolean> {
+        return from(this.getTopic(topic).exists()).pipe(this.parseExistsResponse);
+    }
+
+    /**
+     * Attempts to create a new Topic instance
+     * @param _subscription
+     * @param _topic
+     * @returns
+     */
+    public createTopic(topic: string | GooglePubSubTopic): Observable<GooglePubSubTopic> {
+        return from(this.getTopic(topic).create()).pipe(map((topicResponse) => topicResponse[0]));
+    }
+
+    /**
+     * Returns client health information
+     * @returns
+     */
+    public getHealth(): ClientHealthInfo {
+        return {
+            isOpen: this.googlePubSubClient.isOpen,
+            isEmulator: this.googlePubSubClient.isEmulator,
+            projectId: this.googlePubSubClient.projectId,
+        };
+    }
+
+    /**
+     * Dispatch an outgoing message event
+     * @param packet
+     * @returns
+     */
+    protected dispatchEvent(packet: ReadPacket<Buffer>): Promise<any> {
         const topic = packet.pattern;
-        const { data } = this.serializer.serialize(packet);
-        return this.googlePubSubClient.topic(topic).publish(data);
+        return this.googlePubSubClient.topic(topic).publish(packet.data);
     }
 
-    protected initializeDeserializer(options?: GooglePubSubOptions): void {
-        this.deserializer = options?.deserializer
-            ? options.deserializer
-            : new GooglePubSubMessageDeserializer();
+    /**
+     * Parses the response from a `.exists()` call on either a Topic or Subscription
+     */
+    private parseExistsResponse: OperatorFunction<ExistsResponse, boolean> = map(
+        (existsResponse: ExistsResponse) => existsResponse[0],
+    );
+
+    /**
+     * Indicates if the provided value is a string
+     * @param str
+     */
+    private isString(str?: string | GooglePubSubTopic | GooglePubSubSubscription): str is string {
+        return typeof str === 'string';
     }
 
-    protected initializeSerializer(options?: GooglePubSubOptions): void {
-        this.serializer = options?.serializer
-            ? options.serializer
-            : new GooglePubSubMessageSerializer();
+    /**
+     * Indicates if the provided value is a Topic instance
+     * @param topic
+     */
+    private isTopicInstance(topic?: GooglePubSubTopic | string): topic is GooglePubSubTopic {
+        return topic instanceof Topic;
+    }
+
+    /**
+     * Indicates if the provided value is a Subscription instance
+     * @param subscription
+     */
+    private isSubscriptionInstance(
+        subscription?: GooglePubSubSubscription | string,
+    ): subscription is GooglePubSubSubscription {
+        return subscription instanceof Subscription;
     }
 
     /**
      * This refers to an internal publish method to NestJS, please use `publishToTopic`.
      */
-    protected publish(
-        packet: ReadPacket<any>,
-        callback: (packet: WritePacket<any>) => void,
-    ): Function {
+    protected publish(packet: ReadPacket<any>, callback: (packet: WritePacket<any>) => void): any {
         throw new Error('Method intentionally not implemented.');
-    }
-
-    public connect(): Promise<void> {
-        return Promise.resolve();
     }
 }
