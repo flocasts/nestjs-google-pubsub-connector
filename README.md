@@ -137,3 +137,19 @@ new ClientGooglePubSub()
         Buffer.from(msg),
     );
 ```
+
+
+### Road Map
+  - [ ] make commitizen work
+  - [ ] set up npm package
+    - [ ] cloud build tagging for the npm packages
+  - [ ] implement nack strategies
+  - [ ] 80% test coverage
+  - [ ] Switch to a factory for the strategy (rather than using `new`)
+  - [ ] More fleshed out client
+  - [ ] Pass subscription options
+  - [ ] Implement (de)serializers
+     - [ ] Incoming Request
+     - [ ] Outgoing request
+     - [ ] Incoming Response
+     - [ ] Outgoing Response
