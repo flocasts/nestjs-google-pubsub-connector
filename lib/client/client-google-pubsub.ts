@@ -1,5 +1,4 @@
 import {
-    ClientConfig as GooglePubSubClientConfig,
     CreateSubscriptionOptions,
     ExistsResponse,
     PubSub,
@@ -14,14 +13,10 @@ import { GOOGLE_PUBSUB_SUBSCRIPTION_MESSAGE_EVENT } from '../constants';
 import {
     ClientHealthInfo,
     GooglePubSubMessage,
+    GooglePubSubOptions,
     GooglePubSubSubscription,
     GooglePubSubTopic,
 } from '../interfaces';
-
-export interface GooglePubSubOptions {
-    pubSubClient?: PubSub;
-    pubSubClientConfig?: GooglePubSubClientConfig;
-}
 
 /**
  * Proxy for the Google PubSub client

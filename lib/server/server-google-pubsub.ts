@@ -143,7 +143,10 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
             if (topicExists) {
                 const subscriptionName: string =
                     metadata.subscriptionName ||
-                    this.subscriptionNamingStrategy.generateSubscriptionName(metadata.topicName!);
+                    this.subscriptionNamingStrategy.generateSubscriptionName(
+                        metadata.topicName!,
+                        metadata.subscriptionName!,
+                    );
                 topic = this.googlePubSubClient.getTopic(metadata.topicName!);
                 subscription = await this.googlePubSubClient
                     .createSubscription(subscriptionName, topic)

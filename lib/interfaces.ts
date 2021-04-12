@@ -1,4 +1,4 @@
-import { Message, Subscription, Topic } from '@google-cloud/pubsub';
+import { ClientConfig, Message, PubSub, Subscription, Topic } from '@google-cloud/pubsub';
 import { ClientGooglePubSub } from './client';
 import { GooglePubSubContext } from './ctx-host';
 
@@ -30,7 +30,7 @@ export interface GooglePubSubTransportOptions {
     nackStrategy?: NackStrategy;
 }
 
-export type GenerateSubscriptionName = (subscriptionName: string) => string;
+export type GenerateSubscriptionName = (topicName: string, subscriptionName: string) => string;
 export interface SubscriptionNamingStrategy {
     generateSubscriptionName: GenerateSubscriptionName;
 }
@@ -60,4 +60,9 @@ export interface ClientHealthInfo {
     isOpen: boolean;
     isEmulator: boolean;
     projectId: string;
+}
+
+export interface GooglePubSubOptions {
+    pubSubClient?: PubSub;
+    pubSubClientConfig?: ClientConfig;
 }
