@@ -15,7 +15,9 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "type": "pwa-node"
+            "type": "pwa-node",
+            "outputCapture": "std",
+            "console": "internalConsole",
         },
         {
             "type": "pwa-node",

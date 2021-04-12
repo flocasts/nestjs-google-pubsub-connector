@@ -9,7 +9,7 @@ import {
 import { Injectable } from '@nestjs/common';
 import { ClientProxy, ReadPacket, WritePacket } from '@nestjs/microservices';
 import { from, fromEvent, Observable, of, OperatorFunction } from 'rxjs';
-import { first, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { GOOGLE_PUBSUB_SUBSCRIPTION_MESSAGE_EVENT } from '../constants';
 import {
     ClientHealthInfo,
@@ -108,17 +108,12 @@ export class ClientGooglePubSub extends ClientProxy {
 
         if (subscription) {
             let topic: GooglePubSubTopic | string | null = subscription.topic ?? _topic ?? null;
-            if (this.isString(_topic)) {
-                topic = this.getTopic(_topic);
-            } else if (this.isTopicInstance(_topic)) {
-                topic = _topic;
+            if (this.isString(topic)) {
+                topic = this.getTopic(topic);
             }
-            if (topic) {
+            if (this.isTopicInstance(topic)) {
                 return from(
-                    this.getTopic(topic).createSubscription(
-                        subscription.name,
-                        createSubscriptionOptions,
-                    ),
+                    topic.createSubscription(subscription.name, createSubscriptionOptions),
                 ).pipe(map((subscriptionResponse) => subscriptionResponse[0]));
             }
         }
@@ -206,7 +201,9 @@ export class ClientGooglePubSub extends ClientProxy {
      * Indicates if the provided value is a string
      * @param str
      */
-    private isString(str?: string | GooglePubSubTopic | GooglePubSubSubscription): str is string {
+    private isString(
+        str?: string | GooglePubSubTopic | GooglePubSubSubscription | null,
+    ): str is string {
         return typeof str === 'string';
     }
 
@@ -214,7 +211,7 @@ export class ClientGooglePubSub extends ClientProxy {
      * Indicates if the provided value is a Topic instance
      * @param topic
      */
-    private isTopicInstance(topic?: GooglePubSubTopic | string): topic is GooglePubSubTopic {
+    private isTopicInstance(topic?: GooglePubSubTopic | string | null): topic is GooglePubSubTopic {
         return topic instanceof Topic;
     }
 
@@ -223,7 +220,7 @@ export class ClientGooglePubSub extends ClientProxy {
      * @param subscription
      */
     private isSubscriptionInstance(
-        subscription?: GooglePubSubSubscription | string,
+        subscription?: GooglePubSubSubscription | string | null,
     ): subscription is GooglePubSubSubscription {
         return subscription instanceof Subscription;
     }

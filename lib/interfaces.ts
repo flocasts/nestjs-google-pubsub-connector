@@ -5,6 +5,8 @@ import { GooglePubSubContext } from './ctx-host';
 export type GooglePubSubMessage = Message;
 export type GooglePubSubTopic = Topic;
 export type GooglePubSubSubscription = Subscription;
+export type AckFunction = () => void;
+export type NackFunction = () => void;
 export interface GooglePubSubSubscriptionPatternMetadata {
     subscriptionName: string;
     topicName?: string;
@@ -34,8 +36,8 @@ export interface SubscriptionNamingStrategy {
 }
 
 export type AckHandler = (
-    ack: () => void,
-    nack: () => void,
+    ack: AckFunction,
+    nack: NackFunction,
     ctx: GooglePubSubContext,
 ) => Promise<void>;
 
@@ -45,8 +47,8 @@ export interface AckStrategy {
 
 export type NackHandler = (
     error: Error,
-    ack: () => void,
-    nack: () => void,
+    ack: AckFunction,
+    nack: NackFunction,
     ctx: GooglePubSubContext,
 ) => Promise<void>;
 
