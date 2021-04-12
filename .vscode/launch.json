@@ -37,9 +37,6 @@
             ],
             "outputCapture": "std",
             "console": "internalConsole",
-            "env": {
-                "GOOGLE_APPLICATION_CREDENTIALS": "/Users/haroldwaters/google-keys/flosports-174016-be4fa81cdbee.json"
-            }
         }
     ]
 }
