@@ -48,8 +48,11 @@ import {
 } from '@flosports/nestjs-google-pubsub-microservice';
 
 export class BasicSubscriptionNamingStrategy implements SubscriptionNamingStrategy {
-    public generateSubscriptionName(topicName: string, subscriptionName: string): string {
-        return `${topicName}-${subscriptionName}`;
+    public generateSubscriptionName(topicName: string, subscriptionName?: string): string {
+        if (subscriptionName) {
+            return subscriptionName;
+        }
+        return `${topicName}-sub`
     }
 }
 ```
