@@ -25,8 +25,17 @@
     "google",
     "pubsub"
   ],
-  "author": "Flosports",
+  "author": "Harold Waters <harold.waters@flosports.tv>",
+  "contributors": [
+    {
+      "name": "William Reynolds",
+      "email": "william.reynolds@flosports.tv"
+    }
+  ],
   "license": "ISC",
+  "release": {
+    "branches": ["master", "next"]
+  },
   "devDependencies": {
     "@commitlint/cli": "^12.1.1",
     "@commitlint/config-conventional": "^12.1.1",
