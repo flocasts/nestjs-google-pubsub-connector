@@ -96,10 +96,9 @@ export class ClientGooglePubSub extends ClientProxy {
     ): Observable<GooglePubSubSubscription | null> {
         const subscription = this.getSubscription(_subscription);
 
-        if (_topic == null) return of(null);
-        if (subscription.topic == null) return of(null);
+        if (subscription.topic == null && _topic == null) return of(null);
 
-        const topic = this.getTopic(subscription.topic ?? _topic);
+        const topic = this.getTopic(subscription.topic ?? _topic!);
         return from(topic.createSubscription(subscription.name, createSubscriptionOptions)).pipe(
             map((subscriptionResponse) => subscriptionResponse[0]),
             mergeMap((resp) => {

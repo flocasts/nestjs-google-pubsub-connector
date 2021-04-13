@@ -96,7 +96,7 @@ describe('ClientGooglePubSub', () => {
             const topic = new Topic(client, topicName);
             mockedCreateSubscription = jest
                 .spyOn(topic, 'createSubscription')
-                .mockImplementation(() => Promise.resolve([]));
+                .mockImplementation(() => Promise.resolve([':-)']));
             mockedTopicFunction.mockImplementationOnce(() => topic);
         });
 
