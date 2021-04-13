@@ -41,21 +41,21 @@
     "@nestjs/core": "^7.6.15",
     "@nestjs/microservices": "^7.6.15",
     "reflect-metadata": "^0.1.13",
-    "rxjs": ">=6"
+    "rxjs": "^6.6.7"
   },
   "dependencies": {
     "@google-cloud/pubsub": "^2.10.0"
   },
   "peerDependencies": {
-    "@nestjs/common": "^7.6.15",
-    "@nestjs/core": "^7.6.15",
-    "@nestjs/microservices": "^7.6.15",
+    "@nestjs/common": ">=7.0 && <8",
+    "@nestjs/core": ">=7.0 && <8",
+    "@nestjs/microservices": ">=7.0 && <8",
     "reflect-metadata": "^0.1.13",
-    "rxjs": ">=6"
+    "rxjs": ">=6 && <7"
   },
   "lint-staged": {
-    "{lib,test}/**/*.ts": "prettier --write",
-    "{lib,apps,libs,test}/**/*.ts": "eslint --fix"
+    "{lib,test,examples}/**/*.ts": "prettier --write",
+    "{lib,apps,examples,libs,test}/**/*.ts": "eslint --fix"
   },
   "config": {
     "commitizen": {
@@ -65,7 +65,8 @@
   "husky": {
     "hooks": {
       "prepare-commit-msg": "exec < /dev/tty && git cz --hook",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "pre-push": "npm run build && npm run test"
     }
   }
 }
