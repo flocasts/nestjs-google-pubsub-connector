@@ -124,7 +124,7 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
      * Resolve subscriptions and create them if `createSubscription` is true
      * @param pattern
      */
-    public async getSubscriptionFromPattern(pattern: string): Promise<void> {
+    private async getSubscriptionFromPattern(pattern: string): Promise<void> {
         const metadata: GooglePubSubPatternMetadata = JSON.parse(pattern);
         let subscription: GooglePubSubSubscription | null = null;
 
@@ -155,10 +155,7 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
         }
 
         if (subscription) {
-            this.logger.log({
-                msg: `Mapped {${subscription.name}} handler`,
-                subscriptionName: subscription.name,
-            });
+            this.logger.log(`ckMapped {${subscription.name}} handler`);
             this.subscriptions.set(pattern, subscription);
         }
     }

@@ -6,6 +6,7 @@
   "scripts": {
     "test": "jest",
     "test:coverage": "jest --coverage",
+    "test:debug": "jest --max-workers=1",
     "build": "tsc",
     "prepare": "husky install",
     "format": "prettier \"lib/**/*.ts\" \"examples/**/*.ts\"  -c",

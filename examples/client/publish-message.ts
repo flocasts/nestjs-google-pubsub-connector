@@ -1,10 +1,10 @@
-import { ClientGooglePubSub } from '../../'
+import { ClientGooglePubSub } from '../../';
 
-const topicName: string = process.argv[2]
-const message: string = process.argv[3]
+const topicName: string = process.argv[2];
+const message: string = process.argv[3];
 
 function printHelp() {
-    console.log(`Usage: ${process.argv0} ${process.argv[1]} TOPIC_NAME MESSAGE`)
+    console.log(`Usage: ${process.argv0} ${process.argv[1]} TOPIC_NAME MESSAGE`);
 }
 
 function publishMessage() {
@@ -21,4 +21,4 @@ if (!topicName || !message) {
 publishMessage()
     .then(() => console.log(`Message published to ${topicName}`))
     .catch((error) => console.log(`An error ocurred while publishing: ${error.message}`))
-    .finally(() => process.exit(0))
+    .finally(() => process.exit(0));
