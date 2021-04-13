@@ -155,6 +155,10 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
         }
 
         if (subscription) {
+            this.logger.log({
+                msg: `Mapped {${subscription.name}} handler`,
+                subscriptionName: subscription.name,
+            });
             this.subscriptions.set(pattern, subscription);
         }
     }

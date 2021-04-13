@@ -22,7 +22,7 @@
         {
             "type": "pwa-node",
             "request": "launch",
-            "name": "Launch Program",
+            "name": "Launch Example Server",
             "skipFiles": [
                 "<node_internals>/**"
             ],
@@ -31,9 +31,9 @@
                 "${workspaceFolder}/**",
                 "!**/node_modules/**"
             ],
-            "program": "${workspaceFolder}/test/test-main.ts",
+            "program": "${workspaceFolder}/examples/server/main.ts",
             "outFiles": [
-                "${workspaceFolder}/**/*.js"
+                "${workspaceFolder}/dist/**/*.js"
             ],
             "outputCapture": "std",
             "console": "internalConsole",
