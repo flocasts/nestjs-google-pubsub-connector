@@ -1,10 +1,13 @@
 steps:
-- name: "npm install"
+- name: node
+  id: "npm run ci"
   entrypoint: npm
   args: ['ci']
-- name: "npm run build"
+- name: node
+  id: "npm run build"
   entrypoint: npm
   args: ['run', 'build']
-- name: "npm run test:coverage"
+- name: node
+  id: "npm run test:coverage"
   entrypoint: npm
   args: ['run', 'test:coverage']
