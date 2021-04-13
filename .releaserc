@@ -1,0 +1,10 @@
+{
+  "release": {
+    "branches": [
+      {
+        "name": "main",
+        "channel": false
+      }
+    ]
+  }
+}

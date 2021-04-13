@@ -1,8 +1,12 @@
 {
   "name": "@flosportsinc/nestjs-google-pubsub-microservice",
-  "version": "0.0.1",
+  "version": "0.0.0-development",
   "description": "A NestJS Custom Transport Strategy for Google PubSub",
   "main": "dist/index.js",
+  "repository": {
+    "url": "git+https://github.com/flocasts/nestjs-google-pubsub-microservice.git",
+    "type": "git"
+  },
   "files": [
     "dist"
   ],
@@ -11,9 +15,10 @@
     "test:coverage": "jest --coverage",
     "test:debug": "jest --max-workers=1",
     "build": "tsc",
-    "prepare": "husky install",
+    "prepare": "husky install && npm run build",
     "format": "prettier \"lib/**/*.ts\" \"examples/**/*.ts\"  -c",
-    "format:fix": "npm run format -- --write"
+    "format:fix": "npm run format -- --write",
+    "semantic-release": "npx --no-install semantic-release"
   },
   "keywords": [
     "nestjs",
@@ -41,6 +46,7 @@
     "prettier": "2.2.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^6.6.7",
+    "semantic-release": "^17.4.2",
     "ts-jest": "^26.5.4",
     "ts-node": "^9.1.1",
     "typescript": "^4.2.4"
