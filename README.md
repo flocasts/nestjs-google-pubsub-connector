@@ -138,18 +138,28 @@ new ClientGooglePubSub()
     );
 ```
 
-
-### Road Map
-  - [ ] make commitizen work
-  - [ ] set up npm package
-    - [ ] cloud build tagging for the npm packages
+### The Road to 1.0.0 (in no particular order)
+  - [ ] Make commitizen work
+  - [ ] Set up npm package
+     - [ ] Cloud Build release for the npm package
   - [ ] implement nack strategies
   - [ ] 80% test coverage
   - [ ] Switch to a factory for the strategy (rather than using `new`)
-  - [ ] More fleshed out client
-  - [ ] Pass subscription options
+  - [ ] More fleshed out client proxy
+     - [ ] Support for deletes
+     - [ ] Support for more message types (string, POJOs)
+     - [ ] Send attributes in message
+  - [ ] Pass subscription options from server to created subscriptions
+  - [ ] Working examples directory
+  - [ ] Importable module for client proxy that provides an injectable service
+
+### Long term goals
+  - [ ] Utils for testing PubSub
+    - [ ] PubSub client mock
+    - [ ] PubSub client proxy mock
   - [ ] Implement (de)serializers
-     - [ ] Incoming Request
-     - [ ] Outgoing request
-     - [ ] Incoming Response
-     - [ ] Outgoing Response
+    - [ ] Incoming Request
+    - [ ] Outgoing request
+    - [ ] Incoming Response
+    - [ ] Outgoing Response
+  - [ ] Implement request/response between client/server 
