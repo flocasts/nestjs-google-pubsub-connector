@@ -7,8 +7,8 @@ import {
 } from '@google-cloud/pubsub';
 import { Injectable } from '@nestjs/common';
 import { ClientProxy, ReadPacket, WritePacket } from '@nestjs/microservices';
-import { from, fromEvent, Observable, of, OperatorFunction } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { from, fromEvent, Observable, of, OperatorFunction, throwError } from 'rxjs';
+import { map, mergeMap } from 'rxjs/operators';
 import { GOOGLE_PUBSUB_SUBSCRIPTION_MESSAGE_EVENT } from '../constants';
 import {
     ClientHealthInfo,
@@ -94,25 +94,23 @@ export class ClientGooglePubSub extends ClientProxy {
         _topic?: string | GooglePubSubTopic,
         createSubscriptionOptions?: CreateSubscriptionOptions,
     ): Observable<GooglePubSubSubscription | null> {
-        let subscription: GooglePubSubSubscription | string | null = null;
-        if (this.isString(_subscription)) {
-            subscription = this.getSubscription(_subscription);
-        } else if (this.isSubscriptionInstance(_subscription)) {
-            subscription = _subscription;
-        }
+        const subscription = this.getSubscription(_subscription);
 
-        if (subscription) {
-            let topic: GooglePubSubTopic | string | null = subscription.topic ?? _topic ?? null;
-            if (this.isString(topic)) {
-                topic = this.getTopic(topic);
-            }
-            if (this.isTopicInstance(topic)) {
-                return from(
-                    topic.createSubscription(subscription.name, createSubscriptionOptions),
-                ).pipe(map((subscriptionResponse) => subscriptionResponse[0]));
-            }
-        }
-        return of(null);
+        if (_topic == null) return of(null);
+        if (subscription.topic == null) return of(null);
+
+        const topic = this.getTopic(subscription.topic ?? _topic);
+        return from(topic.createSubscription(subscription.name, createSubscriptionOptions)).pipe(
+            map((subscriptionResponse) => subscriptionResponse[0]),
+            mergeMap((resp) => {
+                if (resp === undefined) {
+                    return throwError(
+                        'Empty response when creating subscription: ' + subscription.name,
+                    );
+                }
+                return of(resp);
+            }),
+        );
     }
 
     /**
