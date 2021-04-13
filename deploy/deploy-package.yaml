@@ -1,0 +1,13 @@
+steps:
+- name: node:alpine
+  id: "npm run ci"
+  entrypoint: npm
+  args: ['ci']
+- name: node:alpine
+  id: "npm run build"
+  entrypoint: npm
+  args: ['run', 'build']
+- name: node:alpine
+  id: "npm run test:coverage"
+  entrypoint: npm
+  args: ['run', 'test:coverage']
