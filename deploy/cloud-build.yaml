@@ -1,0 +1,10 @@
+steps:
+- name: npm install
+  entrypoint: npm
+  args: ['ci']
+- name: npm run build
+  entrypoint: npm
+  args: ['run', 'build']
+- name: npm run test:coverage
+  entrypoint: npm
+  args: ['run', 'test:coverage']
