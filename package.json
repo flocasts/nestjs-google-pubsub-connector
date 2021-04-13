@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
+    "test:coverage": "jest --coverage",
     "build": "tsc",
     "prepare": "husky install",
     "format": "prettier \"lib/**/*.ts\" \"examples/**/*.ts\"  -c",
