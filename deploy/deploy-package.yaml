@@ -1,13 +1,20 @@
 steps:
-- name: node:alpine
+- name: node
   id: "npm run ci"
   entrypoint: npm
   args: ['ci']
-- name: node:alpine
+- name: node
   id: "npm run build"
   entrypoint: npm
   args: ['run', 'build']
-- name: node:alpine
+- name: node
   id: "npm run test:coverage"
   entrypoint: npm
   args: ['run', 'test:coverage']
+- name: node
+  id: "npm run semantic-release -- -d false --no-ci"
+  entrypoint: npm
+  env:
+    - 'NPM_TOKEN=$_NPM_TOKEN'
+    - 'GH_TOKEN=$_GH_TOKEN'
+  args: ['run', 'semantic-release', '--', '-d', 'false', '--no-ci']

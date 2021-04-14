@@ -1,8 +1,12 @@
 {
   "name": "@flosportsinc/nestjs-google-pubsub-microservice",
-  "version": "0.0.1",
+  "version": "0.0.0-development",
   "description": "A NestJS Custom Transport Strategy for Google PubSub",
   "main": "dist/index.js",
+  "repository": {
+    "url": "git+https://github.com/flocasts/nestjs-google-pubsub-microservice.git",
+    "type": "git"
+  },
   "files": [
     "dist"
   ],
@@ -11,18 +15,33 @@
     "test:coverage": "jest --coverage",
     "test:debug": "jest --max-workers=1",
     "build": "tsc",
-    "prepare": "husky install",
+    "prepare": "husky install && npm run build",
     "format": "prettier \"lib/**/*.ts\" \"examples/**/*.ts\"  -c",
-    "format:fix": "npm run format -- --write"
+    "format:fix": "npm run format -- --write",
+    "semantic-release": "npx --no-install semantic-release"
   },
   "keywords": [
     "nestjs",
     "google",
     "pubsub"
   ],
-  "author": "Flosports",
+  "author": "Harold Waters <harold.waters@flosports.tv>",
+  "contributors": [
+    {
+      "name": "William Reynolds",
+      "email": "william.reynolds@flosports.tv"
+    }
+  ],
   "license": "ISC",
+  "release": {
+    "branches": ["master", "next"]
+  },
   "devDependencies": {
+    "@commitlint/cli": "^12.1.1",
+    "@commitlint/config-conventional": "^12.1.1",
+    "@nestjs/common": "^7.6.15",
+    "@nestjs/core": "^7.6.15",
+    "@nestjs/microservices": "^7.6.15",
     "@types/jest": "^26.0.22",
     "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "^4.21.0",
@@ -34,14 +53,12 @@
     "jest": "^26.6.3",
     "lint-staged": "^10.5.4",
     "prettier": "2.2.1",
+    "reflect-metadata": "^0.1.13",
+    "rxjs": "^6.6.7",
+    "semantic-release": "^17.4.2",
     "ts-jest": "^26.5.4",
     "ts-node": "^9.1.1",
-    "typescript": "^4.2.4",
-    "@nestjs/common": "^7.6.15",
-    "@nestjs/core": "^7.6.15",
-    "@nestjs/microservices": "^7.6.15",
-    "reflect-metadata": "^0.1.13",
-    "rxjs": "^6.6.7"
+    "typescript": "^4.2.4"
   },
   "dependencies": {
     "@google-cloud/pubsub": "^2.10.0"
