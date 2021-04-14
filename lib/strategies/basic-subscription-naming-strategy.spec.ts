@@ -1,4 +1,4 @@
-import { BasicSubscriptionNamingStrategy } from './basic-subscription-name-strategy';
+import { BasicSubscriptionNamingStrategy } from './basic-subscription-naming-strategy';
 
 const topicName = 'expendables-1';
 const subscriptionName = 'totally-rocks';
