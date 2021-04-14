@@ -45,8 +45,8 @@ export interface AckStrategy {
     ack: AckHandler;
 }
 
-export type NackHandler = (
-    error: Error,
+export type NackHandler<T = unknown> = (
+    error: T,
     ack: AckFunction,
     nack: NackFunction,
     ctx: GooglePubSubContext,

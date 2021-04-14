@@ -1,7 +1,7 @@
 import { Logger } from '@nestjs/common';
 import { CustomTransportStrategy, ReadPacket, Server } from '@nestjs/microservices';
-import { from, merge, Observable, Subscription } from 'rxjs';
-import { map, mergeMap } from 'rxjs/operators';
+import { from, merge, Observable, of, Subscription, throwError } from 'rxjs';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 import { ClientGooglePubSub } from '../client';
 import { GooglePubSubContext as GooglePubSubContext } from '../ctx-host/google-pubsub.context';
 import { GooglePubSubMessageDeserializer } from '../deserializers';
@@ -111,11 +111,7 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
 
         // Pass every emitted event through the same pipeline
         this.listenerSubscription = merge(...listeners)
-            .pipe(
-                map(this.deserializeAndAddContext),
-                mergeMap(this.handleMessage),
-                mergeMap(([ack, nack, ctx]) => this.ackStrategy.ack(ack, nack, ctx)),
-            )
+            .pipe(map(this.deserializeAndAddContext), mergeMap(this.handleMessage))
             .subscribe();
         callback();
     }
@@ -198,12 +194,32 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
         ReadPacket<GooglePubSubMessage>,
         GooglePubSubContext,
     ]): Observable<[AckFunction, NackFunction, GooglePubSubContext]> => {
-        return from(this.handleEvent(pattern, packet, ctx)).pipe(
-            map<void, [AckFunction, AckFunction, GooglePubSubContext]>(() => [
-                packet.data.ack.bind(packet.data),
-                packet.data.nack.bind(packet.data),
-                ctx,
-            ]),
+        return of(this.getHandlerByPattern(pattern)).pipe(
+            mergeMap((handler) => {
+                if (handler == null)
+                    throw Error('Transport Error: Handler should never be nullish.');
+                return from(handler(packet, ctx)).pipe(mergeMap((i) => i));
+            }),
+            catchError((err) => {
+                return of(err);
+            }),
+            map<unknown, [AckFunction, AckFunction, GooglePubSubContext]>((err) => {
+                if (err) {
+                    this.nackStrategy.nack(
+                        err,
+                        packet.data.ack.bind(packet.data),
+                        packet.data.nack.bind(packet.data),
+                        ctx,
+                    );
+                } else {
+                    this.ackStrategy.ack(
+                        packet.data.ack.bind(packet.data),
+                        packet.data.nack.bind(packet.data),
+                        ctx,
+                    );
+                }
+                return [packet.data.ack.bind(packet.data), packet.data.nack.bind(packet.data), ctx];
+            }),
         );
     };
 

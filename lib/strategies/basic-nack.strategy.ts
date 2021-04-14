@@ -3,7 +3,7 @@ import { NackStrategy } from '../interfaces';
 
 export class BasicNackStrategy implements NackStrategy {
     public nack(
-        error: Error,
+        error: unknown,
         ack: () => void,
         nack: () => void,
         ctx: GooglePubSubContext,
