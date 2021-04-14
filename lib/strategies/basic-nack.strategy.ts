@@ -1,11 +1,11 @@
 import { GooglePubSubContext } from '../ctx-host';
-import { NackStrategy } from '../interfaces';
+import { AckFunction, NackFunction, NackStrategy } from '../interfaces';
 
 export class BasicNackStrategy implements NackStrategy {
     public nack(
         error: unknown,
-        ack: () => void,
-        nack: () => void,
+        ack: AckFunction,
+        nack: NackFunction,
         ctx: GooglePubSubContext,
     ): Promise<void> {
         if (ctx.getAutoNack()) {

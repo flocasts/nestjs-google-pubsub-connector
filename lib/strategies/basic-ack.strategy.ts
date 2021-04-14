@@ -1,8 +1,8 @@
 import { GooglePubSubContext } from '../ctx-host';
-import { AckStrategy } from '../interfaces';
+import { AckFunction, AckStrategy, NackFunction } from '../interfaces';
 
 export class BasicAckStrategy implements AckStrategy {
-    public ack(ack: () => void, nack: () => void, ctx: GooglePubSubContext): Promise<void> {
+    public ack(ack: AckFunction, nack: NackFunction, ctx: GooglePubSubContext): Promise<void> {
         if (ctx.getAutoAck()) {
             ack();
         }

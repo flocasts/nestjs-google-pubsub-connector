@@ -12,7 +12,7 @@
   ],
   "scripts": {
     "test": "jest",
-    "test:coverage": "jest --coverage",
+    "test:coverage": "jest --coverage --ci",
     "test:debug": "jest --max-workers=1",
     "build": "tsc",
     "prepare": "husky install && npm run build",

@@ -7,7 +7,7 @@ easy integration with Google PubSub.
 
 - Seamlessly integrate your subscription listeners with the robust NestJS framework
 - Creates subscriptions on demand
-- Extensible
+- Extensible:
   - Subscription naming strategies
   - Ack/nack strategies
 - Decorators! Decorators!! Decorators!!!
@@ -19,42 +19,103 @@ few configuration parameters, as well as an optional PubSub instance.
 
 ### Decorators
 
-#### @GooglePubSubMessageHandler
-Bread and butter, this takes a subscription name and optionally a topic name. A subscription will be
-created if it does not already exits **if**:
-- A topic name is supplied
-- `createSubscriptions` was set to true when the microservice was created
-
-### @GooglePubSubMessageBody
-This will retrieve and `JSON.parse()` the body of the incoming message.
-
-### @Ack
-This will return a function that will `ack` the incoming message.
-**N.B.** this will disable any auto-acking.
-
-### @Nack
-Same as above, but for nacking.
-
+| Name | Desscription |
+-------|-----------
+| @GooglePubSubMessageHandler | Takes a subscription name and optionally a topic name. A subscription will be created if it does not already exits **if**: a topic name is supplied  **and** `createSubscriptions` was set to true when the microservice was created |
+| @GooglePubSubMessageBody | This will retrieve and `JSON.parse()` the body of the incoming message.
+| @Ack | This will return a function that will `ack` the incoming message. </br> **N.B.** this will disable any auto-acking.|
+| @Nack | Same as above, but for nacking. |
+-------------
 
 ### Subscription creation
-If `createSubscriptions` is set as true on setup, then the service will attempt to create a new
-subscription if the requested subscription for a handler is not already present.
-The microservice takes a `subscriptionNamingStrategy` as an argument, which expects a class conforming
-to the `SubscriptionNamingStrategy` interface. A basic strategy is included by default:
-
+If `createSubscriptions` is set as true on transporter setup, then the service will
+attempt to create a new subscription if the requested subscription for a handler is
+not already present.The microservice takes a `subscriptionNamingStrategy` as an
+argument, which expects a class conforming to the `SubscriptionNamingStrategy`
+interface. A basic strategy is included by default:
 ```typescript
 import {
     SubscriptionNamingStrategy
 } from '@flosports/nestjs-google-pubsub-microservice';
 
-export class BasicSubscriptionNamingStrategy implements SubscriptionNamingStrategy {
-    public generateSubscriptionName(topicName: string, subscriptionName: string): string {
-        return `${topicName}-${subscriptionName}`;
+export class BasicSubscriptionNamingStrategy
+    implements SubscriptionNamingStrategy {
+    public generateSubscriptionName(
+        topicName: string,
+        subscriptionName?: string
+    ): string {
+        if (subscriptionName) {
+            return subscriptionName;
+        }
+        return `${topicName}-sub`
     }
 }
 ```
 
 The string returned from this strategy will be used as the name for the created subscription.
+
+### Acking and Nacking
+In the interest of giving you, the user, the power over your own destiny this
+library takes both a "hands off" and "just works" approach to acking and nacking
+messages. This is accomplished through "strategies" confirming to the `AckStrategy`,
+`NackStrategy` interfaces which are supplied at transport creation.
+
+#### Ack Strategies
+Ack strategies are guaranteed to run after a handler completes successfully, and
+expose functions for acking and nacking the message, as well as the messages
+`GooglePubSubContext`. The default is shown in the example below:
+```typescript
+import { GooglePubSubContext } from '../ctx-host';
+import { AckFunction, AckStrategy, NackFunction } from '../interfaces';
+
+export class BasicAckStrategy implements AckStrategy {
+    public ack(ack: AckFunction, nack: NackFunction, ctx: GooglePubSubContext): Promise<void> {
+        if (ctx.getAutoAck()) {
+            ack();
+        }
+        return Promise.resolve();
+    }
+}
+```
+
+The flow here is simple, if autoAck is set to true then this message will be acked
+and the function will return.
+
+#### Nack Strategies
+Nack strategies are guaranteed to run if any error is thrown from the handler.
+</br>
+_**N.B.** This will occur _after_ exception filters._
+</br>
+The signature is the same as an ack strategies with the exception of the thrown Error
+(pun intended) being included as the first argument. The default is shown below:
+
+```typescript
+import { GooglePubSubContext } from '../ctx-host';
+import { AckFunction, NackFunction, NackStrategy } from '../interfaces';
+
+export class BasicNackStrategy implements NackStrategy {
+    public nack(
+        error: Error,
+        ack: AckFunction,
+        nack: NackFunction,
+        ctx: GooglePubSubContext,
+    ): Promise<void> {
+        if (ctx.getAutoNack()) {
+            nack();
+        }
+        return Promise.resolve();
+    }
+}
+```
+
+#### No strategy/hybrid acking and nacking
+In addition to using these strategies, the library also makes available ack and nack 
+functions through decorators to the controller as well as from
+the `GooglePubSubContext`. When ack or nack functions are 
+retrieved from the context (either directly or through the 
+decorator) **the autoAck/autoNack methods will return false**,
+disabling the basic strategies and optionally any strategies you
+should choose to create. </br>
 
 ### Usage
 ```typescript
@@ -138,11 +199,8 @@ new ClientGooglePubSub()
     );
 ```
 
-### The Road to 1.0.0 (in no particular order)
-  - [ ] Make commitizen work
-  - [ ] Set up npm package
-     - [ ] Cloud Build release for the npm package
-  - [ ] implement nack strategies
+### Roadmap
+  - [ ] Fully implement nack strategies
   - [ ] 80% test coverage
   - [ ] Switch to a factory for the strategy (rather than using `new`)
   - [ ] More fleshed out client proxy

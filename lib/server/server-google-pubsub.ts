@@ -19,7 +19,7 @@ import {
 } from '../interfaces';
 import { BasicAckStrategy } from '../strategies/basic-ack.strategy';
 import { BasicNackStrategy } from '../strategies/basic-nack.strategy';
-import { BasicSubscriptionNamingStrategy } from '../strategies/basic-subscription-name-strategy';
+import { BasicSubscriptionNamingStrategy } from '../strategies/basic-subscription-naming-strategy';
 
 export class GooglePubSubTransport extends Server implements CustomTransportStrategy {
     /**
