@@ -8,8 +8,6 @@ import { GooglePubSubContext } from '../ctx-host';
 export const GooglePubSubMessageNack = createParamDecorator(
     (data: unknown, ctx: ExecutionContext): (() => void) => {
         const pubSubCtx: GooglePubSubContext = ctx.switchToRpc().getContext();
-        const message = pubSubCtx.getMessage();
-        pubSubCtx.setAutoNack(false);
-        return message.nack.bind(message);
+        return pubSubCtx.getNackFunction();
     },
 );

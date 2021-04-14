@@ -1,5 +1,6 @@
 import { Message } from '@google-cloud/pubsub';
 import { BaseRpcContext } from '@nestjs/microservices/ctx-host/base-rpc.context';
+import { AckFunction, NackFunction } from '../interfaces';
 
 type PubSubContextArgs = [
     // The incoming message
@@ -23,42 +24,52 @@ export class GooglePubSubContext extends BaseRpcContext<PubSubContextArgs> {
     /**
      * Returns the Pubsub Message instance
      */
-    getMessage(): Message {
+    public getMessage(): Message {
         return this.args[0];
     }
 
     /**
      * Returns the raw metadata for the handler
      */
-    getRawMetadata(): string {
+    public getRawMetadata(): string {
         return this.args[1];
+    }
+
+    public getAckFunction(): AckFunction {
+        this.setAutoAck(false);
+        return () => this.args[0].ack();
     }
 
     /**
      * Whether the message attached to this context should be auto-acked
      */
-    getAutoAck(): boolean {
+    public getAutoAck(): boolean {
         return this.args[2];
     }
 
     /**
      * Whether the message attached to this context should be auto-acked
      */
-    setAutoAck(value: boolean): void {
+    private setAutoAck(value: boolean): void {
         this.args[2] = value;
+    }
+
+    public getNackFunction(): NackFunction {
+        this.setAutoNack(false);
+        return () => this.args[0].nack();
     }
 
     /**
      * Whether the message attached to this context should be auto-nacked
      */
-    getAutoNack(): boolean {
+    public getAutoNack(): boolean {
         return this.args[3];
     }
 
     /**
      * Whether the message attached to this context should be auto-nacked
      */
-    setAutoNack(value: boolean): void {
+    private setAutoNack(value: boolean): void {
         this.args[3] = value;
     }
 }
