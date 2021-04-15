@@ -13,7 +13,9 @@ export class ExampleController {
     @GooglePubSubMessageHandler({
         subscriptionName: 'transport-jobs',
     })
-    public theTransporterHandler(@GooglePubSubMessageBody() data: { trunkClosed: boolean }): void {
+    public theTransporterHandler(
+        @GooglePubSubMessageBody('trunkClosed') trunkClosed: boolean,
+    ): void {
         console.log(`Frank Martin`);
     }
 }

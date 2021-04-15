@@ -173,7 +173,7 @@ export class TestController {
         subscriptionName: 'my-subscription-that-or-may-not-exist',
         topicName: 'my-existing-topic'
     })
-    public handler2(@GooglePubSubMessageBody() data: { bar: boolean }): void {
+    public handler2(@GooglePubSubMessageBody('bar') bar:  boolean ): void {
         return this.diService.handleBar(data);
     }
 }
