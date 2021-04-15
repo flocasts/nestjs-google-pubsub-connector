@@ -1,10 +1,10 @@
 {
-  "name": "@flosportsinc/nestjs-google-pubsub-microservice",
+  "name": "@flosportsinc/nestjs-google-pubsub-connector",
   "version": "0.0.0-development",
-  "description": "A NestJS Custom Transport Strategy for Google PubSub",
+  "description": "A NestJS Connector for Google PubSub",
   "main": "dist/index.js",
   "repository": {
-    "url": "git+https://github.com/flocasts/nestjs-google-pubsub-microservice.git",
+    "url": "git+https://github.com/flocasts/nestjs-google-pubsub-connector.git",
     "type": "git"
   },
   "files": [
