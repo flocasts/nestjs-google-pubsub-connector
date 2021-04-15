@@ -1,4 +1,4 @@
-# NestJS Google Pubsub Microservice
+# NestJS Google Pubsub Connector
 
 This package includes two pieces, a NestJS microservice strategy and a client proxy, to enable
 easy integration with Google PubSub.
