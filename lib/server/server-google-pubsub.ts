@@ -198,7 +198,9 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
             mergeMap((handler) => {
                 if (handler == null)
                     throw Error('Transport Error: Handler should never be nullish.');
-                return from(handler(packet, ctx)).pipe(mergeMap((i) => i));
+                return from(handler(packet, ctx)).pipe(
+                    mergeMap((i) => this.transformToObservable(i)),
+                );
             }),
             catchError((err) => {
                 return of(err);
