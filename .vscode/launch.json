@@ -5,11 +5,26 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Debug Tests",
+            "name": "Debug Unit Tests",
             "request": "launch",
             "runtimeArgs": [
                 "run-script",
                 "test:debug"
+            ],
+            "runtimeExecutable": "npm",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "pwa-node",
+            "outputCapture": "std",
+            "console": "internalConsole",
+        },
+        {
+            "name": "Debug e2e Tests",
+            "request": "launch",
+            "runtimeArgs": [
+                "run-script",
+                "test:e2e:debug"
             ],
             "runtimeExecutable": "npm",
             "skipFiles": [

@@ -1,6 +1,6 @@
 import { Logger } from '@nestjs/common';
 import { CustomTransportStrategy, ReadPacket, Server } from '@nestjs/microservices';
-import { from, merge, Observable, of, Subscription, throwError } from 'rxjs';
+import { from, merge, Observable, of, Subscription } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import { ClientGooglePubSub } from '../client';
 import { GooglePubSubContext as GooglePubSubContext } from '../ctx-host/google-pubsub.context';
@@ -23,14 +23,19 @@ import { BasicSubscriptionNamingStrategy } from '../strategies/basic-subscriptio
 
 export class GooglePubSubTransport extends Server implements CustomTransportStrategy {
     /**
-     * Google PubSub client handle
-     */
-    private readonly googlePubSubClient: ClientGooglePubSub;
-
-    /**
      * Logger
      */
     protected readonly logger = new Logger('GooglePubSubTransport');
+
+    /**
+     * Convert the incoming message into a ReadPacket
+     */
+    protected readonly deserializer: GooglePubSubMessageDeserializer;
+
+    /**
+     * Google PubSub client handle
+     */
+    private readonly googlePubSubClient: ClientGooglePubSub;
 
     /**
      * This function will be used to determine subscription names when only a topic name is given
@@ -65,19 +70,14 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
     private readonly autoNack: boolean;
 
     /**
-     * GooglePubSubSubscriptions keyed by pattern
-     */
-    private readonly subscriptions: Map<string, GooglePubSubSubscription> = new Map();
-
-    /**
-     * Convert the incoming message into a ReadPacket
-     */
-    protected readonly deserializer: GooglePubSubMessageDeserializer;
-
-    /**
      * Subscription for all message listeners
      */
     private listenerSubscription: Subscription | null = null;
+
+    /**
+     * GooglePubSubSubscriptions keyed by pattern
+     */
+    private readonly subscriptions: Map<string, GooglePubSubSubscription> = new Map();
 
     constructor(options?: GooglePubSubTransportOptions) {
         super();

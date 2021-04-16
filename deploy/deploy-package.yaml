@@ -8,9 +8,13 @@ steps:
   entrypoint: npm
   args: ['run', 'build:package']
 - name: node
-  id: "npm run test:coverage"
+  id: "npm run test:ci"
   entrypoint: npm
-  args: ['run', 'test:coverage']
+  args: ['run', 'test:ci']
+- name: node
+  id: "npm run test:e2e:ci"
+  entrypoint: npm
+  args: ['run', 'test:e2e:ci']
 - name: node
   id: "npm run semantic-release -- -d false --no-ci"
   entrypoint: npm
