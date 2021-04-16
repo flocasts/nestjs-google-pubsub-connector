@@ -4,9 +4,9 @@ steps:
   entrypoint: npm
   args: ['ci']
 - name: node
-  id: "npm run build"
+  id: "npm run build:package"
   entrypoint: npm
-  args: ['run', 'build']
+  args: ['run', 'build:package']
 - name: node
   id: "npm run test:coverage"
   entrypoint: npm

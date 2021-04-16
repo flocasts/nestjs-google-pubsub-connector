@@ -21,15 +21,15 @@
         },
         {
             "type": "pwa-node",
-            "request": "launch",
             "name": "Launch Example Server",
+            "request": "launch",
+            "runtimeArgs": [
+                "run-script",
+                "example:server"
+            ],
+            "runtimeExecutable": "npm",
             "skipFiles": [
                 "<node_internals>/**"
-            ],
-            "preLaunchTask": "npm: build",
-            "resolveSourceMapLocations": [
-                "${workspaceFolder}/**",
-                "!**/node_modules/**"
             ],
             "program": "${workspaceFolder}/examples/server/main.ts",
             "outFiles": [
