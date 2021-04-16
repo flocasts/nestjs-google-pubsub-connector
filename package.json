@@ -12,13 +12,16 @@
   ],
   "scripts": {
     "test": "jest",
-    "test:coverage": "jest --coverage --ci",
-    "test:debug": "jest --max-workers=1",
+    "test:ci": "npm run test -- --runInBand  --coverage --ci",
+    "test:debug": "npm run test -- --runInBand",
+    "test:e2e": "jest --config test/jest-e2e.ts",
+    "test:e2e:ci": "npm run test:e2e -- --runInBand  --ci",
+    "test:e2e:debug": "npm run test:e2e -- --runInBand",
     "build": "tsc",
     "build:package": "tsc -p tsconfig.build.json",
     "example:server": "node --inspect -r ts-node/register examples/server/main.ts",
     "prepare": "husky install && npm run build",
-    "format": "prettier \"lib/**/*.ts\" \"examples/**/*.ts\"  -c",
+    "format": "prettier \"lib/**/*.ts\" \"examples/**/*.ts\" \"test/**/*.ts\"  -c",
     "format:fix": "npm run format -- --write",
     "semantic-release": "npx --no-install semantic-release"
   },
@@ -36,7 +39,10 @@
   ],
   "license": "ISC",
   "release": {
-    "branches": ["master", "next"]
+    "branches": [
+      "master",
+      "next"
+    ]
   },
   "devDependencies": {
     "@commitlint/cli": "^12.1.1",
@@ -44,6 +50,7 @@
     "@nestjs/common": "^7.6.15",
     "@nestjs/core": "^7.6.15",
     "@nestjs/microservices": "^7.6.15",
+    "@nestjs/testing": "^7.6.15",
     "@types/jest": "^26.0.22",
     "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "^4.21.0",
