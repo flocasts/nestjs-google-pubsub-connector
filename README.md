@@ -22,7 +22,8 @@ few configuration parameters, as well as an optional PubSub instance.
 | Name | Desscription |
 -------|-----------
 | @GooglePubSubMessageHandler | Takes a subscription name and optionally a topic name. A subscription will be created if it does not already exits **if**: a topic name is supplied  **and** `createSubscriptions` was set to true when the microservice was created |
-| @GooglePubSubMessageBody | This will retrieve and `JSON.parse()` the body of the incoming message.
+| @GooglePubSubMessageBody | This will retrieve and `JSON.parse()` the body of the incoming message. You may optionally include a key and the corresponding value will be returned.
+| @GooglePubSubMessageAttributes | This will retrieve attributes of the incoming message. You may optionally include a key, and the corresponding value will be returned.
 | @Ack | This will return a function that will `ack` the incoming message. </br> **N.B.** this will disable any auto-acking.|
 | @Nack | Same as above, but for nacking. |
 -------------
