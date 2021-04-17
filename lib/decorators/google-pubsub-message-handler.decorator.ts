@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { applyDecorators } from '@nestjs/common';
 import { EventPattern } from '@nestjs/microservices';
 import { GooglePubSubPatternMetadata } from '../interfaces';
