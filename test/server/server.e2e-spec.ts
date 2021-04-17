@@ -109,11 +109,17 @@ describe('Server E2E Tests', () => {
             )!;
 
             const data = Buffer.from(JSON.stringify({ expendable: true }));
-            const message = createMessage({ data: data });
+            const message = createMessage({
+                data: data,
+                attributes: { contractId: 'rescue-zhou' },
+            });
             subscription.emit('message', message);
 
             await sleep(10);
-            expect(doStuffMock).toHaveBeenCalledWith({ expendable: true });
+            expect(doStuffMock).toHaveBeenCalledWith(
+                { expendable: true },
+                { contractId: 'rescue-zhou' },
+            );
         });
 
         it('should call `doStuffAsync` example service with expected parameters', async () => {
@@ -121,11 +127,14 @@ describe('Server E2E Tests', () => {
                 JSON.stringify(theTransporterHandlerPattern),
             )!;
             const data = Buffer.from(JSON.stringify({ trunkClosed: false }));
-            const message = createMessage({ data: data });
+            const message = createMessage({
+                data: data,
+                attributes: { licenseNum: 'abc12345' },
+            });
             subscription.emit('message', message);
 
             await sleep(10);
-            expect(doStuffMockAsync).toHaveBeenCalledWith(false);
+            expect(doStuffMockAsync).toHaveBeenCalledWith(false, 'abc12345');
         });
 
         it('should call `doStuffObservable` example service with expected parameters', async () => {
