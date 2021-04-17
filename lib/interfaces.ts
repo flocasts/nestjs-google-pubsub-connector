@@ -1,4 +1,5 @@
 import { ClientConfig, Message, PubSub, Subscription, Topic } from '@google-cloud/pubsub';
+import { ModuleMetadata, Provider, Type } from '@nestjs/common';
 import { ClientGooglePubSub } from './client';
 import { GooglePubSubContext } from './ctx-host';
 
@@ -65,4 +66,16 @@ export interface ClientHealthInfo {
 export interface GooglePubSubOptions {
     pubSubClient?: PubSub;
     pubSubClientConfig?: ClientConfig;
+}
+
+export interface GooglePubSubModuleOptionsFactory {
+    createGooglePubSubOptions(): Promise<GooglePubSubOptions> | GooglePubSubOptions;
+}
+
+export interface GooglePubSubModuleAsyncOptions extends Pick<ModuleMetadata, 'imports'> {
+    useExisting?: Type<GooglePubSubModuleOptionsFactory>;
+    useClass?: Type<GooglePubSubModuleOptionsFactory>;
+    useFactory?: (...args: any[]) => Promise<GooglePubSubOptions> | GooglePubSubOptions;
+    inject?: any[];
+    extraProviders?: Provider[];
 }

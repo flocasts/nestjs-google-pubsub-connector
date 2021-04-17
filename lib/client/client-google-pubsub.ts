@@ -31,6 +31,15 @@ export class ClientGooglePubSub extends ClientProxy {
     }
 
     /**
+     * Create and return a new ClientGooglePubSub instance
+     * @param options
+     * @returns
+     */
+    public static create(options?: GooglePubSubOptions): ClientGooglePubSub {
+        return new this(options);
+    }
+
+    /**
      * Since the client on starts listening for messages when event subscribers are added, this
      * method does nothing
      * @returns
