@@ -6,6 +6,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ExampleController } from '../../examples/server/example.controller';
 import { ExampleService } from '../../examples/server/example.service';
 import { ClientGooglePubSub, GooglePubSubSubscription, GooglePubSubTransport } from '../../lib';
+import { createMessage } from '../utilities';
 
 jest.mock('../../examples/server/example.service');
 
@@ -28,15 +29,6 @@ const doStuffMockAsync = MockExampleService.prototype.doStuffAsync;
 const doStuffMockObservable = MockExampleService.prototype.doStuffObservable;
 
 const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms));
-
-const createMessage = (options: Partial<Message>): Message =>
-    (Object.assign(
-        {
-            ack: jest.fn(),
-            nack: jest.fn(),
-        },
-        options,
-    ) as unknown) as Message;
 
 describe('Server E2E Tests', () => {
     let pubsub: PubSub;

@@ -1,5 +1,5 @@
-export * from './google-pubsub-ack.decorator';
-export * from './google-pubsub-nack.decorator';
-export * from './google-pubsub-message-body.decorator';
-export * from './google-pubsub-message-attributes.decorator';
-export * from './google-pubsub-message-handler.decorator';
+export { GooglePubSubMessageAck } from './google-pubsub-ack.decorator';
+export { GooglePubSubMessageNack } from './google-pubsub-nack.decorator';
+export { GooglePubSubMessageBody } from './google-pubsub-message-body.decorator';
+export { GooglePubSubMessageMessageAttributes } from './google-pubsub-message-attributes.decorator';
+export { GooglePubSubMessageHandler } from './google-pubsub-message-handler.decorator';
