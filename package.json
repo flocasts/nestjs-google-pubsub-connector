@@ -11,10 +11,10 @@
     "dist"
   ],
   "scripts": {
-    "test": "jest",
+    "test": "jest --verbose",
     "test:ci": "npm run test -- --runInBand  --coverage --ci",
     "test:debug": "npm run test -- --runInBand",
-    "test:e2e": "jest --config test/jest-e2e.ts",
+    "test:e2e": "npm run test -- --config test/jest-e2e.ts",
     "test:e2e:ci": "npm run test:e2e -- --runInBand  --ci",
     "test:e2e:debug": "npm run test:e2e -- --runInBand",
     "build": "tsc",

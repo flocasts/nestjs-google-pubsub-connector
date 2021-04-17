@@ -5,6 +5,7 @@ import { catchError, map, mergeMap } from 'rxjs/operators';
 import { ClientGooglePubSub } from '../client';
 import { GooglePubSubContext as GooglePubSubContext } from '../ctx-host/google-pubsub.context';
 import { GooglePubSubMessageDeserializer } from '../deserializers';
+import { InvalidPatternMetadataException } from '../errors/invalid-pattern-metadata.exception';
 import {
     AckFunction,
     AckStrategy,
@@ -121,7 +122,17 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
      * @param pattern
      */
     private async getSubscriptionFromPattern(pattern: string): Promise<void> {
-        const metadata: GooglePubSubPatternMetadata = JSON.parse(pattern);
+        let metadata: GooglePubSubPatternMetadata | null;
+        try {
+            metadata = JSON.parse(pattern);
+        } catch (error) {
+            metadata = null;
+        }
+
+        if (metadata == null || !(metadata.subscriptionName || metadata.topicName)) {
+            throw new InvalidPatternMetadataException(pattern);
+        }
+
         let subscription: GooglePubSubSubscription | null = null;
 
         const subscriptionExists: boolean = metadata.subscriptionName

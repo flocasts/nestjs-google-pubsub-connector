@@ -2,6 +2,7 @@
 import { PubSub, Subscription } from '@google-cloud/pubsub';
 import { of } from 'rxjs';
 import { ClientGooglePubSub } from '../client';
+import { InvalidPatternMetadataException } from '../errors/invalid-pattern-metadata.exception';
 import { GooglePubSubTransport } from './server-google-pubsub';
 
 jest.mock('../client/client-google-pubsub.ts');
@@ -51,6 +52,18 @@ describe('Google PubSub Server', () => {
             expect(subscriptionExistsMock).toHaveBeenCalled();
             // @ts-expect-error
             expect(server.subscriptions.keys()).toContain(pattern);
+        });
+
+        it('should throw an InvalidPatternMetadata exception when given invalid JSON', async () => {
+            expect(() => {
+                return getSubscriptionFromPattern("[ this sure ain't JSON }");
+            }).rejects.toBeInstanceOf(InvalidPatternMetadataException);
+        });
+
+        it('should throw an InvalidPatternMetadata exception when object does not contain a topic or subscription name', async () => {
+            expect(() => {
+                return getSubscriptionFromPattern(JSON.stringify({}));
+            }).rejects.toBeInstanceOf(InvalidPatternMetadataException);
         });
 
         it("should get a subscription from a pattern and attempt to create if it doesn't exist", async () => {
