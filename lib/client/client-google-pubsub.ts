@@ -11,11 +11,14 @@ import { from, fromEvent, Observable, of, OperatorFunction, throwError } from 'r
 import { map, mapTo, mergeMap } from 'rxjs/operators';
 import { GOOGLE_PUBSUB_SUBSCRIPTION_MESSAGE_EVENT } from '../constants';
 import {
+    ClientGooglePubSubOutgoingRequestSerializedData,
     ClientHealthInfo,
     GooglePubSubMessage,
+    GooglePubSubMessageAttributes,
     GooglePubSubOptions,
     GooglePubSubSubscription,
     GooglePubSubTopic,
+    PublishData,
 } from '../interfaces';
 
 /**
@@ -47,13 +50,18 @@ export class ClientGooglePubSub extends ClientProxy {
     }
 
     /**
-     * Publishes the buffer to the supplied Topic
-     * @param topic
-     * @param data
-     * @returns
+     * Publishes data and attributes to the supplied Topic
      */
-    public publishToTopic(topic: string, data: Buffer): Observable<string> {
-        return this.emit(topic, data);
+    public publishToTopic(
+        topic: string,
+        publishData: PublishData,
+        attributes?: GooglePubSubMessageAttributes,
+    ): Observable<string> {
+        const request = {
+            message: publishData,
+            attributes: attributes,
+        };
+        return this.emit(topic, request);
     }
 
     /**
@@ -195,9 +203,12 @@ export class ClientGooglePubSub extends ClientProxy {
      * @param packet
      * @returns
      */
-    protected dispatchEvent(packet: ReadPacket<Buffer>): Promise<any> {
-        const topic = packet.pattern;
-        return this.googlePubSubClient.topic(topic).publish(packet.data);
+    protected dispatchEvent(packet: ClientGooglePubSubOutgoingRequestSerializedData): Promise<any> {
+        const topic = this.googlePubSubClient.topic(packet.pattern);
+        if (Buffer.isBuffer(packet.data.message)) {
+            return topic.publish(packet.data.message, packet.data.attributes);
+        }
+        return topic.publishJSON(packet.data.message, packet.data.attributes);
     }
 
     /**

@@ -13,6 +13,9 @@ const clientProxy: ClientGooglePubSub = new ClientGooglePubSub({ pubSubClient: c
 
 const mockedClose = PubSub.prototype.close as jest.MockedFunction<PubSub['close']>;
 const mockedPublish = Topic.prototype.publish as jest.MockedFunction<GooglePubSubTopic['publish']>;
+const mockedPublishJSON = Topic.prototype.publishJSON as jest.MockedFunction<
+    GooglePubSubTopic['publishJSON']
+>;
 const mockedSubscriptionExists = Subscription.prototype.exists as jest.MockedFunction<
     Subscription['exists']
 >;
@@ -39,7 +42,22 @@ describe('ClientGooglePubSub', () => {
         it('should attempt to publish a Buffer to the provided topic', async () => {
             await clientProxy.publishToTopic(topicName, testBuffer).toPromise();
             expect(client.topic).toHaveBeenLastCalledWith(topicName);
-            expect(mockedPublish).toHaveBeenLastCalledWith(testBuffer);
+            expect(mockedPublish).toHaveBeenLastCalledWith(testBuffer, undefined);
+        });
+
+        it('should attempt to publish an object to the provided topic', async () => {
+            const data = { songTitle: "Comin' on" };
+            await clientProxy.publishToTopic(topicName, data).toPromise();
+            expect(client.topic).toHaveBeenLastCalledWith(topicName);
+            expect(mockedPublishJSON).toHaveBeenLastCalledWith(data, undefined);
+        });
+
+        it('should attempt to publish an object to the provided topic with message attributes', async () => {
+            const data = { songTitle: "Comin' on" };
+            const attrs = { bandName: 'The Shamen' };
+            await clientProxy.publishToTopic(topicName, data, attrs).toPromise();
+            expect(client.topic).toHaveBeenLastCalledWith(topicName);
+            expect(mockedPublishJSON).toHaveBeenLastCalledWith(data, attrs);
         });
     });
 
