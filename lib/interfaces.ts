@@ -1,10 +1,20 @@
-import { ClientConfig, Message, PubSub, Subscription, Topic } from '@google-cloud/pubsub';
+import {
+    Attributes,
+    ClientConfig,
+    Message,
+    PubSub,
+    Subscription,
+    Topic,
+} from '@google-cloud/pubsub';
+import { ReadPacket } from '@nestjs/microservices';
 import { ClientGooglePubSub } from './client';
 import { GooglePubSubContext } from './ctx-host';
 
 export type GooglePubSubMessage = Message;
+export type GooglePubSubMessageAttributes = Attributes;
 export type GooglePubSubTopic = Topic;
 export type GooglePubSubSubscription = Subscription;
+
 export type AckFunction = () => void;
 export type NackFunction = () => void;
 export interface GooglePubSubSubscriptionPatternMetadata {
@@ -65,4 +75,15 @@ export interface ClientHealthInfo {
 export interface GooglePubSubOptions {
     pubSubClient?: PubSub;
     pubSubClientConfig?: ClientConfig;
+}
+
+export type PublishData = Buffer | Record<string, any>;
+
+export interface ClientGooglePubSubOutgoingRequestData {
+    message: PublishData;
+    attributes?: GooglePubSubMessageAttributes;
+}
+
+export interface ClientGooglePubSubOutgoingRequestSerializedData extends ReadPacket {
+    data: ClientGooglePubSubOutgoingRequestData;
 }

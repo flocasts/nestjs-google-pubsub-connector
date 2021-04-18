@@ -19,13 +19,11 @@ PubSubMock.prototype.close.mockImplementation(() => {
 const subscriptionExistsMock = jest.fn().mockImplementation(() => {
     return Promise.resolve([true]);
 });
-
 Subscription.prototype.exists = subscriptionExistsMock;
 
 const subscriptionDeleteMock = jest.fn().mockImplementation(() => {
     return Promise.resolve([true]);
 });
-
 Subscription.prototype.delete = subscriptionDeleteMock;
 
 const subscriptionCreateMock = jest
@@ -43,20 +41,22 @@ Topic.prototype.create = topicCreateMock;
 const topicExistsMock = jest.fn().mockImplementation(() => {
     return Promise.resolve([true]);
 });
-
 Topic.prototype.exists = topicExistsMock;
 
 const topicDeleteMock = jest.fn().mockImplementation(() => {
     return Promise.resolve([true]);
 });
-
 Topic.prototype.delete = topicDeleteMock;
 
 const topicPublishMock = jest.fn().mockImplementation(() => {
     return Promise.resolve([true]);
 });
-
 Topic.prototype.publish = topicPublishMock;
+
+const topicPublishJSONMock = jest.fn().mockImplementation(() => {
+    return Promise.resolve([true]);
+});
+Topic.prototype.publishJSON = topicPublishJSONMock;
 
 module.exports = {
     PubSub: PubSubMock,
