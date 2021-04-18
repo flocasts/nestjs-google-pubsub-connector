@@ -8,7 +8,7 @@ import {
 import { Injectable } from '@nestjs/common';
 import { ClientProxy, ReadPacket, WritePacket } from '@nestjs/microservices';
 import { from, fromEvent, Observable, of, OperatorFunction, throwError } from 'rxjs';
-import { map, mergeMap } from 'rxjs/operators';
+import { map, mapTo, mergeMap } from 'rxjs/operators';
 import { GOOGLE_PUBSUB_SUBSCRIPTION_MESSAGE_EVENT } from '../constants';
 import {
     ClientHealthInfo,
@@ -113,6 +113,15 @@ export class ClientGooglePubSub extends ClientProxy {
     }
 
     /**
+     * Attempts to delete a Subscription instance
+     * @param subscription
+     * @returns
+     */
+    public deleteSubscription(subscription: string | GooglePubSubSubscription): Observable<void> {
+        return from(this.getSubscription(subscription).delete()).pipe(mapTo(void 0));
+    }
+
+    /**
      * Register a listener for from `message` events on the PubSub client for the
      * supplied subscription
      * @param subscription
@@ -161,6 +170,15 @@ export class ClientGooglePubSub extends ClientProxy {
     }
 
     /**
+     * Attempts to delete a Topic instance
+     * @param topic
+     * @returns
+     */
+    public deleteTopic(topic: string | GooglePubSubTopic): Observable<void> {
+        return from(this.getTopic(topic).delete()).pipe(mapTo(void 0));
+    }
+
+    /**
      * Returns client health information
      * @returns
      */
@@ -188,16 +206,6 @@ export class ClientGooglePubSub extends ClientProxy {
     private parseExistsResponse: OperatorFunction<ExistsResponse, boolean> = map(
         (existsResponse: ExistsResponse) => existsResponse[0],
     );
-
-    /**
-     * Indicates if the provided value is a string
-     * @param str
-     */
-    private isString(
-        str?: string | GooglePubSubTopic | GooglePubSubSubscription | null,
-    ): str is string {
-        return typeof str === 'string';
-    }
 
     /**
      * Indicates if the provided value is a Topic instance

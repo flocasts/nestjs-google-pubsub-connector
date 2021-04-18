@@ -8,41 +8,35 @@ const subscriptionName = 'project-v-tem-ray-notifier';
 const testMessage = "We're at Side 7";
 const testBuffer = Buffer.from(testMessage);
 
+const client: PubSub = new PubSub();
+const clientProxy: ClientGooglePubSub = new ClientGooglePubSub({ pubSubClient: client });
+
+const mockedClose = PubSub.prototype.close as jest.MockedFunction<PubSub['close']>;
+const mockedPublish = Topic.prototype.publish as jest.MockedFunction<GooglePubSubTopic['publish']>;
+const mockedSubscriptionExists = Subscription.prototype.exists as jest.MockedFunction<
+    Subscription['exists']
+>;
+const mockedSubscriptionCreate = Topic.prototype.createSubscription as jest.MockedFunction<
+    Topic['createSubscription']
+>;
+const mockedSubscriptionDelete = Subscription.prototype.delete as jest.MockedFunction<
+    Subscription['delete']
+>;
+
+const mockedTopicExists = Topic.prototype.exists as jest.MockedFunction<Topic['exists']>;
+const mockedTopicCreate = Topic.prototype.create as jest.MockedFunction<Topic['create']>;
+const mockedTopicDelete = Topic.prototype.delete as jest.MockedFunction<Topic['delete']>;
+
 describe('ClientGooglePubSub', () => {
-    const client: PubSub = new PubSub();
-    const clientProxy: ClientGooglePubSub = new ClientGooglePubSub({ pubSubClient: client });
-
-    // Mock implementations
-    const subscriptionFactory: PubSub['subscription'] = (name: string, options: any) => {
-        return new Subscription(client, name);
-    };
-    const topicFactory: PubSub['topic'] = (name: string, options: any) => {
-        return new Topic(client, name);
-    };
-
-    const mockedPublish: jest.MockedFunction<GooglePubSubTopic['publish']> = jest.fn();
-    const mockedClose: jest.MockedFunction<PubSub['close']> = client.close as any;
-    const mockedTopicFunction: jest.MockedFunction<
-        PubSub['topic']
-    > = (client.topic as any).mockImplementation(topicFactory);
-    const mockedSubscriptionFunction: jest.MockedFunction<
-        PubSub['subscription']
-    > = (client.subscription as any).mockImplementation(subscriptionFactory);
-
     describe('close', () => {
         it('should call the close method on the PubSub client', async () => {
-            mockedClose.mockImplementationOnce(() => Promise.resolve());
             await clientProxy.close().toPromise();
-            expect(client.close).toHaveBeenCalled();
+            expect(mockedClose).toHaveBeenCalled();
         });
     });
 
     describe('publishToTopic', () => {
         it('should attempt to publish a Buffer to the provided topic', async () => {
-            mockedPublish.mockImplementation(() => Promise.resolve());
-            mockedTopicFunction.mockImplementationOnce(() => {
-                return ({ publish: mockedPublish } as unknown) as GooglePubSubTopic;
-            });
             await clientProxy.publishToTopic(topicName, testBuffer).toPromise();
             expect(client.topic).toHaveBeenLastCalledWith(topicName);
             expect(mockedPublish).toHaveBeenLastCalledWith(testBuffer);
@@ -63,66 +57,56 @@ describe('ClientGooglePubSub', () => {
     });
 
     describe('subscriptionExists', () => {
-        const mockedExists: jest.Mock<Subscription['exists']> = jest
-            .fn()
-            .mockImplementation(() => Promise.resolve([]));
-
-        beforeEach(() => {
-            mockedSubscriptionFunction.mockImplementationOnce(() => {
-                return ({
-                    exists: mockedExists,
-                } as unknown) as Subscription;
-            });
-        });
-
         it('should call the `.exists` method on the client subscription when given a string', async () => {
             await clientProxy.subscriptionExists(subscriptionName).toPromise();
-            expect(mockedExists).toHaveBeenCalled();
+            expect(mockedSubscriptionExists).toHaveBeenCalled();
         });
 
         it('should call the `.exists` method on the client subscription when given a Subscription Instance', async () => {
-            const subscription: Subscription = {
-                exists: mockedExists,
-            } as any;
-            await clientProxy.subscriptionExists(subscription).toPromise();
-            expect(mockedExists).toHaveBeenCalled();
+            await clientProxy
+                .subscriptionExists(new Subscription(client, subscriptionName))
+                .toPromise();
+            expect(mockedSubscriptionExists).toHaveBeenCalled();
         });
     });
 
     describe('createSubscription', () => {
-        let mockedCreateSubscription: jest.SpyInstance;
-
-        beforeEach(() => {
-            const topic = new Topic(client, topicName);
-            mockedCreateSubscription = jest
-                .spyOn(topic, 'createSubscription')
-                .mockImplementation(() => Promise.resolve([':-)']));
-            mockedTopicFunction.mockImplementationOnce(() => topic);
-        });
-
         it('should attempt to create a Subscription when given a subscription name and a topic name', async () => {
             await clientProxy.createSubscription(subscriptionName, topicName).toPromise();
-            expect(mockedCreateSubscription).toHaveBeenCalled();
+            expect(mockedSubscriptionCreate).toHaveBeenCalled();
         });
 
         it('should attempt to create a Subscription when given a subscription instance and a topic name', async () => {
             const subscription = new Subscription(client, subscriptionName);
             await clientProxy.createSubscription(subscription, topicName).toPromise();
-            expect(mockedCreateSubscription).toHaveBeenCalled();
+            expect(mockedSubscriptionCreate).toHaveBeenCalled();
         });
 
         it('should attempt to create a Subscription when given a subscription instance with a topic name set', async () => {
             const subscription = new Subscription(client, subscriptionName);
             subscription.topic = topicName;
             await clientProxy.createSubscription(subscription).toPromise();
-            expect(mockedCreateSubscription).toHaveBeenCalled();
+            expect(mockedSubscriptionCreate).toHaveBeenCalled();
         });
 
         it('should attempt to create a Subscription when given a subscription instance and a topic instance', async () => {
             const subscription = new Subscription(client, subscriptionName);
             subscription.topic = topicName;
             await clientProxy.createSubscription(subscription).toPromise();
-            expect(mockedCreateSubscription).toHaveBeenCalled();
+            expect(mockedSubscriptionCreate).toHaveBeenCalled();
+        });
+    });
+
+    describe('deleteSubscription', () => {
+        it('should call the `.delete` method on the client subscription when given a string', async () => {
+            await clientProxy.deleteSubscription(subscriptionName).toPromise();
+            expect(mockedSubscriptionDelete).toHaveBeenCalled();
+        });
+
+        it('should call the `.delete` method on the client subscription when given a Subscription Instance', async () => {
+            const subscription: Subscription = new Subscription(client, subscriptionName);
+            await clientProxy.deleteSubscription(subscription).toPromise();
+            expect(mockedSubscriptionDelete).toHaveBeenCalled();
         });
     });
 
@@ -140,29 +124,39 @@ describe('ClientGooglePubSub', () => {
     });
 
     describe('topicExists', () => {
-        const mockedExists: jest.Mock<Topic['exists']> = jest
-            .fn()
-            .mockImplementation(() => Promise.resolve([]));
-
-        beforeEach(() => {
-            mockedTopicFunction.mockImplementationOnce(() => {
-                return ({
-                    exists: mockedExists,
-                } as unknown) as Topic;
-            });
-        });
-
         it('should call the `.exists` method on the client topic when given a string', async () => {
             await clientProxy.topicExists(topicName).toPromise();
-            expect(mockedExists).toHaveBeenCalled();
+            expect(mockedTopicExists).toHaveBeenCalled();
         });
 
         it('should call the `.exists` method on the client topic when given a Topic Instance', async () => {
-            const topic: Topic = {
-                exists: mockedExists,
-            } as any;
-            await clientProxy.topicExists(topic).toPromise();
-            expect(mockedExists).toHaveBeenCalled();
+            await clientProxy.topicExists(new Topic(client, topicName)).toPromise();
+            expect(mockedTopicExists).toHaveBeenCalled();
+        });
+    });
+
+    describe('createTopic', () => {
+        it('should attempt to create a Topic when given a topic name', async () => {
+            await clientProxy.createTopic(topicName).toPromise();
+            expect(mockedTopicCreate).toHaveBeenCalled();
+        });
+
+        it('should attempt to create a Topic when given a topic instance', async () => {
+            const topic = new Topic(client, topicName);
+            await clientProxy.createTopic(topic).toPromise();
+            expect(mockedTopicCreate).toHaveBeenCalled();
+        });
+    });
+
+    describe('deleteTopic', () => {
+        it('should call the `.delete` method on the client topic when given a string', async () => {
+            await clientProxy.deleteTopic(topicName).toPromise();
+            expect(mockedTopicDelete).toHaveBeenCalled();
+        });
+
+        it('should call the `.delete` method on the client topic when given a Topic Instance', async () => {
+            await clientProxy.deleteTopic(new Topic(client, topicName)).toPromise();
+            expect(mockedTopicDelete).toHaveBeenCalled();
         });
     });
 });
