@@ -219,7 +219,7 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
             catchError((err) => {
                 return of(err);
             }),
-            map<unknown, [AckFunction, AckFunction, GooglePubSubContext]>((err) => {
+            map<unknown, [AckFunction, NackFunction, GooglePubSubContext]>((err) => {
                 if (err) {
                     this.nackStrategy.nack(
                         err,

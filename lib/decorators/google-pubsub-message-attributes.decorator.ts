@@ -8,7 +8,7 @@ export const getMessageAttrs = (
 ): (string | undefined) | Record<string, string> => {
     const message: Message = ctx.switchToRpc().getContext<GooglePubSubContext>().getMessage();
     const attrs = message.attributes;
-    if (key != null) {
+    if (attrs != null && key != null) {
         return attrs[key];
     }
     return attrs;
