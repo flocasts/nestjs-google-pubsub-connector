@@ -5,11 +5,11 @@ easy integration with Google PubSub.
 
 ## Features
 
-- Seamlessly integrate your subscription listeners with the robust NestJS framework
-- Creates subscriptions on demand
+- Seamlessly integrate your subscription listeners with the robust NestJS framework!
+- Creates subscriptions on demand, with self-service naming strategies!
 - Extensible:
-  - Subscription naming strategies
-  - Ack/nack strategies
+  - Subscription naming strategies!
+  - Ack/nack strategies!
 - Decorators! Decorators!! Decorators!!!
 
 ## Microservice Strategy
@@ -26,7 +26,6 @@ few configuration parameters, as well as an optional PubSub instance.
 | @GooglePubSubMessageAttributes | This will retrieve attributes of the incoming message. You may optionally include a key, and the corresponding value will be returned.
 | @Ack | This will return a function that will `ack` the incoming message. </br> **N.B.** this will disable any auto-acking.|
 | @Nack | Same as above, but for nacking. |
--------------
 
 ### Subscription creation
 If `createSubscriptions` is set as true on transporter setup, then the service will
@@ -200,25 +199,34 @@ new ClientGooglePubSub()
     );
 ```
 
-### Roadmap
-  - [ ] Fully implement nack strategies
-  - [ ] 80% test coverage
-  - [ ] Switch to a factory for the strategy (rather than using `new`)
-  - [ ] More fleshed out client proxy
-     - [ ] Support for deletes
-     - [ ] Support for more message types (string, POJOs)
-     - [ ] Send attributes in message
-  - [ ] Pass subscription options from server to created subscriptions
-  - [ ] Working examples directory
-  - [ ] Importable module for client proxy that provides an injectable service
+### Examples
 
-### Long term goals
-  - [ ] Utils for testing PubSub
-    - [ ] PubSub client mock
-    - [ ] PubSub client proxy mock
-  - [ ] Implement (de)serializers
-    - [ ] Incoming Request
-    - [ ] Outgoing request
-    - [ ] Incoming Response
-    - [ ] Outgoing Response
-  - [ ] Implement request/response between client/server 
+A working example server can be found in the [examples directory](examples).
+
+#### Prerequisites for running the example server
+In order to run the example server you must either:
+* Have `GOOGLE_APPLICATION_CREDENTIALS` set in your environment, and pointed to a valid credentials, or
+* Have a running PubSub emulator and have `PUBSUB_EMULATOR_HOST` set in your environment
+
+In both cases you will need to create any topics present in the example server (or change them to
+topics) that already exist.
+
+#### Running the example server
+To run the server, simply invoke the provided `npm` script:
+```sh
+npm run example:server
+```
+Assuming all prerequisites are met you should see something like the following:
+```sh
+> @flosportsinc/nestjs-google-pubsub-connector@0.0.0-development example:server /Users/haroldwaters/repos/nestjs-google-pubsub-transport
+> node --inspect -r ts-node/register examples/server/main.ts
+
+Debugger listening on ws://127.0.0.1:9229/d23772bb-0e6d-40f8-b47d-d0fc94c7c8c2
+For help, see: https://nodejs.org/en/docs/inspector
+[Nest] 90792   - 04/17/2021, 7:04:02 PM   [NestFactory] Starting Nest application...
+[Nest] 90792   - 04/17/2021, 7:04:02 PM   [InstanceLoader] ExampleService dependencies initialized +28ms
+[Nest] 90792   - 04/17/2021, 7:04:02 PM   [InstanceLoader] ExampleModule dependencies initialized +0ms
+[Nest] 90792   - 04/17/2021, 7:04:02 PM   [NestMicroservice] Nest microservice successfully started +5ms
+[Nest] 90792   - 04/17/2021, 7:04:02 PM   [GooglePubSubTransport] Mapped {projects/flosports-174016/subscriptions/lee-christmas-notifications} handler
+example app started!
+```
