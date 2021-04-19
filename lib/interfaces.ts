@@ -36,6 +36,7 @@ export interface GooglePubSubTransportOptions {
     autoAck?: boolean;
     autoNack?: boolean;
     subscriptionNamingStrategy?: SubscriptionNamingStrategy;
+    topicNamingStrategy?: TopicNamingStrategy;
     ackStrategy?: AckStrategy;
     nackStrategy?: NackStrategy;
 }
@@ -43,6 +44,31 @@ export interface GooglePubSubTransportOptions {
 export type GenerateSubscriptionName = (topicName: string, subscriptionName?: string) => string;
 export interface SubscriptionNamingStrategy {
     generateSubscriptionName: GenerateSubscriptionName;
+}
+
+export type GenerateTopicName = (initialName: string) => string;
+
+/**
+ * Provides a method for renaming topics before creating subscriptions for them.
+ *
+ * @remarks
+ * Consider a service in which the name of the topic used depends upon an
+ * environment variable. When configuring the handler decorator, you would
+ * have to provide a static value for the topic name. Decorator arguments
+ * being static for Nest's event handling prevents a function from being
+ * passed in. Instead, if names need to change dynamically at runtime,
+ * create a Strategy implementing this interface to provide the necessary
+ * behavior.
+ *
+ * @example
+ * class PrefixedTopicNameStrategy implements TopicNamingStrategy {
+ *     generateTopicName(originalName: string): string {
+ *         return `prefix-${originalName}`
+ *     }
+ * }
+ */
+export interface TopicNamingStrategy {
+    generateTopicName: GenerateTopicName;
 }
 
 export type AckHandler = (
