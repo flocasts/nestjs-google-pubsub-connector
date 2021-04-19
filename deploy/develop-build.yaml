@@ -4,6 +4,10 @@ steps:
   entrypoint: npm
   args: ['ci']
 - name: node:14-alpine
+  id: "npm run lint"
+  entrypoint: npm
+  args: ['run', 'lint']
+- name: node:14-alpine
   id: "npm run build"
   entrypoint: npm
   args: ['run', 'build']
