@@ -1,23 +1,59 @@
 # NestJS Google Pubsub Connector
 
-This package includes two pieces, a NestJS microservice strategy and a client proxy, to enable
-easy integration with Google PubSub.
+This package includes two pieces, a NestJS microservice strategy as well as a client proxy. Together this enable
+easy integration with Google PubSub in a NestJS-y way.
 
 ## Features
-
-- Seamlessly integrate your subscription listeners with the robust NestJS framework!
+- Seamlessly integrate your subscription listeners as controllers in the robust NestJS framework!
 - Creates subscriptions on demand, with self-service naming strategies!
-- Extensible:
-  - Subscription naming strategies!
-  - Ack/nack strategies!
+- A "just-works" approach means that zero configuration is needed out of the box, just insert the
+strategy and let the framework do the rest.
+- Oh-so Extensible:
+  - Subscription naming strategies let you dynamically name subscriptions how _you_ want to!
+  - Ack/nack strategies let you decouple your business logic from how you respond to messages!
 - Decorators! Decorators!! Decorators!!!
 
 ## Microservice Strategy
 
-The server/microservice component is inserted as a strategy when creating a microservice, taking a 
-few configuration parameters, as well as an optional PubSub instance.
+The server/transport strategy component is inserted as a strategy when creating a microservice, taking a 
+few configuration parameters, as well as an optional PubSub instance, like so:
+```typescript
+async function bootstrap() {
+    const app: INestMicroservice = await NestFactory.createMicroservice<MicroserviceOptions>(
+        ExampleModule,
+        {
+            strategy: new GooglePubSubTransport({
+                createSubscriptions: true,
+                // The microservice will configure its own PubSub instance, but you're free to
+                // supply your own
+                // client: new PubSub()
+            }),
+        },
+    );
+
+    // It's also possible to connect as a hybrid app:
+    // const app = await NestFactory.create(HttpAppModule);
+    // const microservice = app.connectMicroservice({
+    //      strategy: new GooglePubSubTransport({
+    //          createSubscriptions: true,
+    //          // The microservice will configure its own PubSub instance, but you're free to
+    //          // supply your own
+    //          // client: new PubSub
+    //      }),
+    // });
+
+    return app.listen(() => {
+        console.log('example app started!');
+    });
+}
+bootstrap();
+```
+
+With just the configuration above you can have working controllers responding to messages in minutes.
 
 ### Decorators
+Parameter decorators are one of the best ease-of-use features in NestJS, and this library offers a few
+that will make parsing PubSub Messages easy, simple and fun:
 
 | Name | Desscription |
 -------|-----------
@@ -56,7 +92,7 @@ The string returned from this strategy will be used as the name for the created 
 
 ### Acking and Nacking
 In the interest of giving you, the user, the power over your own destiny this
-library takes both a "hands off" and "just works" approach to acking and nacking
+library takes both a hands-off and "just works" approach to acking and nacking
 messages. This is accomplished through "strategies" confirming to the `AckStrategy`,
 `NackStrategy` interfaces which are supplied at transport creation.
 
@@ -180,8 +216,14 @@ export class TestController {
 ```
 
 ## Client Proxy
-
 This library also provides a basic client proxy that wraps a PubSub instance.
+
+This proxy supports:
+* Publishing
+* Topic/Subscription creation
+* Topic/Subscription deletion
+
+You can find a number of working examples in the [examples directory](examples/client).
 
 ### Usage
 ```typescript
@@ -199,9 +241,15 @@ new ClientGooglePubSub()
     );
 ```
 
-### Examples
+### Authentication
+In keeping with the hand-off "just works" approach in this library, authentication is handled entirely
+by the underlying PubSub client. This means that the credentials pointed to by the `GOOGLE_APPLICATION_CREDENTIALS`
+will be used, as well as emulator support if `PUBSUB_EMULATOR_HOST` is set. If you need a more advanced
+configuration, then both the transport strategy and the client proxy will take a PubSub client instance
+as a constructor parameter - you can simply build the client you need and then hand it off.
 
-A working example server can be found in the [examples directory](examples).
+### Examples
+A working example server can be found in the [examples directory](examples/server).
 
 #### Prerequisites for running the example server
 In order to run the example server you must either:

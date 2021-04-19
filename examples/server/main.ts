@@ -12,7 +12,7 @@ async function bootstrap() {
                 createSubscriptions: true,
                 // The microservice will configure its own PubSub instance, but you're free to
                 // supply your own
-                // client: new PubSub
+                // client: new PubSub()
             }),
         },
     );
