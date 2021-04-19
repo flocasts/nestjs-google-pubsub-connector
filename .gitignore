@@ -1,6 +1,7 @@
 .idea/
 node_modules
 dist
+docs/
 .tsbuildinfo
 coverage
 coverage-e2e

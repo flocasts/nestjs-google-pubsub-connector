@@ -44,7 +44,6 @@
   ],
   "include": [
     "lib/**/*.ts",
-    "examples/**/*.ts",
     "test/**/*.ts",
   ]
 }
