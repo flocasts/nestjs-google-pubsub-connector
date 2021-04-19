@@ -30,7 +30,10 @@
   "keywords": [
     "nestjs",
     "google",
-    "pubsub"
+    "pubsub",
+    "google-pubsub",
+    "transport",
+    "microservice"
   ],
   "author": "Harold Waters <harold.waters@flosports.tv>",
   "contributors": [
