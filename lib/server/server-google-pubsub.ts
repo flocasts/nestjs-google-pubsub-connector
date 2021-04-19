@@ -17,10 +17,12 @@ import {
     NackFunction,
     NackStrategy,
     SubscriptionNamingStrategy,
+    TopicNamingStrategy,
 } from '../interfaces';
 import { BasicAckStrategy } from '../strategies/basic-ack.strategy';
 import { BasicNackStrategy } from '../strategies/basic-nack.strategy';
 import { BasicSubscriptionNamingStrategy } from '../strategies/basic-subscription-naming-strategy';
+import { BasicTopicNamingStrategy } from '../strategies/basic-topic-naming-strategy';
 
 export class GooglePubSubTransport extends Server implements CustomTransportStrategy {
     /**
@@ -42,6 +44,11 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
      * This function will be used to determine subscription names when only a topic name is given
      */
     private readonly subscriptionNamingStrategy: SubscriptionNamingStrategy;
+
+    /**
+     * Modifies topic names dynamically
+     */
+    private readonly topicNamingStrategy: TopicNamingStrategy;
 
     /**
      * This function is called after an incoming message is handled and allows control over when/how
@@ -88,6 +95,7 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
         this.autoNack = options?.autoNack ?? false;
         this.subscriptionNamingStrategy =
             options?.subscriptionNamingStrategy ?? new BasicSubscriptionNamingStrategy();
+        this.topicNamingStrategy = options?.topicNamingStrategy ?? new BasicTopicNamingStrategy();
         this.ackStrategy = options?.ackStrategy ?? new BasicAckStrategy();
         this.nackStrategy = options?.nackStrategy ?? new BasicNackStrategy();
         this.deserializer = new GooglePubSubMessageDeserializer();
@@ -147,17 +155,18 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
                 throw new InvalidPatternMetadataException(pattern);
             }
             let topic: GooglePubSubTopic;
-            const topicExists: boolean = metadata.topicName
-                ? await this.googlePubSubClient.topicExists(metadata.topicName).toPromise()
+            const topicName = this.topicNamingStrategy.generateTopicName(metadata.topicName);
+            const topicExists: boolean = topicName
+                ? await this.googlePubSubClient.topicExists(topicName).toPromise()
                 : false;
             if (topicExists) {
                 const subscriptionName: string =
                     metadata.subscriptionName ||
                     this.subscriptionNamingStrategy.generateSubscriptionName(
-                        metadata.topicName,
+                        topicName,
                         metadata.subscriptionName,
                     );
-                topic = this.googlePubSubClient.getTopic(metadata.topicName);
+                topic = this.googlePubSubClient.getTopic(topicName);
                 subscription = await this.googlePubSubClient
                     .createSubscription(subscriptionName, topic)
                     .toPromise();
