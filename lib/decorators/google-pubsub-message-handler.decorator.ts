@@ -1,8 +1,7 @@
 /* istanbul ignore file */
-import { applyDecorators } from '@nestjs/common';
 import { EventPattern } from '@nestjs/microservices';
 import { GooglePubSubPatternMetadata } from '../interfaces';
 
-export function GooglePubSubMessageHandler(metadata: GooglePubSubPatternMetadata) {
-    return applyDecorators(EventPattern(JSON.stringify(metadata)));
+export function GooglePubSubMessageHandler(metadata: GooglePubSubPatternMetadata): MethodDecorator {
+    return EventPattern(JSON.stringify(metadata));
 }

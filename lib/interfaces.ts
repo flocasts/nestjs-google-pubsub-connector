@@ -30,7 +30,7 @@ export interface GooglePubSubTransportOptions {
     nackStrategy?: NackStrategy;
 }
 
-export type GenerateSubscriptionName = (topicName: string, subscriptionName: string) => string;
+export type GenerateSubscriptionName = (topicName: string, subscriptionName?: string) => string;
 export interface SubscriptionNamingStrategy {
     generateSubscriptionName: GenerateSubscriptionName;
 }

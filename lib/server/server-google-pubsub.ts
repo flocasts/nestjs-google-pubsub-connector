@@ -5,7 +5,7 @@ import { catchError, map, mergeMap } from 'rxjs/operators';
 import { ClientGooglePubSub } from '../client';
 import { GooglePubSubContext as GooglePubSubContext } from '../ctx-host/google-pubsub.context';
 import { GooglePubSubMessageDeserializer } from '../deserializers';
-import { InvalidPatternMetadataException } from '../errors/invalid-pattern-metadata.exception';
+import { InvalidPatternMetadataException } from '../errors';
 import {
     AckFunction,
     AckStrategy,
@@ -99,7 +99,7 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
 
     /**
      * Bind message handlers to subscription instances
-     * @param callback
+     * @param callback - The callback to be invoked when all handlers have been bound
      */
     private async bindHandlers(callback: () => void) {
         // Set up our subscriptions from any decorated topics
@@ -119,7 +119,7 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
 
     /**
      * Resolve subscriptions and create them if `createSubscription` is true
-     * @param pattern
+     * @param pattern - The pattern from the \@GooglePubSubMessageHandler decorator
      */
     private async getSubscriptionFromPattern(pattern: string): Promise<void> {
         let metadata: GooglePubSubPatternMetadata | null;
@@ -143,6 +143,9 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
         if (metadata.subscriptionName && subscriptionExists) {
             subscription = this.googlePubSubClient.getSubscription(metadata.subscriptionName);
         } else if (this.createSubscriptions) {
+            if (!metadata.topicName) {
+                throw new InvalidPatternMetadataException(pattern);
+            }
             let topic: GooglePubSubTopic;
             const topicExists: boolean = metadata.topicName
                 ? await this.googlePubSubClient.topicExists(metadata.topicName).toPromise()
@@ -151,10 +154,10 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
                 const subscriptionName: string =
                     metadata.subscriptionName ||
                     this.subscriptionNamingStrategy.generateSubscriptionName(
-                        metadata.topicName!,
-                        metadata.subscriptionName!,
+                        metadata.topicName,
+                        metadata.subscriptionName,
                     );
-                topic = this.googlePubSubClient.getTopic(metadata.topicName!);
+                topic = this.googlePubSubClient.getTopic(metadata.topicName);
                 subscription = await this.googlePubSubClient
                     .createSubscription(subscriptionName, topic)
                     .toPromise();

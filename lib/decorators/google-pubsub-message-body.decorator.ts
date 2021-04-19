@@ -5,7 +5,7 @@ import { GooglePubSubContext } from '../ctx-host';
 export const getMessageBody = (
     key: string | undefined,
     ctx: ExecutionContext,
-): Record<string, any> | unknown => {
+): Record<string, unknown> | unknown => {
     const message: Message = ctx.switchToRpc().getContext<GooglePubSubContext>().getMessage();
     try {
         const body = JSON.parse(message.data.toString());

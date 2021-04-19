@@ -228,7 +228,7 @@ export class ClientGooglePubSub extends ClientProxy {
     /**
      * This refers to an internal publish method to NestJS, please use `publishToTopic`.
      */
-    protected publish(packet: ReadPacket<any>, callback: (packet: WritePacket<any>) => void): any {
+    protected publish(): any {
         throw new Error('Method intentionally not implemented.');
     }
 }

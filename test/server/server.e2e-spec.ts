@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { Message, PubSub, Subscription } from '@google-cloud/pubsub';
+import { PubSub, Subscription } from '@google-cloud/pubsub';
 import { INestMicroservice } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ExampleController } from '../../examples/server/example.controller';

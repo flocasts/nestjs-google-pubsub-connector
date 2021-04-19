@@ -17,14 +17,22 @@ describe('Google PubSub Server', () => {
     let getSubscriptionMock: jest.MockedFunction<ClientGooglePubSub['getSubscription']>;
 
     beforeEach(() => {
-        clientProxy = new ClientGooglePubSub() as any;
+        clientProxy = new ClientGooglePubSub();
         server = new GooglePubSubTransport({
             client: clientProxy,
         });
-        subscriptionExistsMock = clientProxy.subscriptionExists as any;
-        topicExistsMock = clientProxy.topicExists as any;
-        createSubscriptionMock = clientProxy.createSubscription as any;
-        getSubscriptionMock = clientProxy.getSubscription as any;
+        subscriptionExistsMock = clientProxy.subscriptionExists as jest.MockedFunction<
+            ClientGooglePubSub['subscriptionExists']
+        >;
+        topicExistsMock = clientProxy.topicExists as jest.MockedFunction<
+            ClientGooglePubSub['topicExists']
+        >;
+        createSubscriptionMock = clientProxy.createSubscription as jest.MockedFunction<
+            ClientGooglePubSub['createSubscription']
+        >;
+        getSubscriptionMock = clientProxy.getSubscription as jest.MockedFunction<
+            ClientGooglePubSub['getSubscription']
+        >;
 
         subscriptionExistsMock.mockImplementation(() => of(true));
         topicExistsMock.mockImplementation(() => of(true));

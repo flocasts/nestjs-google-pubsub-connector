@@ -24,14 +24,16 @@ export class ExampleController {
     public theTransporterHandler(
         @GooglePubSubMessageBody('trunkClosed') trunkClosed: boolean,
         @GooglePubSubMessageMessageAttributes('licenseNum') licenseNum: number,
-    ): Promise<any> {
+    ): Promise<unknown> {
         return this.exampleService.doStuffAsync(trunkClosed, licenseNum);
     }
 
     @GooglePubSubMessageHandler({
         topicName: 'health-stats',
     })
-    public crankHandler(@GooglePubSubMessageBody('heartRate') heartRate: number): Observable<any> {
+    public crankHandler(
+        @GooglePubSubMessageBody('heartRate') heartRate: number,
+    ): Observable<unknown> {
         return this.exampleService.doStuffObservable(heartRate);
     }
 }
