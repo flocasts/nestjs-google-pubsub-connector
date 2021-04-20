@@ -17,7 +17,7 @@
     "test:e2e": "npm run test -- --config test/jest-e2e.ts",
     "test:e2e:ci": "npm run test:e2e -- --runInBand  --ci",
     "test:e2e:debug": "npm run test:e2e -- --runInBand",
-    "build": "rimraf dist && tsc",
+    "build": "tsc",
     "build:package": "tsc -p tsconfig.build.json",
     "example:server": "node --inspect -r ts-node/register examples/server/main.ts",
     "prepare": "husky install && npm run build",
