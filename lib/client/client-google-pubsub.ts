@@ -120,11 +120,7 @@ export class ClientGooglePubSub extends ClientProxy {
         );
     }
 
-    /**
-     * Attempts to delete a Subscription instance
-     * @param subscription
-     * @returns
-     */
+    /** Attempts to delete a Subscription instance */
     public deleteSubscription(subscription: string | GooglePubSubSubscription): Observable<void> {
         return from(this.getSubscription(subscription).delete()).pipe(mapTo(void 0));
     }
