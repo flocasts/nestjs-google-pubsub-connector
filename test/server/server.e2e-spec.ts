@@ -63,6 +63,12 @@ describe('Server E2E Tests', () => {
             expect(subscriptions.size).toBe(3);
         });
 
+        it('should be able to get handlers for all subscriptions', () => {
+            for (const [pattern] of subscriptions) {
+                expect(strategy.getHandlerByPattern(pattern)).not.toBeNull();
+            }
+        });
+
         it('it should initialize a subscription when a topic name and subscription name are provided', () => {
             const subscription: Subscription = subscriptions.get(
                 JSON.stringify(expendablesHandlerPattern),

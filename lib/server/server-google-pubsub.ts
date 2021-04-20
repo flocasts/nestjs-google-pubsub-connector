@@ -1,5 +1,11 @@
 import { Logger } from '@nestjs/common';
-import { CustomTransportStrategy, ReadPacket, Server } from '@nestjs/microservices';
+import {
+    CustomTransportStrategy,
+    MessageHandler,
+    MsPattern,
+    ReadPacket,
+    Server,
+} from '@nestjs/microservices';
 import { from, merge, Observable, of, Subscription } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import { ClientGooglePubSub } from '../client';
@@ -254,5 +260,9 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
     public async close(): Promise<void> {
         this.listenerSubscription && this.listenerSubscription.unsubscribe();
         await this.googlePubSubClient.close();
+    }
+
+    public getHandlerByPattern(pattern: string): MessageHandler | null {
+        return this.messageHandlers.get(pattern) ?? null;
     }
 }
