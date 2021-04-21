@@ -3,5 +3,5 @@ import { EventPattern } from '@nestjs/microservices';
 import { GooglePubSubPatternMetadata } from '../interfaces';
 
 export function GooglePubSubMessageHandler(metadata: GooglePubSubPatternMetadata): MethodDecorator {
-    return EventPattern(JSON.stringify(metadata));
+    return EventPattern(metadata);
 }

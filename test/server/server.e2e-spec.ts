@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { PubSub, Subscription } from '@google-cloud/pubsub';
 import { INestMicroservice } from '@nestjs/common';
+import { PatternMetadata } from '@nestjs/microservices';
 import { Test, TestingModule } from '@nestjs/testing';
 import { throwError } from 'rxjs';
 import { ExampleController } from '../../examples/server/example.controller';
@@ -35,7 +36,7 @@ describe('Server E2E Tests', () => {
     let pubsub: PubSub;
     let client: ClientGooglePubSub;
     let strategy: GooglePubSubTransport;
-    let subscriptions: Map<string, GooglePubSubSubscription>;
+    let subscriptions: Map<PatternMetadata, GooglePubSubSubscription>;
     let app: INestMicroservice;
 
     beforeEach(async () => {
@@ -58,7 +59,7 @@ describe('Server E2E Tests', () => {
         await app.listenAsync();
     });
 
-    describe('Subscription Initialization', () => {
+    describe.only('Subscription Initialization', () => {
         it('it should initialize a subscription for each handler', () => {
             expect(subscriptions.size).toBe(3);
         });
@@ -69,10 +70,8 @@ describe('Server E2E Tests', () => {
             }
         });
 
-        it('it should initialize a subscription when a topic name and subscription name are provided', () => {
-            const subscription: Subscription = subscriptions.get(
-                JSON.stringify(expendablesHandlerPattern),
-            )!;
+        it.only('it should initialize a subscription when a topic name and subscription name are provided', () => {
+            const subscription: Subscription = subscriptions.get(expendablesHandlerPattern)!;
 
             expect(subscription).toBeDefined();
             expect(subscription.name).toMatch(
@@ -81,9 +80,7 @@ describe('Server E2E Tests', () => {
         });
 
         it('it should initialize a subscription when only a subscription name is provided', () => {
-            const subscription: Subscription = subscriptions.get(
-                JSON.stringify(theTransporterHandlerPattern),
-            )!;
+            const subscription: Subscription = subscriptions.get(theTransporterHandlerPattern)!;
 
             expect(subscription).toBeDefined();
             expect(subscription.name).toMatch(
@@ -92,9 +89,7 @@ describe('Server E2E Tests', () => {
         });
 
         it('it should attempt to create a subscription when only a topic name is provided', () => {
-            const subscription: Subscription = subscriptions.get(
-                JSON.stringify(crankHandlerPattern),
-            )!;
+            const subscription: Subscription = subscriptions.get(crankHandlerPattern)!;
 
             expect(subscription).toBeDefined();
             expect(subscription.name).toMatch(new RegExp(`${crankHandlerPattern.topicName}-sub`));
@@ -103,9 +98,7 @@ describe('Server E2E Tests', () => {
 
     describe('Message Handling', () => {
         it('should call `doStuff` example service with expected parameters', async () => {
-            const subscription: Subscription = subscriptions.get(
-                JSON.stringify(expendablesHandlerPattern),
-            )!;
+            const subscription: Subscription = subscriptions.get(expendablesHandlerPattern)!;
 
             const data = Buffer.from(JSON.stringify({ expendable: true }));
             const message = createMessage({
@@ -122,9 +115,7 @@ describe('Server E2E Tests', () => {
         });
 
         it('should call `doStuffAsync` example service with expected parameters', async () => {
-            const subscription: Subscription = subscriptions.get(
-                JSON.stringify(theTransporterHandlerPattern),
-            )!;
+            const subscription: Subscription = subscriptions.get(theTransporterHandlerPattern)!;
             const data = Buffer.from(JSON.stringify({ trunkClosed: false }));
             const message = createMessage({
                 data: data,
@@ -137,9 +128,7 @@ describe('Server E2E Tests', () => {
         });
 
         it('should call `doStuffObservable` example service with expected parameters', async () => {
-            const subscription: Subscription = subscriptions.get(
-                JSON.stringify(crankHandlerPattern),
-            )!;
+            const subscription: Subscription = subscriptions.get(crankHandlerPattern)!;
             const data = Buffer.from(JSON.stringify({ heartRate: 180 }));
             const message = createMessage({ data: data });
             subscription.emit('message', message);
@@ -151,9 +140,7 @@ describe('Server E2E Tests', () => {
 
     describe('Ack/Nack', () => {
         it('should call call the ack function when the handler is run successfully', async () => {
-            const subscription: Subscription = subscriptions.get(
-                JSON.stringify(expendablesHandlerPattern),
-            )!;
+            const subscription: Subscription = subscriptions.get(expendablesHandlerPattern)!;
 
             const data = Buffer.from('{}');
             const ackMock = jest.fn();
@@ -170,9 +157,7 @@ describe('Server E2E Tests', () => {
         it('should call call the nack function when the handler encounters an error', async () => {
             //@ts-expect-error
             strategy.autoNack = true;
-            const subscription: Subscription = subscriptions.get(
-                JSON.stringify(expendablesHandlerPattern),
-            )!;
+            const subscription: Subscription = subscriptions.get(expendablesHandlerPattern)!;
 
             doStuffMock.mockImplementationOnce(() => {
                 throw ':-(';
@@ -193,9 +178,7 @@ describe('Server E2E Tests', () => {
         it('should call call the nack function when the handler rejects', async () => {
             //@ts-expect-error
             strategy.autoNack = true;
-            const subscription: Subscription = subscriptions.get(
-                JSON.stringify(theTransporterHandlerPattern),
-            )!;
+            const subscription: Subscription = subscriptions.get(theTransporterHandlerPattern)!;
 
             doStuffMockAsync.mockRejectedValueOnce('Promise<:-(>');
 
@@ -214,9 +197,7 @@ describe('Server E2E Tests', () => {
         it('should call call the nack function when the handler returns a `throwError` operator', async () => {
             //@ts-expect-error
             strategy.autoNack = true;
-            const subscription: Subscription = subscriptions.get(
-                JSON.stringify(crankHandlerPattern),
-            )!;
+            const subscription: Subscription = subscriptions.get(crankHandlerPattern)!;
 
             doStuffMockObservable.mockReturnValueOnce(throwError('Observable<:-(>'));
 
