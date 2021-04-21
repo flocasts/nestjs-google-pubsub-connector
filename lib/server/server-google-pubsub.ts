@@ -3,6 +3,7 @@ import {
     CustomTransportStrategy,
     MessageHandler,
     MsPattern,
+    PatternMetadata,
     ReadPacket,
     Server,
 } from '@nestjs/microservices';
@@ -91,7 +92,7 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
     /**
      * GooglePubSubSubscriptions keyed by pattern
      */
-    private readonly subscriptions: Map<string, GooglePubSubSubscription> = new Map();
+    private readonly subscriptions: Map<PatternMetadata, GooglePubSubSubscription> = new Map();
 
     constructor(options?: GooglePubSubTransportOptions) {
         super();
@@ -118,7 +119,7 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
     private async bindHandlers(callback: () => void) {
         // Set up our subscriptions from any decorated topics
         await from(this.messageHandlers)
-            .pipe(mergeMap(([pattern]) => this.getSubscriptionFromPattern(pattern)))
+            .pipe(mergeMap(([metadata]: any) => this.getSubscriptionFromPattern(metadata)))
             .toPromise();
 
         // Group all of our event listeners into an array
@@ -135,16 +136,9 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
      * Resolve subscriptions and create them if `createSubscription` is true
      * @param pattern - The pattern from the \@GooglePubSubMessageHandler decorator
      */
-    private async getSubscriptionFromPattern(pattern: string): Promise<void> {
-        let metadata: GooglePubSubPatternMetadata | null;
-        try {
-            metadata = JSON.parse(pattern);
-        } catch (error) {
-            metadata = null;
-        }
-
+    private async getSubscriptionFromPattern(metadata: GooglePubSubPatternMetadata): Promise<void> {
         if (metadata == null || !(metadata.subscriptionName || metadata.topicName)) {
-            throw new InvalidPatternMetadataException(pattern);
+            // throw new InvalidPatternMetadataException(pattern);
         }
 
         let subscription: GooglePubSubSubscription | null = null;
@@ -158,10 +152,10 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
             subscription = this.googlePubSubClient.getSubscription(metadata.subscriptionName);
         } else if (this.createSubscriptions) {
             if (!metadata.topicName) {
-                throw new InvalidPatternMetadataException(pattern);
+                // throw new InvalidPatternMetadataException(pattern);
             }
             let topic: GooglePubSubTopic;
-            const topicName = this.topicNamingStrategy.generateTopicName(metadata.topicName);
+            const topicName = this.topicNamingStrategy.generateTopicName(metadata.topicName!);
             const topicExists: boolean = topicName
                 ? await this.googlePubSubClient.topicExists(topicName).toPromise()
                 : false;
@@ -181,20 +175,20 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
 
         if (subscription) {
             this.logger.log(`Mapped {${subscription.name}} handler`);
-            this.subscriptions.set(pattern, subscription);
+            this.subscriptions.set(metadata, subscription);
         }
     }
 
     /**
      * Subscribe to a Subscription and include pattern with each message
      */
-    private subscribeMessageEvent = ([pattern, subscription]: [
-        string,
+    private subscribeMessageEvent = ([metadata, subscription]: [
+        PatternMetadata,
         GooglePubSubSubscription,
-    ]): Observable<[string, GooglePubSubMessage]> => {
+    ]): Observable<[PatternMetadata, GooglePubSubMessage]> => {
         return this.googlePubSubClient.listenForMessages(subscription).pipe(
-            map<GooglePubSubMessage, [string, GooglePubSubMessage]>((message) => [
-                pattern,
+            map<GooglePubSubMessage, [PatternMetadata, GooglePubSubMessage]>((message) => [
+                metadata,
                 message,
             ]),
         );
@@ -203,27 +197,26 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
     /**
      * Convert each message into a ReadPacket and include pattern and Context
      */
-    private deserializeAndAddContext = ([pattern, message]: [string, GooglePubSubMessage]): [
-        string,
-        ReadPacket<GooglePubSubMessage>,
-        GooglePubSubContext,
-    ] => {
+    private deserializeAndAddContext = ([metadata, message]: [
+        PatternMetadata,
+        GooglePubSubMessage,
+    ]): [PatternMetadata, ReadPacket<GooglePubSubMessage>, GooglePubSubContext] => {
         return [
-            pattern,
-            this.deserializer.deserialize(message, { metadata: pattern }),
-            new GooglePubSubContext([message, pattern, this.autoAck, this.autoNack]),
+            metadata,
+            this.deserializer.deserialize(message, { metadata }),
+            new GooglePubSubContext([message, metadata, this.autoAck, this.autoNack]),
         ];
     };
 
     /**
      * Pass ReadPacket to internal `handleEvent` method
      */
-    private handleMessage = ([pattern, packet, ctx]: [
-        string,
+    private handleMessage = ([metadata, packet, ctx]: [
+        PatternMetadata,
         ReadPacket<GooglePubSubMessage>,
         GooglePubSubContext,
     ]): Observable<[AckFunction, NackFunction, GooglePubSubContext]> => {
-        return of(this.getHandlerByPattern(pattern)).pipe(
+        return of(this.getHandlerByPattern(metadata)).pipe(
             mergeMap((handler) => {
                 if (handler == null)
                     throw Error('Transport Error: Handler should never be nullish.');
@@ -263,7 +256,12 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
         await this.googlePubSubClient.close();
     }
 
-    public getHandlerByPattern(pattern: string): MessageHandler | null {
+    public getHandlerByPattern(pattern: any): MessageHandler | null {
         return this.messageHandlers.get(pattern) ?? null;
+    }
+
+    public addHandler(pattern: any, callback: MessageHandler, isEventHandler?: boolean): void {
+        callback.isEventHandler = isEventHandler;
+        this.messageHandlers.set(pattern, callback);
     }
 }

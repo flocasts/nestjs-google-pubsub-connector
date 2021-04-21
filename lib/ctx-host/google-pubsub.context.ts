@@ -1,4 +1,5 @@
 import { Message } from '@google-cloud/pubsub';
+import { PatternMetadata } from '@nestjs/microservices';
 import { BaseRpcContext } from '@nestjs/microservices/ctx-host/base-rpc.context';
 import { AckFunction, NackFunction } from '../interfaces';
 
@@ -6,7 +7,7 @@ type PubSubContextArgs = [
     // The incoming message
     Message,
     // The raw handler metadata
-    string,
+    PatternMetadata,
     // Auto ack
     boolean,
     // Auto nack
@@ -31,7 +32,7 @@ export class GooglePubSubContext extends BaseRpcContext<PubSubContextArgs> {
     /**
      * Returns the raw metadata for the handler
      */
-    public getRawMetadata(): string {
+    public getMetadata(): PatternMetadata {
         return this.args[1];
     }
 
