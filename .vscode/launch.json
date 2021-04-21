@@ -47,9 +47,6 @@
                 "<node_internals>/**"
             ],
             "program": "${workspaceFolder}/examples/server/main.ts",
-            "outFiles": [
-                "${workspaceFolder}/dist/**/*.js"
-            ],
             "outputCapture": "std",
             "console": "internalConsole",
         }

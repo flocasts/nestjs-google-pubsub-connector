@@ -7,7 +7,7 @@ import {
     Server,
 } from '@nestjs/microservices';
 import { from, merge, Observable, of, Subscription } from 'rxjs';
-import { catchError, map, mergeMap } from 'rxjs/operators';
+import { catchError, map, mapTo, mergeMap } from 'rxjs/operators';
 import { ClientGooglePubSub } from '../client';
 import { GooglePubSubContext as GooglePubSubContext } from '../ctx-host/google-pubsub.context';
 import { GooglePubSubMessageDeserializer } from '../deserializers';
@@ -229,6 +229,7 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
                     throw Error('Transport Error: Handler should never be nullish.');
                 return from(handler(packet, ctx)).pipe(
                     mergeMap((i) => this.transformToObservable(i)),
+                    mapTo(null),
                 );
             }),
             catchError((err) => {
