@@ -12,6 +12,7 @@ import { ClientGooglePubSub } from '../client';
 import { GooglePubSubContext as GooglePubSubContext } from '../ctx-host/google-pubsub.context';
 import { GooglePubSubMessageDeserializer } from '../deserializers';
 import { InvalidPatternMetadataException } from '../errors';
+import { TransportError } from '../errors/transport-error.exception';
 import {
     AckFunction,
     AckStrategy,
@@ -225,8 +226,13 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
     ]): Observable<void> => {
         return of(this.getHandlerByPattern(pattern)).pipe(
             mergeMap((handler) => {
-                if (handler == null)
-                    throw Error('Transport Error: Handler should never be nullish.');
+                if (handler == null) {
+                    throw new TransportError(
+                        'Handler should never be nullish.',
+                        pattern,
+                        Array.from(this.messageHandlers.keys()),
+                    );
+                }
                 return from(handler(packet, ctx)).pipe(
                     mergeMap((i) => this.transformToObservable(i)),
                     mapTo(null),
