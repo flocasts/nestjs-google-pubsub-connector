@@ -222,7 +222,7 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
         string,
         ReadPacket<GooglePubSubMessage>,
         GooglePubSubContext,
-    ]): Observable<[AckFunction, NackFunction, GooglePubSubContext]> => {
+    ]): Observable<void> => {
         return of(this.getHandlerByPattern(pattern)).pipe(
             mergeMap((handler) => {
                 if (handler == null)
@@ -235,22 +235,14 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
             catchError((err) => {
                 return of(err);
             }),
-            map<unknown, [AckFunction, NackFunction, GooglePubSubContext]>((err) => {
+            map<unknown, void>((err) => {
+                const ack = packet.data.ack.bind(packet.data);
+                const nack = packet.data.nack.bind(packet.data);
                 if (err) {
-                    this.nackStrategy.nack(
-                        err,
-                        packet.data.ack.bind(packet.data),
-                        packet.data.nack.bind(packet.data),
-                        ctx,
-                    );
+                    this.nackStrategy.nack(err, ack, nack, ctx);
                 } else {
-                    this.ackStrategy.ack(
-                        packet.data.ack.bind(packet.data),
-                        packet.data.nack.bind(packet.data),
-                        ctx,
-                    );
+                    this.ackStrategy.ack(ack, nack, ctx);
                 }
-                return [packet.data.ack.bind(packet.data), packet.data.nack.bind(packet.data), ctx];
             }),
         );
     };
