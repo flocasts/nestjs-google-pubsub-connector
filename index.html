@@ -1,0 +1,514 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>@flosportsinc/nestjs-google-pubsub-connector</title>
+	<meta name="description" content="Documentation for @flosportsinc/nestjs-google-pubsub-connector">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+	<script async src="assets/js/search.js" id="search-script"></script>
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.json" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">@flosportsinc/nestjs-google-pubsub-connector</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<h1>@flosportsinc/nestjs-google-pubsub-connector</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<a href="#nestjs-google-pubsub-connector" id="nestjs-google-pubsub-connector" style="color: inherit; text-decoration: none;">
+					<h1>NestJS Google Pubsub Connector</h1>
+				</a>
+				<p>This package includes two pieces, a NestJS microservice strategy as well as a client proxy. Together this enable
+				easy integration with Google PubSub in a NestJS-y way.</p>
+				<a href="#features" id="features" style="color: inherit; text-decoration: none;">
+					<h2>Features</h2>
+				</a>
+				<ul>
+					<li>Seamlessly integrate your subscription listeners as controllers in the robust NestJS framework!</li>
+					<li>Creates subscriptions on demand, with self-service naming strategies!</li>
+					<li>A &quot;just-works&quot; approach means that zero configuration is needed out of the box, just insert the
+					strategy and let the framework do the rest.</li>
+					<li>Oh-so Extensible:<ul>
+							<li>Subscription naming strategies let you dynamically name subscriptions how <em>you</em> want to!</li>
+							<li>Ack/nack strategies let you decouple your business logic from how you respond to messages!</li>
+						</ul>
+					</li>
+					<li>Decorators! Decorators!! Decorators!!!</li>
+				</ul>
+				<a href="#microservice-strategy" id="microservice-strategy" style="color: inherit; text-decoration: none;">
+					<h2>Microservice Strategy</h2>
+				</a>
+				<p>The server/transport strategy component is inserted as a strategy when creating a microservice, taking a
+				few configuration parameters, as well as an optional PubSub instance, like so:</p>
+				<pre><code class="language-typescript"><span style="color: #0000FF">async</span><span style="color: #000000"> </span><span style="color: #0000FF">function</span><span style="color: #000000"> </span><span style="color: #795E26">bootstrap</span><span style="color: #000000">() {</span>
+<span style="color: #000000">    </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">app</span><span style="color: #000000">: </span><span style="color: #267F99">INestMicroservice</span><span style="color: #000000"> = </span><span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #001080">NestFactory</span><span style="color: #000000">.</span><span style="color: #795E26">createMicroservice</span><span style="color: #000000">&lt;</span><span style="color: #267F99">MicroserviceOptions</span><span style="color: #000000">&gt;(</span>
+<span style="color: #000000">        </span><span style="color: #001080">ExampleModule</span><span style="color: #000000">,</span>
+<span style="color: #000000">        {</span>
+<span style="color: #000000">            </span><span style="color: #001080">strategy:</span><span style="color: #000000"> </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">GooglePubSubTransport</span><span style="color: #000000">({</span>
+<span style="color: #000000">                </span><span style="color: #001080">createSubscriptions:</span><span style="color: #000000"> </span><span style="color: #0000FF">true</span><span style="color: #000000">,</span>
+<span style="color: #000000">                </span><span style="color: #008000">// The microservice will configure its own PubSub instance, but you&#039;re free to</span>
+<span style="color: #000000">                </span><span style="color: #008000">// supply your own</span>
+<span style="color: #000000">                </span><span style="color: #008000">// client: new PubSub()</span>
+<span style="color: #000000">            }),</span>
+<span style="color: #000000">        },</span>
+<span style="color: #000000">    );</span>
+
+<span style="color: #000000">    </span><span style="color: #008000">// It&#039;s also possible to connect as a hybrid app:</span>
+<span style="color: #000000">    </span><span style="color: #008000">// const app = await NestFactory.create(HttpAppModule);</span>
+<span style="color: #000000">    </span><span style="color: #008000">// const microservice = app.connectMicroservice({</span>
+<span style="color: #000000">    </span><span style="color: #008000">//      strategy: new GooglePubSubTransport({</span>
+<span style="color: #000000">    </span><span style="color: #008000">//          createSubscriptions: true,</span>
+<span style="color: #000000">    </span><span style="color: #008000">//          // The microservice will configure its own PubSub instance, but you&#039;re free to</span>
+<span style="color: #000000">    </span><span style="color: #008000">//          // supply your own</span>
+<span style="color: #000000">    </span><span style="color: #008000">//          // client: new PubSub</span>
+<span style="color: #000000">    </span><span style="color: #008000">//      }),</span>
+<span style="color: #000000">    </span><span style="color: #008000">// });</span>
+
+<span style="color: #000000">    </span><span style="color: #AF00DB">return</span><span style="color: #000000"> </span><span style="color: #001080">app</span><span style="color: #000000">.</span><span style="color: #795E26">listen</span><span style="color: #000000">(() </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">        </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;example app started!&#039;</span><span style="color: #000000">);</span>
+<span style="color: #000000">    });</span>
+<span style="color: #000000">}</span>
+<span style="color: #795E26">bootstrap</span><span style="color: #000000">();</span>
+</code></pre>
+				<p>With just the configuration above you can have working controllers responding to messages in minutes.</p>
+				<a href="#decorators" id="decorators" style="color: inherit; text-decoration: none;">
+					<h3>Decorators</h3>
+				</a>
+				<p>Parameter decorators are one of the best ease-of-use features in NestJS, and this library offers a few
+				that will make parsing PubSub Messages easy, simple and fun:</p>
+				<table>
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Desscription</th>
+						</tr>
+					</thead>
+					<tbody><tr>
+							<td>@GooglePubSubMessageHandler</td>
+							<td>Takes a subscription name and optionally a topic name. A subscription will be created if it does not already exits <strong>if</strong>: a topic name is supplied  <strong>and</strong> <code>createSubscriptions</code> was set to true when the microservice was created</td>
+						</tr>
+						<tr>
+							<td>@GooglePubSubMessageBody</td>
+							<td>This will retrieve and <code>JSON.parse()</code> the body of the incoming message. You may optionally include a key and the corresponding value will be returned.</td>
+						</tr>
+						<tr>
+							<td>@GooglePubSubMessageAttributes</td>
+							<td>This will retrieve attributes of the incoming message. You may optionally include a key, and the corresponding value will be returned.</td>
+						</tr>
+						<tr>
+							<td>@Ack</td>
+							<td>This will return a function that will <code>ack</code> the incoming message. </br> <strong>N.B.</strong> this will disable any auto-acking.</td>
+						</tr>
+						<tr>
+							<td>@Nack</td>
+							<td>Same as above, but for nacking.</td>
+						</tr>
+				</tbody></table>
+				<a href="#subscription-creation" id="subscription-creation" style="color: inherit; text-decoration: none;">
+					<h3>Subscription creation</h3>
+				</a>
+				<p>If <code>createSubscriptions</code> is set as true on transporter setup, then the service will
+					attempt to create a new subscription if the requested subscription for a handler is
+					not already present.The microservice takes a <code>subscriptionNamingStrategy</code> as an
+					argument, which expects a class conforming to the <code>SubscriptionNamingStrategy</code>
+				interface. A basic strategy is included by default:</p>
+				<pre><code class="language-typescript"><span style="color: #AF00DB">import</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #001080">SubscriptionNamingStrategy</span>
+<span style="color: #000000">} </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;@flosports/nestjs-google-pubsub-microservice&#039;</span><span style="color: #000000">;</span>
+
+<span style="color: #AF00DB">export</span><span style="color: #000000"> </span><span style="color: #0000FF">class</span><span style="color: #000000"> </span><span style="color: #267F99">BasicSubscriptionNamingStrategy</span>
+<span style="color: #000000">    </span><span style="color: #0000FF">implements</span><span style="color: #000000"> </span><span style="color: #267F99">SubscriptionNamingStrategy</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #0000FF">public</span><span style="color: #000000"> </span><span style="color: #795E26">generateSubscriptionName</span><span style="color: #000000">(</span>
+<span style="color: #000000">        </span><span style="color: #001080">topicName</span><span style="color: #000000">: </span><span style="color: #267F99">string</span><span style="color: #000000">,</span>
+<span style="color: #000000">        </span><span style="color: #001080">subscriptionName</span><span style="color: #000000">?: </span><span style="color: #267F99">string</span>
+<span style="color: #000000">    ): </span><span style="color: #267F99">string</span><span style="color: #000000"> {</span>
+<span style="color: #000000">        </span><span style="color: #AF00DB">if</span><span style="color: #000000"> (</span><span style="color: #001080">subscriptionName</span><span style="color: #000000">) {</span>
+<span style="color: #000000">            </span><span style="color: #AF00DB">return</span><span style="color: #000000"> </span><span style="color: #001080">subscriptionName</span><span style="color: #000000">;</span>
+<span style="color: #000000">        }</span>
+<span style="color: #000000">        </span><span style="color: #AF00DB">return</span><span style="color: #000000"> </span><span style="color: #A31515">`</span><span style="color: #0000FF">${</span><span style="color: #001080">topicName</span><span style="color: #0000FF">}</span><span style="color: #A31515">-sub`</span>
+<span style="color: #000000">    }</span>
+<span style="color: #000000">}</span>
+</code></pre>
+				<p>The string returned from this strategy will be used as the name for the created subscription.</p>
+				<a href="#acking-and-nacking" id="acking-and-nacking" style="color: inherit; text-decoration: none;">
+					<h3>Acking and Nacking</h3>
+				</a>
+				<p>In the interest of giving you, the user, the power over your own destiny this
+					library takes both a hands-off and &quot;just works&quot; approach to acking and nacking
+					messages. This is accomplished through &quot;strategies&quot; confirming to the <code>AckStrategy</code>,
+				<code>NackStrategy</code> interfaces which are supplied at transport creation.</p>
+				<a href="#ack-strategies" id="ack-strategies" style="color: inherit; text-decoration: none;">
+					<h4>Ack Strategies</h4>
+				</a>
+				<p>Ack strategies are guaranteed to run after a handler completes successfully, and
+					expose functions for acking and nacking the message, as well as the messages
+				<code>GooglePubSubContext</code>. The default is shown in the example below:</p>
+				<pre><code class="language-typescript"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">GooglePubSubContext</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;../ctx-host&#039;</span><span style="color: #000000">;</span>
+<span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">AckFunction</span><span style="color: #000000">, </span><span style="color: #001080">AckStrategy</span><span style="color: #000000">, </span><span style="color: #001080">NackFunction</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;../interfaces&#039;</span><span style="color: #000000">;</span>
+
+<span style="color: #AF00DB">export</span><span style="color: #000000"> </span><span style="color: #0000FF">class</span><span style="color: #000000"> </span><span style="color: #267F99">BasicAckStrategy</span><span style="color: #000000"> </span><span style="color: #0000FF">implements</span><span style="color: #000000"> </span><span style="color: #267F99">AckStrategy</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #0000FF">public</span><span style="color: #000000"> </span><span style="color: #795E26">ack</span><span style="color: #000000">(</span><span style="color: #001080">ack</span><span style="color: #000000">: </span><span style="color: #267F99">AckFunction</span><span style="color: #000000">, </span><span style="color: #001080">nack</span><span style="color: #000000">: </span><span style="color: #267F99">NackFunction</span><span style="color: #000000">, </span><span style="color: #001080">ctx</span><span style="color: #000000">: </span><span style="color: #267F99">GooglePubSubContext</span><span style="color: #000000">): </span><span style="color: #267F99">Promise</span><span style="color: #000000">&lt;</span><span style="color: #267F99">void</span><span style="color: #000000">&gt; {</span>
+<span style="color: #000000">        </span><span style="color: #AF00DB">if</span><span style="color: #000000"> (</span><span style="color: #001080">ctx</span><span style="color: #000000">.</span><span style="color: #795E26">getAutoAck</span><span style="color: #000000">()) {</span>
+<span style="color: #000000">            </span><span style="color: #795E26">ack</span><span style="color: #000000">();</span>
+<span style="color: #000000">        }</span>
+<span style="color: #000000">        </span><span style="color: #AF00DB">return</span><span style="color: #000000"> </span><span style="color: #267F99">Promise</span><span style="color: #000000">.</span><span style="color: #795E26">resolve</span><span style="color: #000000">();</span>
+<span style="color: #000000">    }</span>
+<span style="color: #000000">}</span>
+</code></pre>
+				<p>The flow here is simple, if autoAck is set to true then this message will be acked
+				and the function will return.</p>
+				<a href="#nack-strategies" id="nack-strategies" style="color: inherit; text-decoration: none;">
+					<h4>Nack Strategies</h4>
+				</a>
+				<p>Nack strategies are guaranteed to run if any error is thrown from the handler.
+					</br>
+					<em><strong>N.B.</strong> This will occur <em>after</em> exception filters.</em>
+					</br>
+					The signature is the same as an ack strategies with the exception of the thrown Error
+				(pun intended) being included as the first argument. The default is shown below:</p>
+				<pre><code class="language-typescript"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">GooglePubSubContext</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;../ctx-host&#039;</span><span style="color: #000000">;</span>
+<span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">AckFunction</span><span style="color: #000000">, </span><span style="color: #001080">NackFunction</span><span style="color: #000000">, </span><span style="color: #001080">NackStrategy</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;../interfaces&#039;</span><span style="color: #000000">;</span>
+
+<span style="color: #AF00DB">export</span><span style="color: #000000"> </span><span style="color: #0000FF">class</span><span style="color: #000000"> </span><span style="color: #267F99">BasicNackStrategy</span><span style="color: #000000"> </span><span style="color: #0000FF">implements</span><span style="color: #000000"> </span><span style="color: #267F99">NackStrategy</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #0000FF">public</span><span style="color: #000000"> </span><span style="color: #795E26">nack</span><span style="color: #000000">(</span>
+<span style="color: #000000">        </span><span style="color: #001080">error</span><span style="color: #000000">: </span><span style="color: #267F99">Error</span><span style="color: #000000">,</span>
+<span style="color: #000000">        </span><span style="color: #001080">ack</span><span style="color: #000000">: </span><span style="color: #267F99">AckFunction</span><span style="color: #000000">,</span>
+<span style="color: #000000">        </span><span style="color: #001080">nack</span><span style="color: #000000">: </span><span style="color: #267F99">NackFunction</span><span style="color: #000000">,</span>
+<span style="color: #000000">        </span><span style="color: #001080">ctx</span><span style="color: #000000">: </span><span style="color: #267F99">GooglePubSubContext</span><span style="color: #000000">,</span>
+<span style="color: #000000">    ): </span><span style="color: #267F99">Promise</span><span style="color: #000000">&lt;</span><span style="color: #267F99">void</span><span style="color: #000000">&gt; {</span>
+<span style="color: #000000">        </span><span style="color: #AF00DB">if</span><span style="color: #000000"> (</span><span style="color: #001080">ctx</span><span style="color: #000000">.</span><span style="color: #795E26">getAutoNack</span><span style="color: #000000">()) {</span>
+<span style="color: #000000">            </span><span style="color: #795E26">nack</span><span style="color: #000000">();</span>
+<span style="color: #000000">        }</span>
+<span style="color: #000000">        </span><span style="color: #AF00DB">return</span><span style="color: #000000"> </span><span style="color: #267F99">Promise</span><span style="color: #000000">.</span><span style="color: #795E26">resolve</span><span style="color: #000000">();</span>
+<span style="color: #000000">    }</span>
+<span style="color: #000000">}</span>
+</code></pre>
+				<a href="#no-strategyhybrid-acking-and-nacking" id="no-strategyhybrid-acking-and-nacking" style="color: inherit; text-decoration: none;">
+					<h4>No strategy/hybrid acking and nacking</h4>
+				</a>
+				<p>In addition to using these strategies, the library also makes available ack and nack
+					functions through decorators to the controller as well as from
+					the <code>GooglePubSubContext</code>. When ack or nack functions are
+					retrieved from the context (either directly or through the
+					decorator) <strong>the autoAck/autoNack methods will return false</strong>,
+					disabling the basic strategies and optionally any strategies you
+				should choose to create. </br></p>
+				<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
+					<h3>Usage</h3>
+				</a>
+				<pre><code class="language-typescript"><span style="color: #008000">// src/main.ts</span>
+<span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">NestFactory</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;@nestjs/core&#039;</span><span style="color: #000000">;</span>
+<span style="color: #AF00DB">import</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #001080">GooglePubSubTransport</span>
+<span style="color: #000000">} </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;@flosports/nestjs-google-pubsub-microservice&#039;</span><span style="color: #000000">;</span>
+<span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">TestModule</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;./test.module&#039;</span><span style="color: #000000">;</span>
+
+<span style="color: #0000FF">async</span><span style="color: #000000"> </span><span style="color: #0000FF">function</span><span style="color: #000000"> </span><span style="color: #795E26">bootstrap</span><span style="color: #000000">() {</span>
+<span style="color: #000000">    </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">app</span><span style="color: #000000"> = </span><span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #001080">NestFactory</span><span style="color: #000000">.</span><span style="color: #795E26">createMicroservice</span><span style="color: #000000">(</span><span style="color: #001080">TestModule</span><span style="color: #000000">, {</span>
+<span style="color: #000000">        </span><span style="color: #001080">strategy:</span><span style="color: #000000"> </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">GooglePubSubTransport</span><span style="color: #000000">({</span>
+<span style="color: #000000">            </span><span style="color: #001080">createSubscriptions:</span><span style="color: #000000"> </span><span style="color: #0000FF">true</span><span style="color: #000000">,</span>
+<span style="color: #000000">            </span><span style="color: #008000">// The microservice will configure its own PubSub instance, but you&#039;re free to</span>
+<span style="color: #000000">            </span><span style="color: #008000">// supply your own</span>
+<span style="color: #000000">            </span><span style="color: #008000">// client: new PubSub</span>
+<span style="color: #000000">        }),</span>
+<span style="color: #000000">    });</span>
+<span style="color: #000000">    </span><span style="color: #AF00DB">return</span><span style="color: #000000"> </span><span style="color: #001080">app</span><span style="color: #000000">.</span><span style="color: #795E26">listen</span><span style="color: #000000">(() </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">        </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;app started!&#039;</span><span style="color: #000000">);</span>
+<span style="color: #000000">    });</span>
+<span style="color: #000000">}</span>
+<span style="color: #795E26">bootstrap</span><span style="color: #000000">();</span>
+
+<span style="color: #008000">// src/test.module.ts</span>
+<span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">Module</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;@nestjs/common&quot;</span><span style="color: #000000">;</span>
+<span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">TestController</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;./test.controller&quot;</span><span style="color: #000000">;</span>
+
+<span style="color: #000000">@</span><span style="color: #795E26">Module</span><span style="color: #000000">({</span>
+<span style="color: #000000">    </span><span style="color: #001080">controllers:</span><span style="color: #000000"> [</span><span style="color: #001080">TestController</span><span style="color: #000000">],</span>
+<span style="color: #000000">})</span>
+<span style="color: #AF00DB">export</span><span style="color: #000000"> </span><span style="color: #0000FF">class</span><span style="color: #000000"> </span><span style="color: #267F99">TestModule</span><span style="color: #000000"> {</span>
+<span style="color: #000000">}</span>
+
+<span style="color: #008000">// src/test.controller.ts</span>
+<span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">Controller</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;@nestjs/common&#039;</span><span style="color: #000000">;</span>
+<span style="color: #AF00DB">import</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #001080">GooglePubSubMessageBody</span><span style="color: #000000">,</span>
+<span style="color: #000000">    </span><span style="color: #001080">GooglePubSubMessageHandler</span>
+<span style="color: #000000">} </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;@flosports/nestjs-google-pubsub-microservice&#039;</span><span style="color: #000000">;</span>
+<span style="color: #000000">@</span><span style="color: #795E26">Controller</span><span style="color: #000000">()</span>
+<span style="color: #AF00DB">export</span><span style="color: #000000"> </span><span style="color: #0000FF">class</span><span style="color: #000000"> </span><span style="color: #267F99">TestController</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #0000FF">constructor</span><span style="color: #000000">(</span>
+<span style="color: #000000">        </span><span style="color: #0000FF">private</span><span style="color: #000000"> </span><span style="color: #0000FF">readonly</span><span style="color: #000000"> </span><span style="color: #001080">diService</span><span style="color: #000000">: </span><span style="color: #267F99">DiService</span><span style="color: #000000">;</span>
+<span style="color: #000000">    ) { }</span>
+<span style="color: #000000">    @</span><span style="color: #795E26">GooglePubSubMessageHandler</span><span style="color: #000000">({</span>
+<span style="color: #000000">        </span><span style="color: #001080">subscriptionName:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;my-existing-subscription&#039;</span><span style="color: #000000">,</span>
+<span style="color: #000000">    })</span>
+<span style="color: #000000">    </span><span style="color: #0000FF">public</span><span style="color: #000000"> </span><span style="color: #795E26">handler1</span><span style="color: #000000">(@</span><span style="color: #795E26">GooglePubSubMessageBody</span><span style="color: #000000">() </span><span style="color: #001080">data</span><span style="color: #000000">: { </span><span style="color: #001080">foo</span><span style="color: #000000">: </span><span style="color: #267F99">boolean</span><span style="color: #000000"> }): </span><span style="color: #267F99">void</span><span style="color: #000000"> {</span>
+<span style="color: #000000">        </span><span style="color: #AF00DB">return</span><span style="color: #000000"> </span><span style="color: #0000FF">this</span><span style="color: #000000">.</span><span style="color: #001080">diService</span><span style="color: #000000">.</span><span style="color: #795E26">handleFoo</span><span style="color: #000000">(</span><span style="color: #001080">data</span><span style="color: #000000">);</span>
+<span style="color: #000000">    }</span>
+
+<span style="color: #000000">    @</span><span style="color: #795E26">GooglePubSubMessageHandler</span><span style="color: #000000">({</span>
+<span style="color: #000000">        </span><span style="color: #001080">subscriptionName:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;my-subscription-that-or-may-not-exist&#039;</span><span style="color: #000000">,</span>
+<span style="color: #000000">        </span><span style="color: #001080">topicName:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;my-existing-topic&#039;</span>
+<span style="color: #000000">    })</span>
+<span style="color: #000000">    </span><span style="color: #0000FF">public</span><span style="color: #000000"> </span><span style="color: #795E26">handler2</span><span style="color: #000000">(@</span><span style="color: #795E26">GooglePubSubMessageBody</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;bar&#039;</span><span style="color: #000000">) </span><span style="color: #001080">bar</span><span style="color: #000000">:  </span><span style="color: #267F99">boolean</span><span style="color: #000000"> ): </span><span style="color: #267F99">void</span><span style="color: #000000"> {</span>
+<span style="color: #000000">        </span><span style="color: #AF00DB">return</span><span style="color: #000000"> </span><span style="color: #0000FF">this</span><span style="color: #000000">.</span><span style="color: #001080">diService</span><span style="color: #000000">.</span><span style="color: #795E26">handleBar</span><span style="color: #000000">(</span><span style="color: #001080">data</span><span style="color: #000000">);</span>
+<span style="color: #000000">    }</span>
+<span style="color: #000000">}</span>
+</code></pre>
+				<a href="#client-proxy" id="client-proxy" style="color: inherit; text-decoration: none;">
+					<h2>Client Proxy</h2>
+				</a>
+				<p>This library also provides a basic client proxy that wraps a PubSub instance.</p>
+				<p>This proxy supports:</p>
+				<ul>
+					<li>Publishing</li>
+					<li>Topic/Subscription creation</li>
+					<li>Topic/Subscription deletion</li>
+				</ul>
+				<p>You can find a number of working examples in the <a href="examples/client">examples directory</a>.</p>
+				<a href="#usage-1" id="usage-1" style="color: inherit; text-decoration: none;">
+					<h3>Usage</h3>
+				</a>
+				<pre><code class="language-typescript">
+<span style="color: #AF00DB">import</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #001080">ClientGooglePubSub</span>
+<span style="color: #000000">} </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;@flosports/nestjs-google-pubsub-microservice&#039;</span><span style="color: #000000">;</span>
+
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">msg</span><span style="color: #000000"> = </span><span style="color: #A31515">&#039;beam me up scotty&#039;</span><span style="color: #000000">;</span>
+
+<span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">ClientGooglePubSub</span><span style="color: #000000">()</span>
+<span style="color: #000000">    .</span><span style="color: #795E26">publishToTopic</span><span style="color: #000000">(</span>
+<span style="color: #000000">        </span><span style="color: #A31515">&#039;my-test-topic&#039;</span><span style="color: #000000">,</span>
+<span style="color: #000000">        </span><span style="color: #001080">Buffer</span><span style="color: #000000">.</span><span style="color: #795E26">from</span><span style="color: #000000">(</span><span style="color: #001080">msg</span><span style="color: #000000">),</span>
+<span style="color: #000000">    );</span>
+</code></pre>
+				<a href="#authentication" id="authentication" style="color: inherit; text-decoration: none;">
+					<h3>Authentication</h3>
+				</a>
+				<p>In keeping with the hand-off &quot;just works&quot; approach in this library, authentication is handled entirely
+					by the underlying PubSub client. This means that the credentials pointed to by the <code>GOOGLE_APPLICATION_CREDENTIALS</code>
+					will be used, as well as emulator support if <code>PUBSUB_EMULATOR_HOST</code> is set. If you need a more advanced
+					configuration, then both the transport strategy and the client proxy will take a PubSub client instance
+				as a constructor parameter - you can simply build the client you need and then hand it off.</p>
+				<a href="#examples" id="examples" style="color: inherit; text-decoration: none;">
+					<h3>Examples</h3>
+				</a>
+				<p>A working example server can be found in the <a href="examples/server">examples directory</a>.</p>
+				<a href="#prerequisites-for-running-the-example-server" id="prerequisites-for-running-the-example-server" style="color: inherit; text-decoration: none;">
+					<h4>Prerequisites for running the example server</h4>
+				</a>
+				<p>In order to run the example server you must either:</p>
+				<ul>
+					<li>Have <code>GOOGLE_APPLICATION_CREDENTIALS</code> set in your environment, and pointed to a valid credentials, or</li>
+					<li>Have a running PubSub emulator and have <code>PUBSUB_EMULATOR_HOST</code> set in your environment</li>
+				</ul>
+				<p>In both cases you will need to create any topics present in the example server (or change them to
+				topics) that already exist.</p>
+				<a href="#running-the-example-server" id="running-the-example-server" style="color: inherit; text-decoration: none;">
+					<h4>Running the example server</h4>
+				</a>
+				<p>To run the server, simply invoke the provided <code>npm</code> script:</p>
+				<pre><code class="language-sh"><span style="color: #000000">npm run example:server</span>
+</code></pre>
+				<p>Assuming all prerequisites are met you should see something like the following:</p>
+				<pre><code class="language-sh"><span style="color: #000000">&gt; @flosportsinc/nestjs-google-pubsub-connector@0.0.0-development example:server /Users/haroldwaters/repos/nestjs-google-pubsub-transport</span>
+<span style="color: #000000">&gt; node --inspect -r ts-node/register examples/server/main.ts</span>
+
+<span style="color: #000000">Debugger listening on ws://127.0.0.1:9229/d23772bb-0e6d-40f8-b47d-d0fc94c7c8c2</span>
+<span style="color: #000000">For help, see: https://nodejs.org/en/docs/inspector</span>
+<span style="color: #000000">[Nest] 90792   - 04/17/2021, 7:04:02 PM   [NestFactory] Starting Nest application...</span>
+<span style="color: #000000">[Nest] 90792   - 04/17/2021, 7:04:02 PM   [InstanceLoader] ExampleService dependencies initialized +28ms</span>
+<span style="color: #000000">[Nest] 90792   - 04/17/2021, 7:04:02 PM   [InstanceLoader] ExampleModule dependencies initialized +0ms</span>
+<span style="color: #000000">[Nest] 90792   - 04/17/2021, 7:04:02 PM   [NestMicroservice] Nest microservice successfully started +5ms</span>
+<span style="color: #000000">[Nest] 90792   - 04/17/2021, 7:04:02 PM   [GooglePubSubTransport] Mapped {projects/flosports-174016/subscriptions/lee-christmas-notifications} handler</span>
+<span style="color: #000000">example app started!</span>
+</code></pre>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class=" ">
+						<a href="modules.html">Exports</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+					<li class=" tsd-kind-class">
+						<a href="classes/clientgooglepubsub.html" class="tsd-kind-icon">Client<wbr>Google<wbr>Pub<wbr>Sub</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/googlepubsubcontext.html" class="tsd-kind-icon">Google<wbr>Pub<wbr>Sub<wbr>Context</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/googlepubsubmessagedeserializer.html" class="tsd-kind-icon">Google<wbr>Pub<wbr>Sub<wbr>Message<wbr>Deserializer</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/googlepubsubtransport.html" class="tsd-kind-icon">Google<wbr>Pub<wbr>Sub<wbr>Transport</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/invalidpatternmetadataexception.html" class="tsd-kind-icon">Invalid<wbr>Pattern<wbr>Metadata<wbr>Exception</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/ackstrategy.html" class="tsd-kind-icon">Ack<wbr>Strategy</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/clientgooglepubsuboutgoingrequestdata.html" class="tsd-kind-icon">Client<wbr>Google<wbr>Pub<wbr>Sub<wbr>Outgoing<wbr>Request<wbr>Data</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/clientgooglepubsuboutgoingrequestserializeddata.html" class="tsd-kind-icon">Client<wbr>Google<wbr>Pub<wbr>Sub<wbr>Outgoing<wbr>Request<wbr>Serialized<wbr>Data</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/clienthealthinfo.html" class="tsd-kind-icon">Client<wbr>Health<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/googlepubsuboptions.html" class="tsd-kind-icon">Google<wbr>Pub<wbr>Sub<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/googlepubsubsubscriptionpatternmetadata.html" class="tsd-kind-icon">Google<wbr>Pub<wbr>Sub<wbr>Subscription<wbr>Pattern<wbr>Metadata</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/googlepubsubtopicpatternmetadata.html" class="tsd-kind-icon">Google<wbr>Pub<wbr>Sub<wbr>Topic<wbr>Pattern<wbr>Metadata</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/googlepubsubtransportoptions.html" class="tsd-kind-icon">Google<wbr>Pub<wbr>Sub<wbr>Transport<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/nackstrategy.html" class="tsd-kind-icon">Nack<wbr>Strategy</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/subscriptionnamingstrategy.html" class="tsd-kind-icon">Subscription<wbr>Naming<wbr>Strategy</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/topicnamingstrategy.html" class="tsd-kind-icon">Topic<wbr>Naming<wbr>Strategy</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#ackfunction" class="tsd-kind-icon">Ack<wbr>Function</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#ackhandler" class="tsd-kind-icon">Ack<wbr>Handler</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#generatesubscriptionname" class="tsd-kind-icon">Generate<wbr>Subscription<wbr>Name</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#generatetopicname" class="tsd-kind-icon">Generate<wbr>Topic<wbr>Name</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#googlepubsubmessage" class="tsd-kind-icon">Google<wbr>Pub<wbr>Sub<wbr>Message</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#googlepubsubmessageattributes" class="tsd-kind-icon">Google<wbr>Pub<wbr>Sub<wbr>Message<wbr>Attributes</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#googlepubsubpatternmetadata" class="tsd-kind-icon">Google<wbr>Pub<wbr>Sub<wbr>Pattern<wbr>Metadata</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#googlepubsubsubscription" class="tsd-kind-icon">Google<wbr>Pub<wbr>Sub<wbr>Subscription</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#googlepubsubtopic" class="tsd-kind-icon">Google<wbr>Pub<wbr>Sub<wbr>Topic</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#nackfunction" class="tsd-kind-icon">Nack<wbr>Function</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="modules.html#nackhandler" class="tsd-kind-icon">Nack<wbr>Handler</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#publishdata" class="tsd-kind-icon">Publish<wbr>Data</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="modules.html#googlepubsubmessageack" class="tsd-kind-icon">Google<wbr>Pub<wbr>Sub<wbr>Message<wbr>Ack</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="modules.html#googlepubsubmessagebody" class="tsd-kind-icon">Google<wbr>Pub<wbr>Sub<wbr>Message<wbr>Body</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="modules.html#googlepubsubmessagehandler" class="tsd-kind-icon">Google<wbr>Pub<wbr>Sub<wbr>Message<wbr>Handler</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="modules.html#googlepubsubmessagemessageattributes" class="tsd-kind-icon">Google<wbr>Pub<wbr>Sub<wbr>Message<wbr>Message<wbr>Attributes</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="modules.html#googlepubsubmessagenack" class="tsd-kind-icon">Google<wbr>Pub<wbr>Sub<wbr>Message<wbr>Nack</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+</body>
+</html>

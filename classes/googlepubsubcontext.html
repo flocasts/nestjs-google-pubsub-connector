@@ -1,0 +1,585 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>GooglePubSubContext | @flosportsinc/nestjs-google-pubsub-connector</title>
+	<meta name="description" content="Documentation for @flosportsinc/nestjs-google-pubsub-connector">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../assets/css/main.css">
+	<script async src="../assets/js/search.js" id="search-script"></script>
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.json" data-base="..">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="../index.html" class="title">@flosportsinc/nestjs-google-pubsub-connector</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="../modules.html">@flosportsinc/nestjs-google-pubsub-connector</a>
+				</li>
+				<li>
+					<a href="googlepubsubcontext.html">GooglePubSubContext</a>
+				</li>
+			</ul>
+			<h1>Class GooglePubSubContext</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Context for an incoming Google PubSub message</p>
+					</div>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<span class="tsd-signature-type">BaseRpcContext</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">PubSubContextArgs</span><span class="tsd-signature-symbol">&gt;</span>
+						<ul class="tsd-hierarchy">
+							<li>
+								<span class="target">GooglePubSubContext</span>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Constructors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite"><a href="googlepubsubcontext.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section tsd-is-inherited tsd-is-private-protected tsd-is-external">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected tsd-is-external"><a href="googlepubsubcontext.html#args" class="tsd-kind-icon">args</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Methods</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="googlepubsubcontext.html#getackfunction" class="tsd-kind-icon">get<wbr>Ack<wbr>Function</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="googlepubsubcontext.html#getargbyindex" class="tsd-kind-icon">get<wbr>Arg<wbr>ByIndex</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="googlepubsubcontext.html#getargs" class="tsd-kind-icon">get<wbr>Args</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="googlepubsubcontext.html#getautoack" class="tsd-kind-icon">get<wbr>Auto<wbr>Ack</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="googlepubsubcontext.html#getautonack" class="tsd-kind-icon">get<wbr>Auto<wbr>Nack</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="googlepubsubcontext.html#getmessage" class="tsd-kind-icon">get<wbr>Message</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="googlepubsubcontext.html#getnackfunction" class="tsd-kind-icon">get<wbr>Nack<wbr>Function</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="googlepubsubcontext.html#getrawmetadata" class="tsd-kind-icon">get<wbr>Raw<wbr>Metadata</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="googlepubsubcontext.html#setautoack" class="tsd-kind-icon">set<wbr>Auto<wbr>Ack</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="googlepubsubcontext.html#setautonack" class="tsd-kind-icon">set<wbr>Auto<wbr>Nack</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Constructors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
+					<a name="constructor" class="tsd-anchor"></a>
+					<h3>constructor</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Google<wbr>Pub<wbr>Sub<wbr>Context<span class="tsd-signature-symbol">(</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">PubSubContextArgs</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="googlepubsubcontext.html" class="tsd-signature-type" data-tsd-kind="Class">GooglePubSubContext</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Overrides BaseRpcContext&lt;PubSubContextArgs&gt;.constructor</p>
+								<ul>
+									<li>Defined in <a href="https://github.com/flocasts/nestjs-google-pubsub-connector/blob/03d83b2/lib/ctx-host/google-pubsub.context.ts#L19">lib/ctx-host/google-pubsub.context.ts:19</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>args: <span class="tsd-signature-type">PubSubContextArgs</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="googlepubsubcontext.html" class="tsd-signature-type" data-tsd-kind="Class">GooglePubSubContext</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group tsd-is-inherited tsd-is-private-protected tsd-is-external">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected tsd-is-external">
+					<a name="args" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> args</h3>
+					<div class="tsd-signature tsd-kind-icon">args<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">PubSubContextArgs</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from BaseRpcContext.args</p>
+						<ul>
+							<li>Defined in node_modules/@nestjs/microservices/ctx-host/base-rpc.context.d.ts:2</li>
+						</ul>
+					</aside>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getackfunction" class="tsd-anchor"></a>
+					<h3>get<wbr>Ack<wbr>Function</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Ack<wbr>Function<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules.html#ackfunction" class="tsd-signature-type" data-tsd-kind="Type alias">AckFunction</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/flocasts/nestjs-google-pubsub-connector/blob/03d83b2/lib/ctx-host/google-pubsub.context.ts#L38">lib/ctx-host/google-pubsub.context.ts:38</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <a href="../modules.html#ackfunction" class="tsd-signature-type" data-tsd-kind="Type alias">AckFunction</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+					<a name="getargbyindex" class="tsd-anchor"></a>
+					<h3>get<wbr>Arg<wbr>ByIndex</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Arg<wbr>ByIndex<span class="tsd-signature-symbol">(</span>index<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from BaseRpcContext.getArgByIndex</p>
+								<ul>
+									<li>Defined in node_modules/@nestjs/microservices/ctx-host/base-rpc.context.d.ts:12</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns a particular argument by index.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>index: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>index of argument to retrieve</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+					<a name="getargs" class="tsd-anchor"></a>
+					<h3>get<wbr>Args</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Args<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">PubSubContextArgs</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from BaseRpcContext.getArgs</p>
+								<ul>
+									<li>Defined in node_modules/@nestjs/microservices/ctx-host/base-rpc.context.d.ts:7</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns the array of arguments being passed to the handler.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">PubSubContextArgs</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getautoack" class="tsd-anchor"></a>
+					<h3>get<wbr>Auto<wbr>Ack</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Auto<wbr>Ack<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/flocasts/nestjs-google-pubsub-connector/blob/03d83b2/lib/ctx-host/google-pubsub.context.ts#L46">lib/ctx-host/google-pubsub.context.ts:46</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Whether the message attached to this context should be auto-acked</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getautonack" class="tsd-anchor"></a>
+					<h3>get<wbr>Auto<wbr>Nack</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Auto<wbr>Nack<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/flocasts/nestjs-google-pubsub-connector/blob/03d83b2/lib/ctx-host/google-pubsub.context.ts#L65">lib/ctx-host/google-pubsub.context.ts:65</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Whether the message attached to this context should be auto-nacked</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getmessage" class="tsd-anchor"></a>
+					<h3>get<wbr>Message</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Message<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Message</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/flocasts/nestjs-google-pubsub-connector/blob/03d83b2/lib/ctx-host/google-pubsub.context.ts#L27">lib/ctx-host/google-pubsub.context.ts:27</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns the Pubsub Message instance</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Message</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getnackfunction" class="tsd-anchor"></a>
+					<h3>get<wbr>Nack<wbr>Function</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Nack<wbr>Function<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules.html#nackfunction" class="tsd-signature-type" data-tsd-kind="Type alias">NackFunction</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/flocasts/nestjs-google-pubsub-connector/blob/03d83b2/lib/ctx-host/google-pubsub.context.ts#L57">lib/ctx-host/google-pubsub.context.ts:57</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <a href="../modules.html#nackfunction" class="tsd-signature-type" data-tsd-kind="Type alias">NackFunction</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getrawmetadata" class="tsd-anchor"></a>
+					<h3>get<wbr>Raw<wbr>Metadata</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Raw<wbr>Metadata<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/flocasts/nestjs-google-pubsub-connector/blob/03d83b2/lib/ctx-host/google-pubsub.context.ts#L34">lib/ctx-host/google-pubsub.context.ts:34</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns the raw metadata for the handler</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a name="setautoack" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> set<wbr>Auto<wbr>Ack</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Auto<wbr>Ack<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/flocasts/nestjs-google-pubsub-connector/blob/03d83b2/lib/ctx-host/google-pubsub.context.ts#L53">lib/ctx-host/google-pubsub.context.ts:53</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Whether the message attached to this context should be auto-acked</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>value: <span class="tsd-signature-type">boolean</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a name="setautonack" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> set<wbr>Auto<wbr>Nack</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Auto<wbr>Nack<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/flocasts/nestjs-google-pubsub-connector/blob/03d83b2/lib/ctx-host/google-pubsub.context.ts#L72">lib/ctx-host/google-pubsub.context.ts:72</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Whether the message attached to this context should be auto-nacked</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>value: <span class="tsd-signature-type">boolean</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class=" ">
+						<a href="../modules.html">Exports</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+					<li class=" tsd-kind-class">
+						<a href="clientgooglepubsub.html" class="tsd-kind-icon">Client<wbr>Google<wbr>Pub<wbr>Sub</a>
+					</li>
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-class">
+						<a href="googlepubsubcontext.html" class="tsd-kind-icon">Google<wbr>Pub<wbr>Sub<wbr>Context</a>
+						<ul>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
+								<a href="googlepubsubcontext.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected tsd-is-external">
+								<a href="googlepubsubcontext.html#args" class="tsd-kind-icon">args</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="googlepubsubcontext.html#getackfunction" class="tsd-kind-icon">get<wbr>Ack<wbr>Function</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="googlepubsubcontext.html#getargbyindex" class="tsd-kind-icon">get<wbr>Arg<wbr>ByIndex</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="googlepubsubcontext.html#getargs" class="tsd-kind-icon">get<wbr>Args</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="googlepubsubcontext.html#getautoack" class="tsd-kind-icon">get<wbr>Auto<wbr>Ack</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="googlepubsubcontext.html#getautonack" class="tsd-kind-icon">get<wbr>Auto<wbr>Nack</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="googlepubsubcontext.html#getmessage" class="tsd-kind-icon">get<wbr>Message</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="googlepubsubcontext.html#getnackfunction" class="tsd-kind-icon">get<wbr>Nack<wbr>Function</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="googlepubsubcontext.html#getrawmetadata" class="tsd-kind-icon">get<wbr>Raw<wbr>Metadata</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+								<a href="googlepubsubcontext.html#setautoack" class="tsd-kind-icon">set<wbr>Auto<wbr>Ack</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+								<a href="googlepubsubcontext.html#setautonack" class="tsd-kind-icon">set<wbr>Auto<wbr>Nack</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
+					<li class=" tsd-kind-class">
+						<a href="googlepubsubmessagedeserializer.html" class="tsd-kind-icon">Google<wbr>Pub<wbr>Sub<wbr>Message<wbr>Deserializer</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="googlepubsubtransport.html" class="tsd-kind-icon">Google<wbr>Pub<wbr>Sub<wbr>Transport</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="invalidpatternmetadataexception.html" class="tsd-kind-icon">Invalid<wbr>Pattern<wbr>Metadata<wbr>Exception</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="../interfaces/ackstrategy.html" class="tsd-kind-icon">Ack<wbr>Strategy</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="../interfaces/clientgooglepubsuboutgoingrequestdata.html" class="tsd-kind-icon">Client<wbr>Google<wbr>Pub<wbr>Sub<wbr>Outgoing<wbr>Request<wbr>Data</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="../interfaces/clientgooglepubsuboutgoingrequestserializeddata.html" class="tsd-kind-icon">Client<wbr>Google<wbr>Pub<wbr>Sub<wbr>Outgoing<wbr>Request<wbr>Serialized<wbr>Data</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="../interfaces/clienthealthinfo.html" class="tsd-kind-icon">Client<wbr>Health<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="../interfaces/googlepubsuboptions.html" class="tsd-kind-icon">Google<wbr>Pub<wbr>Sub<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="../interfaces/googlepubsubsubscriptionpatternmetadata.html" class="tsd-kind-icon">Google<wbr>Pub<wbr>Sub<wbr>Subscription<wbr>Pattern<wbr>Metadata</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="../interfaces/googlepubsubtopicpatternmetadata.html" class="tsd-kind-icon">Google<wbr>Pub<wbr>Sub<wbr>Topic<wbr>Pattern<wbr>Metadata</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="../interfaces/googlepubsubtransportoptions.html" class="tsd-kind-icon">Google<wbr>Pub<wbr>Sub<wbr>Transport<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="../interfaces/nackstrategy.html" class="tsd-kind-icon">Nack<wbr>Strategy</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="../interfaces/subscriptionnamingstrategy.html" class="tsd-kind-icon">Subscription<wbr>Naming<wbr>Strategy</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="../interfaces/topicnamingstrategy.html" class="tsd-kind-icon">Topic<wbr>Naming<wbr>Strategy</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="../modules.html#ackfunction" class="tsd-kind-icon">Ack<wbr>Function</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="../modules.html#ackhandler" class="tsd-kind-icon">Ack<wbr>Handler</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="../modules.html#generatesubscriptionname" class="tsd-kind-icon">Generate<wbr>Subscription<wbr>Name</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="../modules.html#generatetopicname" class="tsd-kind-icon">Generate<wbr>Topic<wbr>Name</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="../modules.html#googlepubsubmessage" class="tsd-kind-icon">Google<wbr>Pub<wbr>Sub<wbr>Message</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="../modules.html#googlepubsubmessageattributes" class="tsd-kind-icon">Google<wbr>Pub<wbr>Sub<wbr>Message<wbr>Attributes</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="../modules.html#googlepubsubpatternmetadata" class="tsd-kind-icon">Google<wbr>Pub<wbr>Sub<wbr>Pattern<wbr>Metadata</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="../modules.html#googlepubsubsubscription" class="tsd-kind-icon">Google<wbr>Pub<wbr>Sub<wbr>Subscription</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="../modules.html#googlepubsubtopic" class="tsd-kind-icon">Google<wbr>Pub<wbr>Sub<wbr>Topic</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="../modules.html#nackfunction" class="tsd-kind-icon">Nack<wbr>Function</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="../modules.html#nackhandler" class="tsd-kind-icon">Nack<wbr>Handler</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="../modules.html#publishdata" class="tsd-kind-icon">Publish<wbr>Data</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="../modules.html#googlepubsubmessageack" class="tsd-kind-icon">Google<wbr>Pub<wbr>Sub<wbr>Message<wbr>Ack</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="../modules.html#googlepubsubmessagebody" class="tsd-kind-icon">Google<wbr>Pub<wbr>Sub<wbr>Message<wbr>Body</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="../modules.html#googlepubsubmessagehandler" class="tsd-kind-icon">Google<wbr>Pub<wbr>Sub<wbr>Message<wbr>Handler</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="../modules.html#googlepubsubmessagemessageattributes" class="tsd-kind-icon">Google<wbr>Pub<wbr>Sub<wbr>Message<wbr>Message<wbr>Attributes</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="../modules.html#googlepubsubmessagenack" class="tsd-kind-icon">Google<wbr>Pub<wbr>Sub<wbr>Message<wbr>Nack</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="../assets/js/main.js"></script>
+</body>
+</html>
