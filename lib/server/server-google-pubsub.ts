@@ -134,9 +134,15 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
 
     /**
      * Resolve subscriptions and create them if `createSubscription` is true
+     * Basic logic is as follows:
+     *   If a subscription name is provided and that subscription exists, use it
+     *   If a subscription name is provided and it does not exist, attempt to create it and use it
+     *       If a topic name is provided and that topic exists, create our subscription
+     *       If a topic name was not provided OR the topic does not exist, throw an error
      * @param pattern - The pattern from the \@GooglePubSubMessageHandler decorator
      */
     private async getSubscriptionFromPattern(pattern: string): Promise<void> {
+        // Parse out our metadata from the pattern
         let metadata: GooglePubSubPatternMetadata | null;
         try {
             metadata = JSON.parse(pattern);
@@ -148,41 +154,60 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
             throw new InvalidPatternMetadataException(pattern);
         }
 
+        // This, ideally, will hold the subscription we're about to instantiate/create
         let subscription: GooglePubSubSubscription | null = null;
+        const subscriptionName: string = this.subscriptionNamingStrategy.generateSubscriptionName(
+            metadata.topicName,
+            metadata.subscriptionName,
+        );
 
-        const subscriptionExists: boolean = metadata.subscriptionName
-            ? await this.googlePubSubClient
-                  .subscriptionExists(metadata.subscriptionName)
-                  .toPromise()
-            : false;
-        if (metadata.subscriptionName && subscriptionExists) {
-            subscription = this.googlePubSubClient.getSubscription(metadata.subscriptionName);
+        const subscriptionExists: boolean = await this.googlePubSubClient
+            .subscriptionExists(subscriptionName)
+            .toPromise();
+
+        // If our subscription exists, then we're good
+        if (subscriptionExists) {
+            subscription = this.googlePubSubClient.getSubscription(subscriptionName);
+            // If it doesn't, and we're set to create subscriptions then let's do so
         } else if (this.createSubscriptions) {
+            // Subscriptions are created from topics, so if we don't have a topic name set then
+            // throw an error
             if (!metadata.topicName) {
                 throw new InvalidPatternMetadataException(pattern);
             }
-            let topic: GooglePubSubTopic;
+
+            // Get our topic name and check if it exists
             const topicName = this.topicNamingStrategy.generateTopicName(metadata.topicName);
-            const topicExists: boolean = topicName
-                ? await this.googlePubSubClient.topicExists(topicName).toPromise()
-                : false;
+            const topicExists: boolean = await this.googlePubSubClient
+                .topicExists(topicName)
+                .toPromise();
+
+            // If our topic exists, use it to create our subscription
             if (topicExists) {
-                const subscriptionName: string =
-                    metadata.subscriptionName ||
-                    this.subscriptionNamingStrategy.generateSubscriptionName(
-                        topicName,
-                        metadata.subscriptionName,
-                    );
-                topic = this.googlePubSubClient.getTopic(topicName);
                 subscription = await this.googlePubSubClient
-                    .createSubscription(subscriptionName, topic)
+                    .createSubscription(subscriptionName, topicName)
                     .toPromise();
+            // If it doesn't exist then throw - we don't want to start with missing topics
+            } else {
+                throw new TransportError(
+                    `Topic ${topicName} does not exist, cannot create subscription ${subscriptionName}`,
+                    pattern,
+                    Array.from(this.messageHandlers.keys()),
+                );
             }
         }
 
+        // Either add our subscription or throw if we don't have it
         if (subscription) {
             this.logger.log(`Mapped {${subscription.name}} handler`);
             this.subscriptions.set(pattern, subscription);
+        } else {
+            // This code should never be reached, but let's throw if it is.
+            throw new TransportError(
+                `Subscription ${subscriptionName} was not created`,
+                pattern,
+                Array.from(this.messageHandlers.keys()),
+            );
         }
     }
 
