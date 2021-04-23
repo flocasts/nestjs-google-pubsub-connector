@@ -26,3 +26,7 @@ steps:
     - 'NPM_TOKEN=$_NPM_TOKEN'
     - 'GH_TOKEN=$_GH_TOKEN'
   args: ['run', 'semantic-release', '--', '-d', 'false', '--no-ci']
+- name: node
+  id: "npm run docs:deploy"
+  entrypoint: npm
+  args: ['run', 'docs:deploy']
