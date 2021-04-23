@@ -137,54 +137,98 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
      * @param pattern - The pattern from the \@GooglePubSubMessageHandler decorator
      */
     private async getSubscriptionFromPattern(pattern: string): Promise<void> {
-        let metadata: GooglePubSubPatternMetadata | null;
-        try {
-            metadata = JSON.parse(pattern);
-        } catch (error) {
-            metadata = null;
-        }
+        const metadata = this.parsePattern(pattern);
 
-        if (metadata == null || !(metadata.subscriptionName || metadata.topicName)) {
-            throw new InvalidPatternMetadataException(pattern);
-        }
+        const subscriptionName: string = this.getSubscriptionName(metadata, pattern);
 
-        let subscription: GooglePubSubSubscription | null = null;
-
-        const subscriptionExists: boolean = metadata.subscriptionName
-            ? await this.googlePubSubClient
-                  .subscriptionExists(metadata.subscriptionName)
-                  .toPromise()
-            : false;
-        if (metadata.subscriptionName && subscriptionExists) {
-            subscription = this.googlePubSubClient.getSubscription(metadata.subscriptionName);
-        } else if (this.createSubscriptions) {
-            if (!metadata.topicName) {
-                throw new InvalidPatternMetadataException(pattern);
-            }
-            let topic: GooglePubSubTopic;
-            const topicName = this.topicNamingStrategy.generateTopicName(metadata.topicName);
-            const topicExists: boolean = topicName
-                ? await this.googlePubSubClient.topicExists(topicName).toPromise()
-                : false;
-            if (topicExists) {
-                const subscriptionName: string =
-                    metadata.subscriptionName ||
-                    this.subscriptionNamingStrategy.generateSubscriptionName(
-                        topicName,
-                        metadata.subscriptionName,
-                    );
-                topic = this.googlePubSubClient.getTopic(topicName);
-                subscription = await this.googlePubSubClient
-                    .createSubscription(subscriptionName, topic)
-                    .toPromise();
-            }
-        }
+        const subscription: GooglePubSubSubscription | null = await this.getSubscription(
+            subscriptionName,
+            metadata.topicName,
+            pattern,
+        );
 
         if (subscription) {
             this.logger.log(`Mapped {${subscription.name}} handler`);
             this.subscriptions.set(pattern, subscription);
         }
     }
+
+    /**
+     * Parse a metadata pattern, throwing an exception if it cannot be parsed.
+     *
+     * @throws InvalidPatternMetadataException
+     */
+    private parsePattern = (pattern: string): GooglePubSubPatternMetadata => {
+        try {
+            return JSON.parse(pattern);
+        } catch (error) {
+            throw new InvalidPatternMetadataException(pattern);
+        }
+    };
+
+    /**
+     * Get the name for the subscription based on the given metadata.
+     *
+     * @throws InvalidPatternMetadataException
+     * This exception is thrown if a subscription name cannot be generated.
+     */
+    private getSubscriptionName = (
+        metadata: GooglePubSubPatternMetadata,
+        pattern: string,
+    ): string => {
+        const _topicName = metadata.topicName;
+        const _subscriptionName = metadata.subscriptionName;
+
+        const subscriptionName: string | null = _topicName
+            ? this.subscriptionNamingStrategy.generateSubscriptionName(
+                  _topicName,
+                  _subscriptionName,
+              )
+            : _subscriptionName
+            ? _subscriptionName
+            : null;
+
+        if (!subscriptionName) {
+            throw new InvalidPatternMetadataException(pattern);
+        }
+
+        return subscriptionName;
+    };
+
+    /**
+     * Get the subscription from the pattern metadata.
+     *
+     * @remarks
+     * If PubSub Client cannot create the subscription, or if the application is not configured to
+     * create subscriptions, this method will return null when the subscription does not already
+     * exist.
+     *
+     * @throws InvalidPatternMetadataException
+     * Thrown if attempting to create a subscription, but a topic name is not provided.
+     */
+    private getSubscription = async (
+        subscriptionName: string,
+        topicName: string | undefined,
+        pattern: string,
+    ): Promise<GooglePubSubSubscription | null> => {
+        const subscriptionExists: boolean = await this.googlePubSubClient
+            .subscriptionExists(subscriptionName)
+            .toPromise();
+
+        if (subscriptionExists) return this.googlePubSubClient.getSubscription(subscriptionName);
+
+        if (!this.createSubscriptions) return null;
+
+        if (!topicName) {
+            throw new InvalidPatternMetadataException(pattern);
+        }
+
+        const topic: GooglePubSubTopic | null = this.googlePubSubClient.getTopic(topicName);
+
+        return this.createSubscriptions
+            ? await this.googlePubSubClient.createSubscription(subscriptionName, topic).toPromise()
+            : null;
+    };
 
     /**
      * Subscribe to a Subscription and include pattern with each message
