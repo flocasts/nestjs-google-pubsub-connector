@@ -22,7 +22,7 @@
     "example:server": "node --inspect -r ts-node/register examples/server/main.ts",
     "docs:build": "typedoc",
     "docs:watch": "typedoc --watch",
-    "docs:deploy": "npm run docs:build && gh-pages -d docs -u 'Harold Waters <harold.waters@flosports.tv>'",
+    "docs:deploy": "npm run docs:build && gh-pages -d docs",
     "prepare": "husky install && npm run build",
     "lint": "eslint . --ext .js,.ts",
     "lint:fix": "eslint --fix-dry-run . --ext .js,.ts",

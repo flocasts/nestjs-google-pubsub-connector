@@ -1,0 +1,11 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+CURRENT_BRANCH=$(git branch --show-current)
+
+if [ $CURRENT_BRANCH = master ];
+then
+  npm run docs:deploy;
+fi
+
+exit 0
