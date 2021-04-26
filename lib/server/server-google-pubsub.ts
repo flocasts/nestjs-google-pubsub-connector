@@ -23,6 +23,7 @@ import {
     GooglePubSubTransportOptions,
     NackFunction,
     NackStrategy,
+    SubscriptionNameDependencies,
     SubscriptionNamingStrategy,
     TopicNamingStrategy,
 } from '../interfaces';
@@ -141,7 +142,7 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
 
         const subscriptionName: string = this.getSubscriptionName(metadata, pattern);
 
-        const subscription: GooglePubSubSubscription | null = await this.getSubscription(
+        const subscription: GooglePubSubSubscription | null = await this.getOrCreateSubscription(
             subscriptionName,
             metadata.topicName,
             pattern,
@@ -157,6 +158,7 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
      * Parse a metadata pattern, throwing an exception if it cannot be parsed.
      *
      * @throws InvalidPatternMetadataException
+     * Thrown if the JSON pattern cannot be parsed.
      */
     private parsePattern = (pattern: string): GooglePubSubPatternMetadata => {
         try {
@@ -176,24 +178,51 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
         metadata: GooglePubSubPatternMetadata,
         pattern: string,
     ): string => {
-        const _topicName = metadata.topicName;
-        const _subscriptionName = metadata.subscriptionName;
+        const subscriptionNameDeps = GooglePubSubTransport.createSubscriptionNameDependencies(
+            metadata,
+            pattern,
+        );
 
-        const subscriptionName: string | null = _topicName
-            ? this.subscriptionNamingStrategy.generateSubscriptionName(
-                  _topicName,
-                  _subscriptionName,
-              )
-            : _subscriptionName
-            ? _subscriptionName
-            : null;
+        return this.subscriptionNamingStrategy.generateSubscriptionName(subscriptionNameDeps);
+    };
 
-        if (!subscriptionName) {
-            throw new InvalidPatternMetadataException(pattern);
+    /**
+     * Create the dependency object for producing a subscription name.
+     *
+     * @throws InvalidPatternMetadataException
+     * Thrown if `topicName` and `subscriptionName` are both `undefined`.
+     */
+    private static createSubscriptionNameDependencies(
+        metadata: GooglePubSubPatternMetadata,
+        pattern: string,
+    ): SubscriptionNameDependencies {
+        const topicName: string | undefined = metadata.topicName;
+        const subscriptionName: string | undefined = metadata.subscriptionName;
+
+        if (topicName && subscriptionName) {
+            return {
+                _tag: 'TopicAndSubscriptionNames',
+                topicName,
+                subscriptionName,
+            };
         }
 
-        return subscriptionName;
-    };
+        if (topicName) {
+            return {
+                _tag: 'TopicNameOnly',
+                topicName,
+            };
+        }
+
+        if (subscriptionName) {
+            return {
+                _tag: 'SubscriptionNameOnly',
+                subscriptionName,
+            };
+        }
+
+        throw new InvalidPatternMetadataException(pattern);
+    }
 
     /**
      * Get the subscription from the pattern metadata.
@@ -206,7 +235,7 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
      * @throws InvalidPatternMetadataException
      * Thrown if attempting to create a subscription, but a topic name is not provided.
      */
-    private getSubscription = async (
+    private getOrCreateSubscription = async (
         subscriptionName: string,
         topicName: string | undefined,
         pattern: string,
