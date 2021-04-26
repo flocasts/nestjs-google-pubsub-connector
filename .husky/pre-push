@@ -8,4 +8,5 @@ then
   npm run docs:deploy;
 fi
 
-exit 0
+npm run build
+npm run test

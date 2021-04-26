@@ -103,8 +103,7 @@
   "husky": {
     "hooks": {
       "prepare-commit-msg": "exec < /dev/tty && git cz --hook",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-      "pre-push": "npm run build && npm run test"
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   }
 }
