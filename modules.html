@@ -62,6 +62,12 @@
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
+							<h3>Enumerations</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-enum"><a href="enums/namingdependencytag.html" class="tsd-kind-icon">Naming<wbr>Dependency<wbr>Tag</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
 							<h3>Classes</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-class"><a href="classes/clientgooglepubsub.html" class="tsd-kind-icon">Client<wbr>Google<wbr>Pub<wbr>Sub</a></li>
@@ -83,7 +89,10 @@
 								<li class="tsd-kind-interface"><a href="interfaces/googlepubsubtopicpatternmetadata.html" class="tsd-kind-icon">Google<wbr>Pub<wbr>Sub<wbr>Topic<wbr>Pattern<wbr>Metadata</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/googlepubsubtransportoptions.html" class="tsd-kind-icon">Google<wbr>Pub<wbr>Sub<wbr>Transport<wbr>Options</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/nackstrategy.html" class="tsd-kind-icon">Nack<wbr>Strategy</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/subscriptionnameonly.html" class="tsd-kind-icon">Subscription<wbr>Name<wbr>Only</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/subscriptionnamingstrategy.html" class="tsd-kind-icon">Subscription<wbr>Naming<wbr>Strategy</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/topicandsubscriptionnames.html" class="tsd-kind-icon">Topic<wbr>And<wbr>Subscription<wbr>Names</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/topicnameonly.html" class="tsd-kind-icon">Topic<wbr>Name<wbr>Only</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/topicnamingstrategy.html" class="tsd-kind-icon">Topic<wbr>Naming<wbr>Strategy</a></li>
 							</ul>
 						</section>
@@ -102,6 +111,7 @@
 								<li class="tsd-kind-type-alias"><a href="modules.html#nackfunction" class="tsd-kind-icon">Nack<wbr>Function</a></li>
 								<li class="tsd-kind-type-alias tsd-has-type-parameter"><a href="modules.html#nackhandler" class="tsd-kind-icon">Nack<wbr>Handler</a></li>
 								<li class="tsd-kind-type-alias"><a href="modules.html#publishdata" class="tsd-kind-icon">Publish<wbr>Data</a></li>
+								<li class="tsd-kind-type-alias"><a href="modules.html#subscriptionnamedependencies" class="tsd-kind-icon">Subscription<wbr>Name<wbr>Dependencies</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -125,7 +135,7 @@
 					<div class="tsd-signature tsd-kind-icon">Ack<wbr>Function<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/flocasts/nestjs-google-pubsub-connector/blob/03d83b2/lib/interfaces.ts#L18">lib/interfaces.ts:18</a></li>
+							<li>Defined in <a href="https://github.com/flocasts/nestjs-google-pubsub-connector/blob/5f1d3a4/lib/interfaces.ts#L18">lib/interfaces.ts:18</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -150,7 +160,7 @@
 					<div class="tsd-signature tsd-kind-icon">Ack<wbr>Handler<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>ack<span class="tsd-signature-symbol">: </span><a href="modules.html#ackfunction" class="tsd-signature-type" data-tsd-kind="Type alias">AckFunction</a>, nack<span class="tsd-signature-symbol">: </span><a href="modules.html#nackfunction" class="tsd-signature-type" data-tsd-kind="Type alias">NackFunction</a>, ctx<span class="tsd-signature-symbol">: </span><a href="classes/googlepubsubcontext.html" class="tsd-signature-type" data-tsd-kind="Class">GooglePubSubContext</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/flocasts/nestjs-google-pubsub-connector/blob/03d83b2/lib/interfaces.ts#L74">lib/interfaces.ts:74</a></li>
+							<li>Defined in <a href="https://github.com/flocasts/nestjs-google-pubsub-connector/blob/5f1d3a4/lib/interfaces.ts#L111">lib/interfaces.ts:111</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -184,10 +194,10 @@
 				<section class="tsd-panel tsd-member tsd-kind-type-alias">
 					<a name="generatesubscriptionname" class="tsd-anchor"></a>
 					<h3>Generate<wbr>Subscription<wbr>Name</h3>
-					<div class="tsd-signature tsd-kind-icon">Generate<wbr>Subscription<wbr>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>topicName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, subscriptionName<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">string</span></div>
+					<div class="tsd-signature tsd-kind-icon">Generate<wbr>Subscription<wbr>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>deps<span class="tsd-signature-symbol">: </span><a href="modules.html#subscriptionnamedependencies" class="tsd-signature-type" data-tsd-kind="Type alias">SubscriptionNameDependencies</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/flocasts/nestjs-google-pubsub-connector/blob/03d83b2/lib/interfaces.ts#L44">lib/interfaces.ts:44</a></li>
+							<li>Defined in <a href="https://github.com/flocasts/nestjs-google-pubsub-connector/blob/5f1d3a4/lib/interfaces.ts#L81">lib/interfaces.ts:81</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -195,17 +205,14 @@
 						<ul class="tsd-parameters">
 							<li class="tsd-parameter-signature">
 								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-type-alias">
-									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>topicName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, subscriptionName<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>deps<span class="tsd-signature-symbol">: </span><a href="modules.html#subscriptionnamedependencies" class="tsd-signature-type" data-tsd-kind="Type alias">SubscriptionNameDependencies</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
 								</ul>
 								<ul class="tsd-descriptions">
 									<li class="tsd-description">
 										<h4 class="tsd-parameters-title">Parameters</h4>
 										<ul class="tsd-parameters">
 											<li>
-												<h5>topicName: <span class="tsd-signature-type">string</span></h5>
-											</li>
-											<li>
-												<h5><span class="tsd-flag ts-flagOptional">Optional</span> subscriptionName: <span class="tsd-signature-type">string</span></h5>
+												<h5>deps: <a href="modules.html#subscriptionnamedependencies" class="tsd-signature-type" data-tsd-kind="Type alias">SubscriptionNameDependencies</a></h5>
 											</li>
 										</ul>
 										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -221,7 +228,7 @@
 					<div class="tsd-signature tsd-kind-icon">Generate<wbr>Topic<wbr>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>initialName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/flocasts/nestjs-google-pubsub-connector/blob/03d83b2/lib/interfaces.ts#L49">lib/interfaces.ts:49</a></li>
+							<li>Defined in <a href="https://github.com/flocasts/nestjs-google-pubsub-connector/blob/5f1d3a4/lib/interfaces.ts#L86">lib/interfaces.ts:86</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -252,7 +259,7 @@
 					<div class="tsd-signature tsd-kind-icon">Google<wbr>Pub<wbr>Sub<wbr>Message<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Message</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/flocasts/nestjs-google-pubsub-connector/blob/03d83b2/lib/interfaces.ts#L13">lib/interfaces.ts:13</a></li>
+							<li>Defined in <a href="https://github.com/flocasts/nestjs-google-pubsub-connector/blob/5f1d3a4/lib/interfaces.ts#L13">lib/interfaces.ts:13</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -262,7 +269,7 @@
 					<div class="tsd-signature tsd-kind-icon">Google<wbr>Pub<wbr>Sub<wbr>Message<wbr>Attributes<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Attributes</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/flocasts/nestjs-google-pubsub-connector/blob/03d83b2/lib/interfaces.ts#L14">lib/interfaces.ts:14</a></li>
+							<li>Defined in <a href="https://github.com/flocasts/nestjs-google-pubsub-connector/blob/5f1d3a4/lib/interfaces.ts#L14">lib/interfaces.ts:14</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -272,7 +279,7 @@
 					<div class="tsd-signature tsd-kind-icon">Google<wbr>Pub<wbr>Sub<wbr>Pattern<wbr>Metadata<span class="tsd-signature-symbol">:</span> <a href="interfaces/googlepubsubsubscriptionpatternmetadata.html" class="tsd-signature-type" data-tsd-kind="Interface">GooglePubSubSubscriptionPatternMetadata</a><span class="tsd-signature-symbol"> | </span><a href="interfaces/googlepubsubtopicpatternmetadata.html" class="tsd-signature-type" data-tsd-kind="Interface">GooglePubSubTopicPatternMetadata</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/flocasts/nestjs-google-pubsub-connector/blob/03d83b2/lib/interfaces.ts#L29">lib/interfaces.ts:29</a></li>
+							<li>Defined in <a href="https://github.com/flocasts/nestjs-google-pubsub-connector/blob/5f1d3a4/lib/interfaces.ts#L29">lib/interfaces.ts:29</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -282,7 +289,7 @@
 					<div class="tsd-signature tsd-kind-icon">Google<wbr>Pub<wbr>Sub<wbr>Subscription<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Subscription</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/flocasts/nestjs-google-pubsub-connector/blob/03d83b2/lib/interfaces.ts#L16">lib/interfaces.ts:16</a></li>
+							<li>Defined in <a href="https://github.com/flocasts/nestjs-google-pubsub-connector/blob/5f1d3a4/lib/interfaces.ts#L16">lib/interfaces.ts:16</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -292,7 +299,7 @@
 					<div class="tsd-signature tsd-kind-icon">Google<wbr>Pub<wbr>Sub<wbr>Topic<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Topic</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/flocasts/nestjs-google-pubsub-connector/blob/03d83b2/lib/interfaces.ts#L15">lib/interfaces.ts:15</a></li>
+							<li>Defined in <a href="https://github.com/flocasts/nestjs-google-pubsub-connector/blob/5f1d3a4/lib/interfaces.ts#L15">lib/interfaces.ts:15</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -302,7 +309,7 @@
 					<div class="tsd-signature tsd-kind-icon">Nack<wbr>Function<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/flocasts/nestjs-google-pubsub-connector/blob/03d83b2/lib/interfaces.ts#L19">lib/interfaces.ts:19</a></li>
+							<li>Defined in <a href="https://github.com/flocasts/nestjs-google-pubsub-connector/blob/5f1d3a4/lib/interfaces.ts#L19">lib/interfaces.ts:19</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -327,7 +334,7 @@
 					<div class="tsd-signature tsd-kind-icon">Nack<wbr>Handler&lt;T&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>error<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span>, ack<span class="tsd-signature-symbol">: </span><a href="modules.html#ackfunction" class="tsd-signature-type" data-tsd-kind="Type alias">AckFunction</a>, nack<span class="tsd-signature-symbol">: </span><a href="modules.html#nackfunction" class="tsd-signature-type" data-tsd-kind="Type alias">NackFunction</a>, ctx<span class="tsd-signature-symbol">: </span><a href="classes/googlepubsubcontext.html" class="tsd-signature-type" data-tsd-kind="Class">GooglePubSubContext</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/flocasts/nestjs-google-pubsub-connector/blob/03d83b2/lib/interfaces.ts#L84">lib/interfaces.ts:84</a></li>
+							<li>Defined in <a href="https://github.com/flocasts/nestjs-google-pubsub-connector/blob/5f1d3a4/lib/interfaces.ts#L121">lib/interfaces.ts:121</a></li>
 						</ul>
 					</aside>
 					<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -373,9 +380,34 @@
 					<div class="tsd-signature tsd-kind-icon">Publish<wbr>Data<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Buffer</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/flocasts/nestjs-google-pubsub-connector/blob/03d83b2/lib/interfaces.ts#L106">lib/interfaces.ts:106</a></li>
+							<li>Defined in <a href="https://github.com/flocasts/nestjs-google-pubsub-connector/blob/5f1d3a4/lib/interfaces.ts#L143">lib/interfaces.ts:143</a></li>
 						</ul>
 					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias">
+					<a name="subscriptionnamedependencies" class="tsd-anchor"></a>
+					<h3>Subscription<wbr>Name<wbr>Dependencies</h3>
+					<div class="tsd-signature tsd-kind-icon">Subscription<wbr>Name<wbr>Dependencies<span class="tsd-signature-symbol">:</span> <a href="interfaces/topicnameonly.html" class="tsd-signature-type" data-tsd-kind="Interface">TopicNameOnly</a><span class="tsd-signature-symbol"> | </span><a href="interfaces/subscriptionnameonly.html" class="tsd-signature-type" data-tsd-kind="Interface">SubscriptionNameOnly</a><span class="tsd-signature-symbol"> | </span><a href="interfaces/topicandsubscriptionnames.html" class="tsd-signature-type" data-tsd-kind="Interface">TopicAndSubscriptionNames</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/flocasts/nestjs-google-pubsub-connector/blob/5f1d3a4/lib/interfaces.ts#L76">lib/interfaces.ts:76</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The possible configurations for producing a subscription name.</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>remarks</dt>
+							<dd><p>This allows the writer of a custom <code>SubscriptionNamingStrategy</code> to
+									conveniently switch on the <code>_tag</code> member to enforce handling of all
+								possible combinations of subscription and topic names.</p>
+							</dd>
+							<dt>see</dt>
+							<dd><p>BasicSubscriptionNamingStrategy</p>
+							</dd>
+						</dl>
+					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
@@ -390,7 +422,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/flocasts/nestjs-google-pubsub-connector/blob/03d83b2/lib/decorators/google-pubsub-ack.decorator.ts#L13">lib/decorators/google-pubsub-ack.decorator.ts:13</a></li>
+									<li>Defined in <a href="https://github.com/flocasts/nestjs-google-pubsub-connector/blob/5f1d3a4/lib/decorators/google-pubsub-ack.decorator.ts#L13">lib/decorators/google-pubsub-ack.decorator.ts:13</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -419,7 +451,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/flocasts/nestjs-google-pubsub-connector/blob/03d83b2/lib/decorators/google-pubsub-message-body.decorator.ts#L21">lib/decorators/google-pubsub-message-body.decorator.ts:21</a></li>
+									<li>Defined in <a href="https://github.com/flocasts/nestjs-google-pubsub-connector/blob/5f1d3a4/lib/decorators/google-pubsub-message-body.decorator.ts#L21">lib/decorators/google-pubsub-message-body.decorator.ts:21</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -442,7 +474,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/flocasts/nestjs-google-pubsub-connector/blob/03d83b2/lib/decorators/google-pubsub-message-handler.decorator.ts#L5">lib/decorators/google-pubsub-message-handler.decorator.ts:5</a></li>
+									<li>Defined in <a href="https://github.com/flocasts/nestjs-google-pubsub-connector/blob/5f1d3a4/lib/decorators/google-pubsub-message-handler.decorator.ts#L5">lib/decorators/google-pubsub-message-handler.decorator.ts:5</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -465,7 +497,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/flocasts/nestjs-google-pubsub-connector/blob/03d83b2/lib/decorators/google-pubsub-message-attributes.decorator.ts#L17">lib/decorators/google-pubsub-message-attributes.decorator.ts:17</a></li>
+									<li>Defined in <a href="https://github.com/flocasts/nestjs-google-pubsub-connector/blob/5f1d3a4/lib/decorators/google-pubsub-message-attributes.decorator.ts#L17">lib/decorators/google-pubsub-message-attributes.decorator.ts:17</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -488,7 +520,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/flocasts/nestjs-google-pubsub-connector/blob/03d83b2/lib/decorators/google-pubsub-nack.decorator.ts#L13">lib/decorators/google-pubsub-nack.decorator.ts:13</a></li>
+									<li>Defined in <a href="https://github.com/flocasts/nestjs-google-pubsub-connector/blob/5f1d3a4/lib/decorators/google-pubsub-nack.decorator.ts#L13">lib/decorators/google-pubsub-nack.decorator.ts:13</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -519,6 +551,9 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
+					<li class=" tsd-kind-enum">
+						<a href="enums/namingdependencytag.html" class="tsd-kind-icon">Naming<wbr>Dependency<wbr>Tag</a>
+					</li>
 					<li class=" tsd-kind-class">
 						<a href="classes/clientgooglepubsub.html" class="tsd-kind-icon">Client<wbr>Google<wbr>Pub<wbr>Sub</a>
 					</li>
@@ -562,7 +597,16 @@
 						<a href="interfaces/nackstrategy.html" class="tsd-kind-icon">Nack<wbr>Strategy</a>
 					</li>
 					<li class=" tsd-kind-interface">
+						<a href="interfaces/subscriptionnameonly.html" class="tsd-kind-icon">Subscription<wbr>Name<wbr>Only</a>
+					</li>
+					<li class=" tsd-kind-interface">
 						<a href="interfaces/subscriptionnamingstrategy.html" class="tsd-kind-icon">Subscription<wbr>Naming<wbr>Strategy</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/topicandsubscriptionnames.html" class="tsd-kind-icon">Topic<wbr>And<wbr>Subscription<wbr>Names</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/topicnameonly.html" class="tsd-kind-icon">Topic<wbr>Name<wbr>Only</a>
 					</li>
 					<li class=" tsd-kind-interface">
 						<a href="interfaces/topicnamingstrategy.html" class="tsd-kind-icon">Topic<wbr>Naming<wbr>Strategy</a>
@@ -602,6 +646,9 @@
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="modules.html#publishdata" class="tsd-kind-icon">Publish<wbr>Data</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#subscriptionnamedependencies" class="tsd-kind-icon">Subscription<wbr>Name<wbr>Dependencies</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="modules.html#googlepubsubmessageack" class="tsd-kind-icon">Google<wbr>Pub<wbr>Sub<wbr>Message<wbr>Ack</a>
