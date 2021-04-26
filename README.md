@@ -74,18 +74,18 @@ interface. A basic strategy is included by default:
 import {
   SubscriptionNamingStrategy
 } from '@flosports/nestjs-google-pubsub-microservice';
-import { SubscriptionNameDependencies } from './interfaces';
+import { NamingDependencyTag, SubscriptionNameDependencies } from './interfaces';
 
 export class BasicSubscriptionNamingStrategy
         implements SubscriptionNamingStrategy {
   public generateSubscriptionName(
-      deps: SubscriptionNameDependencies
+          deps: SubscriptionNameDependencies
   ): string {
     switch (deps._tag) {
-      case 'TopicAndSubscriptionNames':
-      case 'SubscriptionNameOnly':
+      case NamingDependencyTag.TOPIC_AND_SUBSCRIPTION_NAMES:
+      case NamingDependencyTag.SUBSCRIPTION_NAME_ONLY:
         return deps.subscriptionName;
-      case 'TopicNameOnly':
+      case NamingDependencyTag.TOPIC_NAME_ONLY:
         return `${deps.topicName}-sub`;
     }
   }
