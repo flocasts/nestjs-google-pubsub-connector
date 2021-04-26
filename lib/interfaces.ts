@@ -41,7 +41,44 @@ export interface GooglePubSubTransportOptions {
     nackStrategy?: NackStrategy;
 }
 
-export type GenerateSubscriptionName = (topicName: string, subscriptionName?: string) => string;
+export enum NamingDependencyTag {
+    TOPIC_NAME_ONLY = 'TopicNameOnly',
+    SUBSCRIPTION_NAME_ONLY = 'SubscriptionNameOnly',
+    TOPIC_AND_SUBSCRIPTION_NAMES = 'TopicAndSubscriptionNames',
+}
+
+export interface TopicNameOnly {
+    _tag: NamingDependencyTag.TOPIC_NAME_ONLY;
+    topicName: string;
+}
+
+export interface SubscriptionNameOnly {
+    _tag: NamingDependencyTag.SUBSCRIPTION_NAME_ONLY;
+    subscriptionName: string;
+}
+
+export interface TopicAndSubscriptionNames {
+    _tag: NamingDependencyTag.TOPIC_AND_SUBSCRIPTION_NAMES;
+    topicName: string;
+    subscriptionName: string;
+}
+
+/**
+ * The possible configurations for producing a subscription name.
+ *
+ * @remarks
+ * This allows the writer of a custom `SubscriptionNamingStrategy` to
+ * conveniently switch on the `_tag` member to enforce handling of all
+ * possible combinations of subscription and topic names.
+ *
+ * @see BasicSubscriptionNamingStrategy
+ */
+export type SubscriptionNameDependencies =
+    | TopicNameOnly
+    | SubscriptionNameOnly
+    | TopicAndSubscriptionNames;
+
+export type GenerateSubscriptionName = (deps: SubscriptionNameDependencies) => string;
 export interface SubscriptionNamingStrategy {
     generateSubscriptionName: GenerateSubscriptionName;
 }

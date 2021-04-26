@@ -69,22 +69,26 @@ attempt to create a new subscription if the requested subscription for a handler
 not already present.The microservice takes a `subscriptionNamingStrategy` as an
 argument, which expects a class conforming to the `SubscriptionNamingStrategy`
 interface. A basic strategy is included by default:
+
 ```typescript
 import {
-    SubscriptionNamingStrategy
+  SubscriptionNamingStrategy
 } from '@flosports/nestjs-google-pubsub-microservice';
+import { NamingDependencyTag, SubscriptionNameDependencies } from './interfaces';
 
 export class BasicSubscriptionNamingStrategy
-    implements SubscriptionNamingStrategy {
-    public generateSubscriptionName(
-        topicName: string,
-        subscriptionName?: string
-    ): string {
-        if (subscriptionName) {
-            return subscriptionName;
-        }
-        return `${topicName}-sub`
+        implements SubscriptionNamingStrategy {
+  public generateSubscriptionName(
+          deps: SubscriptionNameDependencies
+  ): string {
+    switch (deps._tag) {
+      case NamingDependencyTag.TOPIC_AND_SUBSCRIPTION_NAMES:
+      case NamingDependencyTag.SUBSCRIPTION_NAME_ONLY:
+        return deps.subscriptionName;
+      case NamingDependencyTag.TOPIC_NAME_ONLY:
+        return `${deps.topicName}-sub`;
     }
+  }
 }
 ```
 
