@@ -245,11 +245,12 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
             throw new InvalidPatternMetadataException(pattern);
         }
 
-        const topic: GooglePubSubTopic | null = this.googlePubSubClient.getTopic(topicName);
+        const _topicName = this.topicNamingStrategy.generateTopicName(topicName);
+        const topic: GooglePubSubTopic | null = this.googlePubSubClient.getTopic(_topicName);
 
-        return this.createSubscriptions
-            ? await this.googlePubSubClient.createSubscription(subscriptionName, topic).toPromise()
-            : null;
+        return await this.googlePubSubClient
+            .createSubscription(subscriptionName, topic)
+            .toPromise();
     };
 
     /**
