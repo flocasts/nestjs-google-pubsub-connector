@@ -1,11 +1,5 @@
 import { Logger } from '@nestjs/common';
-import {
-    CustomTransportStrategy,
-    MessageHandler,
-    MsPattern,
-    ReadPacket,
-    Server,
-} from '@nestjs/microservices';
+import { CustomTransportStrategy, MessageHandler, ReadPacket, Server } from '@nestjs/microservices';
 import { from, merge, Observable, of, Subscription } from 'rxjs';
 import { catchError, map, mapTo, mergeMap } from 'rxjs/operators';
 import { ClientGooglePubSub } from '../client';
@@ -14,15 +8,14 @@ import { GooglePubSubMessageDeserializer } from '../deserializers';
 import { InvalidPatternMetadataException } from '../errors';
 import { TransportError } from '../errors/transport-error.exception';
 import {
-    AckFunction,
     AckStrategy,
     GooglePubSubMessage,
     GooglePubSubPatternMetadata,
     GooglePubSubSubscription,
     GooglePubSubTopic,
     GooglePubSubTransportOptions,
-    NackFunction,
     NackStrategy,
+    NamingDependencyTag,
     SubscriptionNameDependencies,
     SubscriptionNamingStrategy,
     TopicNamingStrategy,
@@ -201,7 +194,7 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
 
         if (topicName && subscriptionName) {
             return {
-                _tag: 'TopicAndSubscriptionNames',
+                _tag: NamingDependencyTag.TOPIC_AND_SUBSCRIPTION_NAMES,
                 topicName,
                 subscriptionName,
             };
@@ -209,14 +202,14 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
 
         if (topicName) {
             return {
-                _tag: 'TopicNameOnly',
+                _tag: NamingDependencyTag.TOPIC_NAME_ONLY,
                 topicName,
             };
         }
 
         if (subscriptionName) {
             return {
-                _tag: 'SubscriptionNameOnly',
+                _tag: NamingDependencyTag.SUBSCRIPTION_NAME_ONLY,
                 subscriptionName,
             };
         }

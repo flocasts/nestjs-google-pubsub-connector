@@ -41,18 +41,24 @@ export interface GooglePubSubTransportOptions {
     nackStrategy?: NackStrategy;
 }
 
+export enum NamingDependencyTag {
+    TOPIC_NAME_ONLY = 'TopicNameOnly',
+    SUBSCRIPTION_NAME_ONLY = 'SubscriptionNameOnly',
+    TOPIC_AND_SUBSCRIPTION_NAMES = 'TopicAndSubscriptionNames',
+}
+
 export interface TopicNameOnly {
-    _tag: 'TopicNameOnly';
+    _tag: NamingDependencyTag.TOPIC_NAME_ONLY;
     topicName: string;
 }
 
 export interface SubscriptionNameOnly {
-    _tag: 'SubscriptionNameOnly';
+    _tag: NamingDependencyTag.SUBSCRIPTION_NAME_ONLY;
     subscriptionName: string;
 }
 
 export interface TopicAndSubscriptionNames {
-    _tag: 'TopicAndSubscriptionNames';
+    _tag: NamingDependencyTag.TOPIC_AND_SUBSCRIPTION_NAMES;
     topicName: string;
     subscriptionName: string;
 }
