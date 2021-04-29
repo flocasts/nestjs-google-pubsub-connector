@@ -1,4 +1,9 @@
-# NestJS Google Pubsub Connector
+<h1 align="center">NestJS Google Pubsub Connector</h1>
+<p align="center">
+  <a href="https://www.npmjs.com/package/@flosportsinc/nestjs-google-pubsub-connector">
+    <img alt="npm latest version" src="https://img.shields.io/npm/v/@flosportsinc/nestjs-google-pubsub-connector/latest.svg" />
+  </a>
+</p>
 
 This package includes two pieces, a NestJS microservice strategy as well as a client proxy. Together this enable
 easy integration with Google PubSub in a NestJS-y way.
