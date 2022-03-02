@@ -1,3 +1,4 @@
+import { CreateSubscriptionOptions } from '@google-cloud/pubsub';
 import { Logger } from '@nestjs/common';
 import { CustomTransportStrategy, MessageHandler, ReadPacket, Server } from '@nestjs/microservices';
 import { from, merge, Observable, of, Subscription } from 'rxjs';
@@ -138,6 +139,7 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
         const subscription: GooglePubSubSubscription | null = await this.getOrCreateSubscription(
             subscriptionName,
             metadata.topicName,
+            metadata.createOptions,
             pattern,
         );
 
@@ -231,6 +233,7 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
     private getOrCreateSubscription = async (
         subscriptionName: string,
         topicName: string | undefined,
+        createOptions: CreateSubscriptionOptions | undefined,
         pattern: string,
     ): Promise<GooglePubSubSubscription | null> => {
         const subscriptionExists: boolean = await this.googlePubSubClient
@@ -249,7 +252,7 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
         const topic: GooglePubSubTopic | null = this.googlePubSubClient.getTopic(_topicName);
 
         return await this.googlePubSubClient
-            .createSubscription(subscriptionName, topic)
+            .createSubscription(subscriptionName, topic, createOptions)
             .toPromise();
     };
 
