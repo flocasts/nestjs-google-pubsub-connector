@@ -9,6 +9,10 @@ export class ExampleController {
 
     @GooglePubSubMessageHandler({
         subscriptionName: 'lee-christmas-notifications',
+        createOptions: {
+            enableMessageOrdering: true,
+            retainAckedMessages: false,
+        },
         topicName: 'expendables-headquarters',
     })
     public expendablesHandler(

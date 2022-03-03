@@ -20,7 +20,7 @@ strategy and let the framework do the rest.
 
 ## Microservice Strategy
 
-The server/transport strategy component is inserted as a strategy when creating a microservice, taking a 
+The server/transport strategy component is inserted as a strategy when creating a microservice, taking a
 few configuration parameters, as well as an optional PubSub instance, like so:
 ```typescript
 async function bootstrap() {
@@ -62,7 +62,7 @@ that will make parsing PubSub Messages easy, simple and fun:
 
 | Name | Desscription |
 -------|-----------
-| @GooglePubSubMessageHandler | Takes a subscription name and optionally a topic name. A subscription will be created if it does not already exits **if**: a topic name is supplied  **and** `createSubscriptions` was set to true when the microservice was created |
+| @GooglePubSubMessageHandler | Takes a subscription name and optionally a topic name and creation parameters of subscription. A subscription will be created if it does not already exits **if**: a topic name is supplied  **and** `createSubscriptions` was set to true when the microservice was created. The creation parameters are of type `CreateSubscriptionOptions` from the google pub/sub library |
 | @GooglePubSubMessageBody | This will retrieve and `JSON.parse()` the body of the incoming message. You may optionally include a key and the corresponding value will be returned.
 | @GooglePubSubMessageAttributes | This will retrieve attributes of the incoming message. You may optionally include a key, and the corresponding value will be returned.
 | @Ack | This will return a function that will `ack` the incoming message. </br> **N.B.** this will disable any auto-acking.|
@@ -154,10 +154,10 @@ export class BasicNackStrategy implements NackStrategy {
 ```
 
 #### No strategy/hybrid acking and nacking
-In addition to using these strategies, the library also makes available ack and nack 
+In addition to using these strategies, the library also makes available ack and nack
 functions through decorators to the controller as well as from
-the `GooglePubSubContext`. When ack or nack functions are 
-retrieved from the context (either directly or through the 
+the `GooglePubSubContext`. When ack or nack functions are
+retrieved from the context (either directly or through the
 decorator) **the autoAck/autoNack methods will return false**,
 disabling the basic strategies and optionally any strategies you
 should choose to create. </br>
@@ -216,6 +216,9 @@ export class TestController {
 
     @GooglePubSubMessageHandler({
         subscriptionName: 'my-subscription-that-or-may-not-exist',
+        createOptions: {
+            enableMessageOrdering: true,
+        },
         topicName: 'my-existing-topic'
     })
     public handler2(@GooglePubSubMessageBody('bar') bar:  boolean ): void {

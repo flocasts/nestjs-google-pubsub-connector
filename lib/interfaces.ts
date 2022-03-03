@@ -1,6 +1,7 @@
 import {
     Attributes,
     ClientConfig,
+    CreateSubscriptionOptions,
     Message,
     PubSub,
     Subscription,
@@ -19,10 +20,12 @@ export type AckFunction = () => void;
 export type NackFunction = () => void;
 export interface GooglePubSubSubscriptionPatternMetadata {
     subscriptionName: string;
+    createOptions?: CreateSubscriptionOptions;
     topicName?: string;
 }
 export interface GooglePubSubTopicPatternMetadata {
     subscriptionName?: string;
+    createOptions?: CreateSubscriptionOptions;
     topicName: string;
 }
 
