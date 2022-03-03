@@ -11,8 +11,14 @@ import { createMessage } from '../utilities';
 
 jest.mock('../../examples/server/example.service');
 
+const subscriptionCreationOptions = {
+    enableMessageOrdering: true,
+    retainAckedMessages: false,
+};
+
 const expendablesHandlerPattern = {
     subscriptionName: 'lee-christmas-notifications',
+    createOptions: subscriptionCreationOptions,
     topicName: 'expendables-headquarters',
 };
 

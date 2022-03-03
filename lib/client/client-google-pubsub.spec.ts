@@ -1,10 +1,27 @@
 jest.mock('@google-cloud/pubsub');
-import { PubSub, Subscription, Topic } from '@google-cloud/pubsub';
+import { CreateSubscriptionOptions, PubSub, Subscription, Topic } from '@google-cloud/pubsub';
 import { GooglePubSubTopic } from '../interfaces';
 import { ClientGooglePubSub } from './client-google-pubsub';
 
 const topicName = 'project-venison-plans';
 const subscriptionName = 'project-v-tem-ray-notifier';
+const subscriptionCreationOption = {
+    enableMessageOrdering: true,
+    retainAckedMessages: false,
+    expirationPolicy: {
+        ttl: {
+            seconds: 30,
+        },
+    },
+    retryPolicy: {
+        minimumBackoff: {
+            seconds: 10,
+        },
+        maximumBackoff: {
+            seconds: 600,
+        },
+    },
+} as CreateSubscriptionOptions;
 const testMessage = "We're at Side 7";
 const testBuffer = Buffer.from(testMessage);
 
@@ -94,9 +111,24 @@ describe('ClientGooglePubSub', () => {
             expect(mockedSubscriptionCreate).toHaveBeenCalled();
         });
 
+        it('should attempt to create a Subscription when given a subscription name and a topic name and a creation options', async () => {
+            await clientProxy
+                .createSubscription(subscriptionName, topicName, subscriptionCreationOption)
+                .toPromise();
+            expect(mockedSubscriptionCreate).toHaveBeenCalled();
+        });
+
         it('should attempt to create a Subscription when given a subscription instance and a topic name', async () => {
             const subscription = new Subscription(client, subscriptionName);
             await clientProxy.createSubscription(subscription, topicName).toPromise();
+            expect(mockedSubscriptionCreate).toHaveBeenCalled();
+        });
+
+        it('should attempt to create a Subscription when given a subscription instance and a topic name and a creation options', async () => {
+            const subscription = new Subscription(client, subscriptionName);
+            await clientProxy
+                .createSubscription(subscription, topicName, subscriptionCreationOption)
+                .toPromise();
             expect(mockedSubscriptionCreate).toHaveBeenCalled();
         });
 
@@ -107,10 +139,28 @@ describe('ClientGooglePubSub', () => {
             expect(mockedSubscriptionCreate).toHaveBeenCalled();
         });
 
+        it('should attempt to create a Subscription when given a subscription instance with a topic name set and a creation options', async () => {
+            const subscription = new Subscription(client, subscriptionName);
+            subscription.topic = topicName;
+            await clientProxy
+                .createSubscription(subscription, undefined, subscriptionCreationOption)
+                .toPromise();
+            expect(mockedSubscriptionCreate).toHaveBeenCalled();
+        });
+
         it('should attempt to create a Subscription when given a subscription instance and a topic instance', async () => {
             const subscription = new Subscription(client, subscriptionName);
             subscription.topic = topicName;
             await clientProxy.createSubscription(subscription).toPromise();
+            expect(mockedSubscriptionCreate).toHaveBeenCalled();
+        });
+
+        it('should attempt to create a Subscription when given a subscription instance and a topic instance and a creation options', async () => {
+            const subscription = new Subscription(client, subscriptionName);
+            subscription.topic = topicName;
+            await clientProxy
+                .createSubscription(subscription, undefined, subscriptionCreationOption)
+                .toPromise();
             expect(mockedSubscriptionCreate).toHaveBeenCalled();
         });
     });
