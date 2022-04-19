@@ -1,110 +1,110 @@
 {
-  "name": "@flosportsinc/nestjs-google-pubsub-connector",
-  "version": "0.0.0-development",
-  "description": "A NestJS Connector for Google PubSub",
-  "main": "dist/index.js",
-  "repository": {
-    "url": "git+https://github.com/flocasts/nestjs-google-pubsub-connector.git",
-    "type": "git"
-  },
-  "files": [
-    "dist"
-  ],
-  "scripts": {
-    "test": "jest --verbose",
-    "test:ci": "npm run test -- --runInBand  --coverage --ci",
-    "test:debug": "npm run test -- --runInBand",
-    "test:e2e": "npm run test -- --config test/jest-e2e.ts",
-    "test:e2e:ci": "npm run test:e2e -- --runInBand  --ci",
-    "test:e2e:debug": "npm run test:e2e -- --runInBand",
-    "build": "tsc",
-    "build:package": "tsc -p tsconfig.build.json",
-    "example:server": "node --inspect -r ts-node/register examples/server/main.ts",
-    "docs:build": "typedoc",
-    "docs:watch": "typedoc --watch",
-    "docs:deploy": "npm run docs:build && gh-pages -d docs",
-    "prepare": "husky install && npm run build",
-    "lint": "eslint . --ext .js,.ts",
-    "lint:fix": "eslint --fix-dry-run . --ext .js,.ts",
-    "format": "prettier \"lib/**/*.ts\" \"examples/**/*.ts\" \"test/**/*.ts\"  -c",
-    "format:fix": "npm run format -- --write",
-    "semantic-release": "npx --no-install semantic-release"
-  },
-  "keywords": [
-    "nestjs",
-    "google",
-    "pubsub",
-    "google-pubsub",
-    "transport",
-    "microservice"
-  ],
-  "author": "Harold Waters <harold.waters@flosports.tv>",
-  "contributors": [
-    {
-      "name": "William Reynolds",
-      "email": "william.reynolds@flosports.tv"
+    "name": "@flosportsinc/nestjs-google-pubsub-connector",
+    "version": "0.0.0-development",
+    "description": "A NestJS Connector for Google PubSub",
+    "main": "dist/index.js",
+    "repository": {
+        "url": "git+https://github.com/flocasts/nestjs-google-pubsub-connector.git",
+        "type": "git"
+    },
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "test": "jest --verbose",
+        "test:ci": "npm run test -- --runInBand  --coverage --ci",
+        "test:debug": "npm run test -- --runInBand",
+        "test:e2e": "npm run test -- --config test/jest-e2e.ts",
+        "test:e2e:ci": "npm run test:e2e -- --runInBand  --ci",
+        "test:e2e:debug": "npm run test:e2e -- --runInBand",
+        "build": "tsc",
+        "build:package": "tsc -p tsconfig.build.json",
+        "example:server": "node --inspect -r ts-node/register examples/server/main.ts",
+        "docs:build": "typedoc",
+        "docs:watch": "typedoc --watch",
+        "docs:deploy": "npm run docs:build && gh-pages -d docs",
+        "prepare": "husky install && npm run build",
+        "lint": "eslint . --ext .js,.ts",
+        "lint:fix": "eslint --fix-dry-run . --ext .js,.ts",
+        "format": "prettier \"lib/**/*.ts\" \"examples/**/*.ts\" \"test/**/*.ts\"  -c",
+        "format:fix": "npm run format -- --write",
+        "semantic-release": "npx --no-install semantic-release"
+    },
+    "keywords": [
+        "nestjs",
+        "google",
+        "pubsub",
+        "google-pubsub",
+        "transport",
+        "microservice"
+    ],
+    "author": "Harold Waters <harold.waters@flosports.tv>",
+    "contributors": [
+        {
+            "name": "William Reynolds",
+            "email": "william.reynolds@flosports.tv"
+        }
+    ],
+    "license": "ISC",
+    "release": {
+        "branches": [
+            "master",
+            "next"
+        ]
+    },
+    "devDependencies": {
+        "@commitlint/cli": "^12.1.1",
+        "@commitlint/config-conventional": "^12.1.1",
+        "@nestjs/common": "^7.6.15",
+        "@nestjs/core": "^7.6.15",
+        "@nestjs/microservices": "^7.6.15",
+        "@nestjs/testing": "^7.6.15",
+        "@types/jest": "^26.0.22",
+        "@types/uuid": "^8.3.0",
+        "@typescript-eslint/eslint-plugin": "^4.21.0",
+        "@typescript-eslint/parser": "^4.21.0",
+        "commitizen": "^4.2.4",
+        "cz-conventional-changelog": "^3.3.0",
+        "eslint": "^7.23.0",
+        "eslint-plugin-tsdoc": "^0.2.12",
+        "fast-check": "^2.14.0",
+        "gh-pages": "^3.2.0",
+        "husky": "^6.0.0",
+        "jest": "^26.6.3",
+        "lint-staged": "^10.5.4",
+        "prettier": "2.2.1",
+        "reflect-metadata": "^0.1.13",
+        "rxjs": "^7.5.5",
+        "semantic-release": "^17.4.2",
+        "ts-jest": "^26.5.4",
+        "ts-node": "^9.1.1",
+        "typedoc": "^0.20.35",
+        "typescript": "^4.2.4"
+    },
+    "dependencies": {
+        "@google-cloud/pubsub": "^2.10.0"
+    },
+    "peerDependencies": {
+        "@nestjs/common": ">=7.0 && <8",
+        "@nestjs/core": ">=7.0 && <8",
+        "@nestjs/microservices": ">=7.0 && <8",
+        "reflect-metadata": "^0.1.13",
+        "rxjs": ">=6"
+    },
+    "lint-staged": {
+        "{lib,test,examples}/**/*.ts": "prettier --write",
+        "{lib,apps,examples,libs,test}/**/*.ts": "eslint --fix"
+    },
+    "config": {
+        "commitizen": {
+            "path": "./node_modules/cz-conventional-changelog"
+        }
+    },
+    "husky": {
+        "hooks": {
+            "prepare-commit-msg": "exec < /dev/tty && git cz --hook",
+            "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+            "pre-push": "npm run build && npm run test"
+        }
     }
-  ],
-  "license": "ISC",
-  "release": {
-    "branches": [
-      "master",
-      "next"
-    ]
-  },
-  "devDependencies": {
-    "@commitlint/cli": "^12.1.1",
-    "@commitlint/config-conventional": "^12.1.1",
-    "@nestjs/common": "^7.6.15",
-    "@nestjs/core": "^7.6.15",
-    "@nestjs/microservices": "^7.6.15",
-    "@nestjs/testing": "^7.6.15",
-    "@types/jest": "^26.0.22",
-    "@types/uuid": "^8.3.0",
-    "@typescript-eslint/eslint-plugin": "^4.21.0",
-    "@typescript-eslint/parser": "^4.21.0",
-    "commitizen": "^4.2.4",
-    "cz-conventional-changelog": "^3.3.0",
-    "eslint": "^7.23.0",
-    "eslint-plugin-tsdoc": "^0.2.12",
-    "fast-check": "^2.14.0",
-    "gh-pages": "^3.2.0",
-    "husky": "^6.0.0",
-    "jest": "^26.6.3",
-    "lint-staged": "^10.5.4",
-    "prettier": "2.2.1",
-    "reflect-metadata": "^0.1.13",
-    "rxjs": "^6.6.7",
-    "semantic-release": "^17.4.2",
-    "ts-jest": "^26.5.4",
-    "ts-node": "^9.1.1",
-    "typedoc": "^0.20.35",
-    "typescript": "^4.2.4"
-  },
-  "dependencies": {
-    "@google-cloud/pubsub": "^2.10.0"
-  },
-  "peerDependencies": {
-    "@nestjs/common": ">=7.0 && <8",
-    "@nestjs/core": ">=7.0 && <8",
-    "@nestjs/microservices": ">=7.0 && <8",
-    "reflect-metadata": "^0.1.13",
-    "rxjs": ">=6 && <7"
-  },
-  "lint-staged": {
-    "{lib,test,examples}/**/*.ts": "prettier --write",
-    "{lib,apps,examples,libs,test}/**/*.ts": "eslint --fix"
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
-  },
-  "husky": {
-    "hooks": {
-      "prepare-commit-msg": "exec < /dev/tty && git cz --hook",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-      "pre-push": "npm run build && npm run test"
-    }
-  }
 }

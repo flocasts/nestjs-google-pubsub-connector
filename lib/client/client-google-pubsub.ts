@@ -134,7 +134,7 @@ export class ClientGooglePubSub extends ClientProxy {
     public listenForMessages(
         subscription: string | GooglePubSubSubscription,
     ): Observable<GooglePubSubMessage> {
-        return fromEvent(
+        return fromEvent<GooglePubSubMessage>(
             this.getSubscription(subscription),
             GOOGLE_PUBSUB_SUBSCRIPTION_MESSAGE_EVENT,
         );
