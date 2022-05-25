@@ -59,7 +59,7 @@
         "@nestjs/core": "^7.6.15",
         "@nestjs/microservices": "^7.6.15",
         "@nestjs/testing": "^7.6.15",
-        "@types/jest": "^26.0.22",
+        "@types/jest": "^27.5.1",
         "@types/uuid": "^8.3.0",
         "@typescript-eslint/eslint-plugin": "^4.21.0",
         "@typescript-eslint/parser": "^4.21.0",
@@ -70,14 +70,14 @@
         "fast-check": "^2.14.0",
         "gh-pages": "^3.2.0",
         "husky": "^6.0.0",
-        "jest": "^26.6.3",
+        "jest": "^28.1.0",
         "lint-staged": "^10.5.4",
         "prettier": "2.2.1",
         "reflect-metadata": "^0.1.13",
         "rxjs": "^7.5.5",
         "semantic-release": "^17.4.2",
-        "ts-jest": "^26.5.4",
-        "ts-node": "^9.1.1",
+        "ts-jest": "^28.0.3",
+        "ts-node": "^10.8.0",
         "typedoc": "^0.20.35",
         "typescript": "^4.2.4"
     },
@@ -85,11 +85,11 @@
         "@google-cloud/pubsub": "^2.10.0"
     },
     "peerDependencies": {
-        "@nestjs/common": ">=7.0 && <8",
-        "@nestjs/core": ">=7.0 && <8",
-        "@nestjs/microservices": ">=7.0 && <8",
+        "@nestjs/common": ">=7.0 && <9",
+        "@nestjs/core": ">=7.0 && <9",
+        "@nestjs/microservices": ">=7.0 && <9",
         "reflect-metadata": "^0.1.13",
-        "rxjs": ">=6"
+        "rxjs": ">=7"
     },
     "lint-staged": {
         "{lib,test,examples}/**/*.ts": "prettier --write",
