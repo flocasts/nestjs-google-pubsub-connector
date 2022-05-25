@@ -236,9 +236,9 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
         createOptions: CreateSubscriptionOptions | undefined,
         pattern: string,
     ): Promise<GooglePubSubSubscription | null> => {
-        const subscriptionExists: boolean = await this.googlePubSubClient
+        const subscriptionExists: boolean = (await this.googlePubSubClient
             .subscriptionExists(subscriptionName)
-            .toPromise();
+            .toPromise()) as boolean;
 
         if (subscriptionExists) return this.googlePubSubClient.getSubscription(subscriptionName);
 
@@ -251,9 +251,9 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
         const _topicName = this.topicNamingStrategy.generateTopicName(topicName);
         const topic: GooglePubSubTopic | null = this.googlePubSubClient.getTopic(_topicName);
 
-        return await this.googlePubSubClient
+        return (await this.googlePubSubClient
             .createSubscription(subscriptionName, topic, createOptions)
-            .toPromise();
+            .toPromise()) as GooglePubSubSubscription | null;
     };
 
     /**
