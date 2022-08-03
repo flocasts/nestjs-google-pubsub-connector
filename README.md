@@ -5,23 +5,25 @@
   </a>
 </p>
 
-This package includes two pieces, a NestJS microservice strategy as well as a client proxy. Together this enable
+This package includes two pieces, a NestJS microservice strategy as well as a client proxy. Together this enables
 easy integration with Google PubSub in a NestJS-y way.
 
 ## Features
-- Seamlessly integrate your subscription listeners as controllers in the robust NestJS framework!
-- Creates subscriptions on demand, with self-service naming strategies!
-- A "just-works" approach means that zero configuration is needed out of the box, just insert the
-strategy and let the framework do the rest.
-- Oh-so Extensible:
-  - Subscription naming strategies let you dynamically name subscriptions how _you_ want to!
-  - Ack/nack strategies let you decouple your business logic from how you respond to messages!
-- Decorators! Decorators!! Decorators!!!
+
+-   Seamlessly integrate your subscription listeners as controllers in the robust NestJS framework!
+-   Creates subscriptions on demand, with self-service naming strategies!
+-   A "just-works" approach means that zero configuration is needed out of the box, just insert the
+    strategy and let the framework do the rest.
+-   Oh-so Extensible:
+    -   Subscription naming strategies let you dynamically name subscriptions how _you_ want to!
+    -   Ack/nack strategies let you decouple your business logic from how you respond to messages!
+-   Decorators! Decorators!! Decorators!!!
 
 ## Microservice Strategy
 
 The server/transport strategy component is inserted as a strategy when creating a microservice, taking a
 few configuration parameters, as well as an optional PubSub instance, like so:
+
 ```typescript
 async function bootstrap() {
     const app: INestMicroservice = await NestFactory.createMicroservice<MicroserviceOptions>(
@@ -57,18 +59,21 @@ bootstrap();
 With just the configuration above you can have working controllers responding to messages in minutes.
 
 ### Decorators
+
 Parameter decorators are one of the best ease-of-use features in NestJS, and this library offers a few
 that will make parsing PubSub Messages easy, simple and fun:
 
-| Name | Desscription |
--------|-----------
-| @GooglePubSubMessageHandler | Takes a subscription name and optionally a topic name and creation parameters of subscription. A subscription will be created if it does not already exits **if**: a topic name is supplied  **and** `createSubscriptions` was set to true when the microservice was created. The creation parameters are of type `CreateSubscriptionOptions` from the google pub/sub library |
-| @GooglePubSubMessageBody | This will retrieve and `JSON.parse()` the body of the incoming message. You may optionally include a key and the corresponding value will be returned.
-| @GooglePubSubMessageAttributes | This will retrieve attributes of the incoming message. You may optionally include a key, and the corresponding value will be returned.
-| @Ack | This will return a function that will `ack` the incoming message. </br> **N.B.** this will disable any auto-acking.|
-| @Nack | Same as above, but for nacking. |
+| Name                                 | Description                                                                                                                                                                                                                                                                                                                                                                  |
+| ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| @GooglePubSubMessageHandler          | Takes a subscription name and optionally a topic name and creation parameters of subscription. A subscription will be created if it does not already exits **if**: a topic name is supplied **and** `createSubscriptions` was set to true when the microservice was created. The creation parameters are of type `CreateSubscriptionOptions` from the google pub/sub library |
+| @GooglePubSubMessageBody             | This will retrieve and `JSON.parse()` the body of the incoming message. You may optionally include a key and the corresponding value will be returned.                                                                                                                                                                                                                       |
+| @GooglePubSubMessageAttributes       | This will retrieve attributes of the incoming message. You may optionally include a key, and the corresponding value will be returned.                                                                                                                                                                                                                                       |
+| @GooglePubSubMessageDeliveryAttempts | This will return the number of delivery attempts for this message.                                                                                                                                                                                                                                                                                                           |
+| @Ack                                 | This will return a function that will `ack` the incoming message. </br> **N.B.** this will disable any auto-acking.                                                                                                                                                                                                                                                          |
+| @Nack                                | Same as above, but for nacking.                                                                                                                                                                                                                                                                                                                                              |
 
 ### Subscription creation
+
 If `createSubscriptions` is set as true on transporter setup, then the service will
 attempt to create a new subscription if the requested subscription for a handler is
 not already present.The microservice takes a `subscriptionNamingStrategy` as an
@@ -76,39 +81,37 @@ argument, which expects a class conforming to the `SubscriptionNamingStrategy`
 interface. A basic strategy is included by default:
 
 ```typescript
-import {
-  SubscriptionNamingStrategy
-} from '@flosports/nestjs-google-pubsub-microservice';
+import { SubscriptionNamingStrategy } from '@flosports/nestjs-google-pubsub-microservice';
 import { NamingDependencyTag, SubscriptionNameDependencies } from './interfaces';
 
-export class BasicSubscriptionNamingStrategy
-        implements SubscriptionNamingStrategy {
-  public generateSubscriptionName(
-          deps: SubscriptionNameDependencies
-  ): string {
-    switch (deps._tag) {
-      case NamingDependencyTag.TOPIC_AND_SUBSCRIPTION_NAMES:
-      case NamingDependencyTag.SUBSCRIPTION_NAME_ONLY:
-        return deps.subscriptionName;
-      case NamingDependencyTag.TOPIC_NAME_ONLY:
-        return `${deps.topicName}-sub`;
+export class BasicSubscriptionNamingStrategy implements SubscriptionNamingStrategy {
+    public generateSubscriptionName(deps: SubscriptionNameDependencies): string {
+        switch (deps._tag) {
+            case NamingDependencyTag.TOPIC_AND_SUBSCRIPTION_NAMES:
+            case NamingDependencyTag.SUBSCRIPTION_NAME_ONLY:
+                return deps.subscriptionName;
+            case NamingDependencyTag.TOPIC_NAME_ONLY:
+                return `${deps.topicName}-sub`;
+        }
     }
-  }
 }
 ```
 
 The string returned from this strategy will be used as the name for the created subscription.
 
 ### Acking and Nacking
+
 In the interest of giving you, the user, the power over your own destiny this
 library takes both a hands-off and "just works" approach to acking and nacking
 messages. This is accomplished through "strategies" confirming to the `AckStrategy`,
 `NackStrategy` interfaces which are supplied at transport creation.
 
 #### Ack Strategies
+
 Ack strategies are guaranteed to run after a handler completes successfully, and
 expose functions for acking and nacking the message, as well as the messages
 `GooglePubSubContext`. The default is shown in the example below:
+
 ```typescript
 import { GooglePubSubContext } from '../ctx-host';
 import { AckFunction, AckStrategy, NackFunction } from '../interfaces';
@@ -127,9 +130,10 @@ The flow here is simple, if autoAck is set to true then this message will be ack
 and the function will return.
 
 #### Nack Strategies
+
 Nack strategies are guaranteed to run if any error is thrown from the handler.
 </br>
-_**N.B.** This will occur _after_ exception filters._
+_**N.B.** This will occur \_after_ exception filters.\_
 </br>
 The signature is the same as an ack strategies with the exception of the thrown Error
 (pun intended) being included as the first argument. The default is shown below:
@@ -154,6 +158,7 @@ export class BasicNackStrategy implements NackStrategy {
 ```
 
 #### No strategy/hybrid acking and nacking
+
 In addition to using these strategies, the library also makes available ack and nack
 functions through decorators to the controller as well as from
 the `GooglePubSubContext`. When ack or nack functions are
@@ -163,6 +168,7 @@ disabling the basic strategies and optionally any strategies you
 should choose to create. </br>
 
 ### Usage
+
 ```typescript
 // src/main.ts
 import { NestFactory } from '@nestjs/core';
@@ -228,32 +234,29 @@ export class TestController {
 ```
 
 ## Client Proxy
+
 This library also provides a basic client proxy that wraps a PubSub instance.
 
 This proxy supports:
-* Publishing
-* Topic/Subscription creation
-* Topic/Subscription deletion
+
+-   Publishing
+-   Topic/Subscription creation
+-   Topic/Subscription deletion
 
 You can find a number of working examples in the [examples directory](examples/client).
 
 ### Usage
-```typescript
 
-import {
-    ClientGooglePubSub
-} from '@flosports/nestjs-google-pubsub-microservice';
+```typescript
+import { ClientGooglePubSub } from '@flosports/nestjs-google-pubsub-microservice';
 
 const msg = 'beam me up scotty';
 
-new ClientGooglePubSub()
-    .publishToTopic(
-        'my-test-topic',
-        Buffer.from(msg),
-    );
+new ClientGooglePubSub().publishToTopic('my-test-topic', Buffer.from(msg));
 ```
 
 ### Authentication
+
 In keeping with the hand-off "just works" approach in this library, authentication is handled entirely
 by the underlying PubSub client. This means that the credentials pointed to by the `GOOGLE_APPLICATION_CREDENTIALS`
 will be used, as well as emulator support if `PUBSUB_EMULATOR_HOST` is set. If you need a more advanced
@@ -261,22 +264,29 @@ configuration, then both the transport strategy and the client proxy will take a
 as a constructor parameter - you can simply build the client you need and then hand it off.
 
 ### Examples
+
 A working example server can be found in the [examples directory](examples/server).
 
 #### Prerequisites for running the example server
+
 In order to run the example server you must either:
-* Have `GOOGLE_APPLICATION_CREDENTIALS` set in your environment, and pointed to a valid credentials, or
-* Have a running PubSub emulator and have `PUBSUB_EMULATOR_HOST` set in your environment
+
+-   Have `GOOGLE_APPLICATION_CREDENTIALS` set in your environment, and pointed to a valid credentials, or
+-   Have a running PubSub emulator and have `PUBSUB_EMULATOR_HOST` set in your environment
 
 In both cases you will need to create any topics present in the example server (or change them to
 topics) that already exist.
 
 #### Running the example server
+
 To run the server, simply invoke the provided `npm` script:
+
 ```sh
 npm run example:server
 ```
+
 Assuming all prerequisites are met you should see something like the following:
+
 ```sh
 > @flosportsinc/nestjs-google-pubsub-connector@0.0.0-development example:server /Users/haroldwaters/repos/nestjs-google-pubsub-transport
 > node --inspect -r ts-node/register examples/server/main.ts
