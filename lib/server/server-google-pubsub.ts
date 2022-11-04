@@ -84,10 +84,16 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
      */
     private listenerSubscription: Subscription | null = null;
 
+    private iterators: [string, AsyncGenerator<GooglePubSubMessage>][] | null = null;
     /**
      * GooglePubSubSubscriptions keyed by pattern
      */
     private readonly subscriptions: Map<string, GooglePubSubSubscription> = new Map();
+
+    /**
+     * Subscription Iterators for one-at-a-time processing keyed by pattern
+     */
+    private readonly synchronousSubscriptions: Map<string, GooglePubSubSubscription> = new Map();
 
     constructor(options?: GooglePubSubTransportOptions) {
         super();
@@ -105,6 +111,11 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
 
     public listen(callback: () => void): void {
         this.bindHandlers(callback);
+        //for one at a time messages, pull events from their iterators and handle them
+        // synchronously
+        if (this.iterators) {
+            this.iterators.map((iterator) => this.handleMessageSync(iterator));
+        }
     }
 
     /**
@@ -120,10 +131,10 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
         // Group all of our event listeners into an array
         const listeners = Array.from(this.subscriptions, this.subscribeMessageEvent);
 
-        // Pass every emitted event through the same pipeline
         this.listenerSubscription = merge(...listeners)
             .pipe(map(this.deserializeAndAddContext), mergeMap(this.handleMessage))
             .subscribe();
+        this.iterators = Array.from(this.synchronousSubscriptions, this.getSubscriptionIterator);
         callback();
     }
 
@@ -145,7 +156,11 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
 
         if (subscription) {
             this.logger.log(`Mapped {${subscription.name}} handler`);
-            this.subscriptions.set(pattern, subscription);
+            if (metadata.oneAtATime) {
+                this.synchronousSubscriptions.set(pattern, subscription);
+            } else {
+                this.subscriptions.set(pattern, subscription);
+            }
         }
     }
 
@@ -271,6 +286,13 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
         );
     };
 
+    private getSubscriptionIterator([pattern, subscription]: [string, GooglePubSubSubscription]): [
+        string,
+        AsyncGenerator<GooglePubSubMessage>,
+    ] {
+        return [pattern, this.googlePubSubClient.getMessageIterator(subscription)];
+    }
+
     /**
      * Convert each message into a ReadPacket and include pattern and Context
      */
@@ -286,6 +308,14 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
         ];
     };
 
+    private async handleMessageSync([pattern, iterator]: [
+        string,
+        AsyncGenerator<GooglePubSubMessage>,
+    ]) {
+        const message = await iterator.next();
+        const data = this.deserializeAndAddContext([pattern, message.value]);
+        this.handleMessage(data);
+    }
     /**
      * Pass ReadPacket to internal `handleEvent` method
      */

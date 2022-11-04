@@ -7,7 +7,7 @@ import {
 } from '@google-cloud/pubsub';
 import { Injectable } from '@nestjs/common';
 import { ClientProxy, ReadPacket, WritePacket } from '@nestjs/microservices';
-import { from, fromEvent, Observable, of, OperatorFunction, throwError } from 'rxjs';
+import { from, fromEvent, Observable, of, OperatorFunction, throwError, take } from 'rxjs';
 import { map, mapTo, mergeMap } from 'rxjs/operators';
 import { GOOGLE_PUBSUB_SUBSCRIPTION_MESSAGE_EVENT } from '../constants';
 import {
@@ -20,6 +20,7 @@ import {
     GooglePubSubTopic,
     PublishData,
 } from '../interfaces';
+import { on } from 'node:events';
 
 /**
  * Proxy for the Google PubSub client
@@ -131,13 +132,21 @@ export class ClientGooglePubSub extends ClientProxy {
      * @param subscription
      * @returns
      */
-    public listenForMessages(
-        subscription: string | GooglePubSubSubscription,
-    ): Observable<GooglePubSubMessage> {
+
+    public listenForMessages(subscription: string | Subscription): Observable<GooglePubSubMessage> {
         return fromEvent<GooglePubSubMessage>(
             this.getSubscription(subscription),
             GOOGLE_PUBSUB_SUBSCRIPTION_MESSAGE_EVENT,
         );
+    }
+
+    public async *getMessageIterator(
+        subscription: string | Subscription,
+    ): AsyncGenerator<GooglePubSubMessage> {
+        const subObj = this.getSubscription(subscription);
+        for await (const message of on(subObj, GOOGLE_PUBSUB_SUBSCRIPTION_MESSAGE_EVENT)) {
+            yield message;
+        }
     }
 
     /**
