@@ -1,16 +1,7 @@
 jest.mock('@google-cloud/pubsub');
-import {
-    CreateSubscriptionOptions,
-    Message,
-    PubSub,
-    Subscription,
-    Topic,
-} from '@google-cloud/pubsub';
-import { Observable } from 'rxjs';
+import { CreateSubscriptionOptions, PubSub, Subscription, Topic } from '@google-cloud/pubsub';
 import { GooglePubSubTopic } from '../interfaces';
 import { ClientGooglePubSub } from './client-google-pubsub';
-import { GooglePubSubMessage } from '../interfaces';
-import * as request from 'supertest';
 import { GOOGLE_PUBSUB_SUBSCRIPTION_MESSAGE_EVENT } from '../constants';
 
 const topicName = 'project-venison-plans';

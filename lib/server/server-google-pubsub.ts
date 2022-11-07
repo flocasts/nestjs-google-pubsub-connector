@@ -1,7 +1,7 @@
 import { CreateSubscriptionOptions } from '@google-cloud/pubsub';
 import { Logger } from '@nestjs/common';
 import { CustomTransportStrategy, MessageHandler, ReadPacket, Server } from '@nestjs/microservices';
-import { from, merge, Observable, of, Subscription } from 'rxjs';
+import { firstValueFrom, from, merge, Observable, of, Subscription } from 'rxjs';
 import { catchError, map, mapTo, mergeMap } from 'rxjs/operators';
 import { ClientGooglePubSub } from '../client';
 import { GooglePubSubContext as GooglePubSubContext } from '../ctx-host/google-pubsub.context';
@@ -332,7 +332,7 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
     ]) {
         for await (const message of iterator) {
             const data = this.deserializeAndAddContext([pattern, message]);
-            this.handleMessage(data);
+            await firstValueFrom(this.handleMessage(data));
         }
     }
 
