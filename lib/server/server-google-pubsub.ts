@@ -113,6 +113,13 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
         this.bindHandlers(callback);
         //for one at a time messages, pull events from their iterators and handle them
         // synchronously
+        this.startPullSyncMessages();
+    }
+
+    /**
+     * Pull messages from the subscription iterators marked with {@link oneAtATime}
+     */
+    private startPullSyncMessages() {
         if (this.iterators) {
             this.iterators.map((iterator) => this.handleMessageSync(iterator));
         }
@@ -286,6 +293,12 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
         );
     };
 
+    /**
+     *
+     * @param pattern - The subscription pattern
+     * @param subscription - The subscription
+     * @returns The pattern and an iterator for the subscription
+     */
     private getSubscriptionIterator([pattern, subscription]: [string, GooglePubSubSubscription]): [
         string,
         AsyncGenerator<GooglePubSubMessage>,
@@ -308,14 +321,21 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
         ];
     };
 
+    /**
+     * Pull messages from the iterator and pass them to the subscription handler
+     * @param pattern - The subscription name
+     * @param iterator - The message iterator
+     */
     private async handleMessageSync([pattern, iterator]: [
         string,
         AsyncGenerator<GooglePubSubMessage>,
     ]) {
-        const message = await iterator.next();
-        const data = this.deserializeAndAddContext([pattern, message.value]);
-        this.handleMessage(data);
+        for await (const message of iterator) {
+            const data = this.deserializeAndAddContext([pattern, message]);
+            this.handleMessage(data);
+        }
     }
+
     /**
      * Pass ReadPacket to internal `handleEvent` method
      */
