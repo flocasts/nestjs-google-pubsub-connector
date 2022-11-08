@@ -92,7 +92,7 @@ describe('Google PubSub Server', () => {
 
         it('should get a subscription from a pattern and not attempt to create if createSubscription is set to false', async () => {
             // @ts-expect-error
-            server.createSubscriptions = true;
+            server.createSubscriptions = false;
             const pattern = JSON.stringify({
                 subscriptionName: 'my-sub-name',
                 topicName: 'my-topic-name',
@@ -104,6 +104,23 @@ describe('Google PubSub Server', () => {
             expect(createSubscriptionMock).not.toHaveBeenCalled();
             // @ts-expect-error
             expect(server.subscriptions.keys()).toContain(pattern);
+        });
+
+        it('should put the subscription in synchronous subscriptions', async () => {
+            //@ts-expect-error
+            server.createSubscriptions = true;
+            const pattern = JSON.stringify({
+                subscriptionName: 'my-sync-sub',
+                topicName: 'my-topic-name',
+                oneAtATime: true,
+            });
+            subscriptionExistsMock.mockImplementationOnce(() => of(false));
+            await getSubscriptionFromPattern(pattern);
+
+            expect(subscriptionExistsMock).toHaveBeenCalled();
+            expect(createSubscriptionMock).toHaveBeenCalled();
+            //@ts-expect-error
+            expect(server.synchronousSubscriptions.keys()).toContain(pattern);
         });
     });
 });
