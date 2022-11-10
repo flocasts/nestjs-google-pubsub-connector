@@ -84,7 +84,7 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
      */
     private listenerSubscription: Subscription | null = null;
 
-    private iterators: [string, AsyncGenerator<GooglePubSubMessage>][] | null = null;
+    private iterators: [string, AsyncGenerator<GooglePubSubMessage[]>][] | null = null;
     /**
      * GooglePubSubSubscriptions keyed by pattern
      */
@@ -111,9 +111,6 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
 
     public listen(callback: () => void): void {
         this.bindHandlers(callback);
-        //for one at a time messages, pull events from their iterators and handle them
-        // synchronously
-        this.startPullSyncMessages();
     }
 
     /**
@@ -141,7 +138,15 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
         this.listenerSubscription = merge(...listeners)
             .pipe(map(this.deserializeAndAddContext), mergeMap(this.handleMessage))
             .subscribe();
-        this.iterators = Array.from(this.synchronousSubscriptions, this.getSubscriptionIterator);
+        this.iterators = Array.from(
+            this.synchronousSubscriptions,
+            this.getSubscriptionIterator,
+            this,
+        );
+
+        //for one at a time messages, pull events from their iterators and handle them
+        // synchronously
+        this.startPullSyncMessages();
         callback();
     }
 
@@ -301,7 +306,7 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
      */
     private getSubscriptionIterator([pattern, subscription]: [string, GooglePubSubSubscription]): [
         string,
-        AsyncGenerator<GooglePubSubMessage>,
+        AsyncGenerator<GooglePubSubMessage[]>,
     ] {
         return [pattern, this.googlePubSubClient.getMessageIterator(subscription)];
     }
@@ -328,11 +333,13 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
      */
     private async handleMessageSync([pattern, iterator]: [
         string,
-        AsyncGenerator<GooglePubSubMessage>,
+        AsyncGenerator<GooglePubSubMessage[]>,
     ]) {
-        for await (const message of iterator) {
-            const data = this.deserializeAndAddContext([pattern, message]);
-            await firstValueFrom(this.handleMessage(data));
+        for await (const [message] of iterator) {
+            if (message) {
+                const data = this.deserializeAndAddContext([pattern, message]);
+                await firstValueFrom(this.handleMessage(data));
+            }
         }
     }
 

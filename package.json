@@ -23,7 +23,7 @@
         "docs:build": "typedoc",
         "docs:watch": "typedoc --watch",
         "docs:deploy": "npm run docs:build && gh-pages -d docs",
-        "prepare": "husky install && npm run build",
+        "prepare": "husky install && npm run build:package",
         "lint": "eslint . --ext .js,.ts",
         "lint:fix": "eslint --fix-dry-run . --ext .js,.ts",
         "link:dev": "rimraf dist/ && npm run build:package && npm link",
