@@ -142,7 +142,7 @@ export class ClientGooglePubSub extends ClientProxy {
 
     public async *getMessageIterator(
         subscription: string | Subscription,
-    ): AsyncGenerator<GooglePubSubMessage> {
+    ): AsyncGenerator<GooglePubSubMessage[]> {
         const subObj = this.getSubscription(subscription);
         for await (const message of on(subObj, GOOGLE_PUBSUB_SUBSCRIPTION_MESSAGE_EVENT)) {
             yield message;
