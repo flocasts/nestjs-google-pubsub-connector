@@ -24,7 +24,7 @@
         "docs:watch": "typedoc --watch",
         "docs:deploy": "npm run docs:build && gh-pages -d docs",
         "prepare": "husky install && npm run build:package",
-        "lint": "eslint . --ext .js,.ts",
+        "lint": "eslint . --ext .ts",
         "lint:fix": "eslint --fix-dry-run . --ext .ts",
         "link:dev": "rimraf dist/ && npm run build:package && npm link",
         "format": "prettier \"lib/**/*.ts\" \"examples/**/*.ts\" \"test/**/*.ts\"  -c",
