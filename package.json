@@ -1,6 +1,6 @@
 {
     "name": "@flosportsinc/nestjs-google-pubsub-connector",
-    "version": "0.0.0-development",
+    "version": "0.1.0-development",
     "description": "A NestJS Connector for Google PubSub",
     "main": "dist/index.js",
     "repository": {
@@ -23,9 +23,10 @@
         "docs:build": "typedoc",
         "docs:watch": "typedoc --watch",
         "docs:deploy": "npm run docs:build && gh-pages -d docs",
-        "prepare": "husky install && npm run build",
+        "prepare": "husky install && npm run build:package",
         "lint": "eslint . --ext .js,.ts",
         "lint:fix": "eslint --fix-dry-run . --ext .js,.ts",
+        "link:dev": "rimraf dist/ && npm run build:package && npm link",
         "format": "prettier \"lib/**/*.ts\" \"examples/**/*.ts\" \"test/**/*.ts\"  -c",
         "format:fix": "npm run format -- --write",
         "semantic-release": "npx --no-install semantic-release"
@@ -43,6 +44,10 @@
         {
             "name": "William Reynolds",
             "email": "william.reynolds@flosports.tv"
+        },
+        {
+            "name": "Eric Glickman-Tondreau",
+            "email": "eric.glickman-tondreau@flosports.tv"
         }
     ],
     "license": "ISC",
@@ -60,6 +65,7 @@
         "@nestjs/microservices": "^7.6.15",
         "@nestjs/testing": "^7.6.15",
         "@types/jest": "^27.5.1",
+        "@types/supertest": "^2.0.12",
         "@types/uuid": "^8.3.0",
         "@typescript-eslint/eslint-plugin": "^4.21.0",
         "@typescript-eslint/parser": "^4.21.0",
@@ -76,6 +82,7 @@
         "reflect-metadata": "^0.1.13",
         "rxjs": "^7.5.5",
         "semantic-release": "^17.4.2",
+        "supertest": "^6.3.1",
         "ts-jest": "^28.0.3",
         "ts-node": "^10.8.0",
         "typedoc": "^0.20.35",

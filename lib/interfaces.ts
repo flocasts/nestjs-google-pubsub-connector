@@ -21,11 +21,13 @@ export type NackFunction = () => void;
 export interface GooglePubSubSubscriptionPatternMetadata {
     subscriptionName: string;
     createOptions?: CreateSubscriptionOptions;
+    oneAtATime?: boolean;
     topicName?: string;
 }
 export interface GooglePubSubTopicPatternMetadata {
     subscriptionName?: string;
     createOptions?: CreateSubscriptionOptions;
+    oneAtATime?: boolean;
     topicName: string;
 }
 
@@ -38,6 +40,7 @@ export interface GooglePubSubTransportOptions {
     createSubscriptions?: boolean;
     autoAck?: boolean;
     autoNack?: boolean;
+    oneAtATime?: boolean;
     subscriptionNamingStrategy?: SubscriptionNamingStrategy;
     topicNamingStrategy?: TopicNamingStrategy;
     ackStrategy?: AckStrategy;

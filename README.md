@@ -168,7 +168,7 @@ decorator) **the autoAck/autoNack methods will return false**,
 disabling the basic strategies and optionally any strategies you
 should choose to create. </br>
 
-### Usage
+## Usage
 
 ```typescript
 // src/main.ts
@@ -232,6 +232,24 @@ export class TestController {
         return this.diService.handleBar(data);
     }
 }
+```
+
+### One At A Time Processing
+
+The library allows you to choose whether to handle your messages in parallel (the standard for PubSub) or serially. Simply enable the `oneAtATime` flag in the config option of your `@GooglePubSubMessageHandler` decorator. Once enabled, a new message will not be pulled until the handler returns or throws an error. Disabling or deleting the flag resets the behavior to default.
+
+**N.B.** This will only work within a single instance of your application. If running in a kubernetes cluster or other horizontally scaled environment, consider creating your application as a singleton.
+
+```typescript
+    @GooglePubSubMessageHandler({
+        subscriptionName: 'my-subscription-that-or-may-not-exist',
+        topicName: 'my-existing-topic'
+        oneAtATime: true //true for serial handling, false or blank for default
+    })
+    public handler2(@GooglePubSubMessageBody('bar') bar:  boolean ): void {
+        return this.diService.handleBar(data);
+    }
+
 ```
 
 ## Client Proxy
