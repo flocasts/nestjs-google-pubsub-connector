@@ -1,6 +1,6 @@
 {
     "name": "@flosportsinc/nestjs-google-pubsub-connector",
-    "version": "0.0.1-development",
+    "version": "0.1.0-development",
     "description": "A NestJS Connector for Google PubSub",
     "main": "dist/index.js",
     "repository": {
@@ -44,6 +44,10 @@
         {
             "name": "William Reynolds",
             "email": "william.reynolds@flosports.tv"
+        },
+        {
+            "name": "Eric Glickman-Tondreau",
+            "email": "eric.glickman-tondreau@flosports.tv"
         }
     ],
     "license": "ISC",
