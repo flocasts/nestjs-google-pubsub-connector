@@ -25,7 +25,7 @@
         "docs:deploy": "npm run docs:build && gh-pages -d docs",
         "prepare": "husky install && npm run build:package",
         "lint": "eslint . --ext .js,.ts",
-        "lint:fix": "eslint --fix-dry-run . --ext .js,.ts",
+        "lint:fix": "eslint --fix-dry-run . --ext .ts",
         "link:dev": "rimraf dist/ && npm run build:package && npm link",
         "format": "prettier \"lib/**/*.ts\" \"examples/**/*.ts\" \"test/**/*.ts\"  -c",
         "format:fix": "npm run format -- --write",
@@ -39,7 +39,7 @@
         "transport",
         "microservice"
     ],
-    "author": "Harold Waters <harold.waters@flosports.tv>",
+    "author": "Harriet Waters <harriet.waters@flosports.tv>",
     "contributors": [
         {
             "name": "William Reynolds",
