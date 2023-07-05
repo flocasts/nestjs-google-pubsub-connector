@@ -42,10 +42,6 @@
     "author": "Harriet Waters <harriet.waters@flosports.tv>",
     "contributors": [
         {
-            "name": "William Reynolds",
-            "email": "william.reynolds@flosports.tv"
-        },
-        {
             "name": "Eric Glickman-Tondreau",
             "email": "eric.glickman-tondreau@flosports.tv"
         }
@@ -92,9 +88,9 @@
         "@google-cloud/pubsub": "^2.10.0"
     },
     "peerDependencies": {
-        "@nestjs/common": ">=7.0 && <10",
-        "@nestjs/core": ">=7.0 && <10",
-        "@nestjs/microservices": ">=7.0 && <10",
+        "@nestjs/common": ">=7.0",
+        "@nestjs/core": ">=7.0",
+        "@nestjs/microservices": ">=7.0",
         "reflect-metadata": "^0.1.13",
         "rxjs": ">=7"
     },
