@@ -3,7 +3,7 @@
   "compilerOptions": {
     /* Basic Options */
     "incremental": false,
-    "target": "ES2018",
+    "target": "ES2022",
     "module": "commonjs",
     "allowJs": false,
     "declaration": true,

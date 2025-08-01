@@ -20,5 +20,5 @@ if (!topicName || !message) {
 
 publishMessage(topicName, message)
     .then(() => console.log(`Message published to ${topicName}`))
-    .catch((error) => console.log(`An error ocurred while publishing: ${error.message}`))
+    .catch((error) => console.log(`An error occurred while publishing: ${error.message}`))
     .finally(() => process.exit(0));

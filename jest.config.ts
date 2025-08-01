@@ -4,6 +4,7 @@
  */
 
 export default {
+  preset: 'ts-jest',
   clearMocks: true,
   collectCoverageFrom: ['./lib/**/*.ts'],
   coverageDirectory: "coverage",

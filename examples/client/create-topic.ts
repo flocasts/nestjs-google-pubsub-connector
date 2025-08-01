@@ -19,5 +19,5 @@ if (!topicName) {
 
 createTopic(topicName)
     .then(() => console.log(`Topic created ${topicName}`))
-    .catch((error) => console.log(`An error ocurred while creating topic: ${error.message}`))
+    .catch((error) => console.log(`An error occurred while creating topic: ${error.message}`))
     .finally(() => process.exit(0));

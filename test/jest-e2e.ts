@@ -4,6 +4,7 @@
  */
 
 export default {
+    preset: 'ts-jest',
     clearMocks: true,
     moduleFileExtensions: ['js', 'json', 'ts'],
     roots: ['.', '../lib'],
