@@ -19,5 +19,7 @@ if (!topicName) {
 
 deleteTopic(topicName)
     .then(() => console.log(`Topic ${topicName} deleted!`))
-    .catch((error) => console.log(`An error ocurred while deleting ${topicName}: ${error.message}`))
+    .catch((error) =>
+        console.log(`An error occurred while deleting ${topicName}: ${error.message}`),
+    )
     .finally(() => process.exit(0));

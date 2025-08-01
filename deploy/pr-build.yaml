@@ -1,21 +1,21 @@
 steps:
-- name: node:14-alpine
+- name: node:22-alpine
   id: "npm ci"
   entrypoint: npm
   args: ['ci']
-- name: node:14-alpine
+- name: node:22-alpine
   id: "npm run lint"
   entrypoint: npm
   args: ['run', 'lint']
-- name: node:14-alpine
+- name: node:22-alpine
   id: "npm run build"
   entrypoint: npm
   args: ['run', 'build']
-- name: node:14-alpine
+- name: node:22-alpine
   id: "npm run test:ci"
   entrypoint: npm
   args: ['run', 'test:ci']
-- name: node:14-alpine
+- name: node:22-alpine
   id: "npm run test:e2e:ci"
   entrypoint: npm
   args: ['run', 'test:e2e:ci']

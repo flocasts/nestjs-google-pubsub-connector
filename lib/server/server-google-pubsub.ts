@@ -4,7 +4,7 @@ import { CustomTransportStrategy, MessageHandler, ReadPacket, Server } from '@ne
 import { firstValueFrom, from, merge, Observable, of, Subscription } from 'rxjs';
 import { catchError, map, mapTo, mergeMap } from 'rxjs/operators';
 import { ClientGooglePubSub } from '../client';
-import { GooglePubSubContext as GooglePubSubContext } from '../ctx-host/google-pubsub.context';
+import { GooglePubSubContext } from '../ctx-host/google-pubsub.context';
 import { GooglePubSubMessageDeserializer } from '../deserializers';
 import { InvalidPatternMetadataException } from '../errors';
 import { TransportError } from '../errors/transport-error.exception';
@@ -110,7 +110,7 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
     }
 
     public listen(callback: () => void): void {
-        this.bindHandlers(callback);
+        void this.bindHandlers(callback);
     }
 
     /**
@@ -118,7 +118,7 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
      */
     private startPullSyncMessages() {
         if (this.iterators) {
-            this.iterators.map((iterator) => this.handleMessageSync(iterator));
+            void Promise.all(this.iterators.map((iterator) => this.handleMessageSync(iterator)));
         }
     }
 
@@ -185,7 +185,7 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
     private parsePattern = (pattern: string): GooglePubSubPatternMetadata => {
         try {
             return JSON.parse(pattern);
-        } catch (error) {
+        } catch {
             throw new InvalidPatternMetadataException(pattern);
         }
     };
@@ -290,12 +290,14 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
         string,
         GooglePubSubSubscription,
     ]): Observable<[string, GooglePubSubMessage]> => {
-        return this.googlePubSubClient.listenForMessages(subscription).pipe(
-            map<GooglePubSubMessage, [string, GooglePubSubMessage]>((message) => [
-                pattern,
-                message,
-            ]),
-        );
+        return this.googlePubSubClient
+            .listenForMessages(subscription)
+            .pipe(
+                map<GooglePubSubMessage, [string, GooglePubSubMessage]>((message) => [
+                    pattern,
+                    message,
+                ]),
+            );
     };
 
     /**
@@ -372,9 +374,9 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
                 const ack = packet.data.ack.bind(packet.data);
                 const nack = packet.data.nack.bind(packet.data);
                 if (err) {
-                    this.nackStrategy.nack(err, ack, nack, ctx);
+                    void this.nackStrategy.nack(err, ack, nack, ctx);
                 } else {
-                    this.ackStrategy.ack(ack, nack, ctx);
+                    void this.ackStrategy.ack(ack, nack, ctx);
                 }
             }),
         );
@@ -384,8 +386,8 @@ export class GooglePubSubTransport extends Server implements CustomTransportStra
      * This is called on transport close by the NestJS internals
      */
     public async close(): Promise<void> {
-        this.listenerSubscription && this.listenerSubscription.unsubscribe();
-        await this.googlePubSubClient.close();
+        this.listenerSubscription?.unsubscribe();
+        await firstValueFrom(this.googlePubSubClient.close());
     }
 
     public getHandlerByPattern(pattern: string): MessageHandler | null {

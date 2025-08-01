@@ -28,7 +28,7 @@ async function bootstrap() {
     //      }),
     // });
 
-    return app.listen(() => {
+    return app.listen().then(() => {
         console.log('example app started!');
     });
 }

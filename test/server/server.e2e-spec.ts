@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { PubSub, Subscription } from '@google-cloud/pubsub';
 import { INestMicroservice } from '@nestjs/common';
@@ -61,7 +60,7 @@ describe('Server E2E Tests', () => {
         subscriptions = strategy.subscriptions;
 
         app = module.createNestMicroservice({ strategy: strategy });
-        await app.listenAsync();
+        await app.listen();
     });
 
     describe('Subscription Initialization', () => {
@@ -181,7 +180,7 @@ describe('Server E2E Tests', () => {
             )!;
 
             doStuffMock.mockImplementationOnce(() => {
-                throw ':-(';
+                throw new Error(':-(');
             });
 
             const data = Buffer.from('{}');
