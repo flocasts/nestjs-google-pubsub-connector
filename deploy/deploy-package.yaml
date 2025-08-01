@@ -19,7 +19,7 @@ steps:
   id: "npm run test:e2e:ci"
   entrypoint: npm
   args: ['run', 'test:e2e:ci']
-- name: node:22-alpine
+- name: node:22
   id: "npm run semantic-release -- -d false --no-ci"
   entrypoint: npm
   env:
