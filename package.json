@@ -89,7 +89,7 @@
         "typescript": "^5.5.4"
     },
     "dependencies": {
-        "@google-cloud/pubsub": "^4.7.2"
+        "@google-cloud/pubsub": "^5.2.0"
     },
     "peerDependencies": {
         "@nestjs/common": ">=10.0",

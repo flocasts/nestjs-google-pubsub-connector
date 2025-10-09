@@ -19,7 +19,7 @@ if (!subscriptionName) {
 
 deleteSubscription(subscriptionName)
     .then(() => console.log(`Subscription ${subscriptionName} deleted!`))
-    .catch((error) =>
+    .catch((error: Error) =>
         console.log(`An error occurred while deleting ${subscriptionName}: ${error.message}`),
     )
     .finally(() => process.exit(0));

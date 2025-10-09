@@ -21,6 +21,7 @@ import {
     GooglePubSubTopic,
     PublishData,
 } from '../interfaces';
+import { MessageOptions } from '@google-cloud/pubsub/build/src/topic';
 
 /**
  * Proxy for the Google PubSub client
@@ -209,11 +210,18 @@ export class ClientGooglePubSub extends ClientProxy {
      * @returns
      */
     protected dispatchEvent(packet: ClientGooglePubSubOutgoingRequestSerializedData): Promise<any> {
-        const topic = this.googlePubSubClient.topic(packet.pattern);
+        const options: MessageOptions = {
+            attributes: packet.data.attributes,
+        };
+
         if (Buffer.isBuffer(packet.data.message)) {
-            return topic.publish(packet.data.message, packet.data.attributes);
+            options.data = packet.data.message;
+        } else {
+            options.json = packet.data.message;
         }
-        return topic.publishJSON(packet.data.message, packet.data.attributes);
+
+        const topic = this.googlePubSubClient.topic(packet.pattern);
+        return topic.publishMessage(options);
     }
 
     /**

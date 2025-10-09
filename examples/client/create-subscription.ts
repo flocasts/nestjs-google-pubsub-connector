@@ -20,7 +20,7 @@ if (!topicName || !subscriptionName) {
 
 createSubscription(topicName, subscriptionName)
     .then(() => console.log(`Subscription created ${subscriptionName}`))
-    .catch((error) =>
+    .catch((error: Error) =>
         console.log(`An error occurred while creating subscription: ${error.message}`),
     )
     .finally(() => process.exit(0));
